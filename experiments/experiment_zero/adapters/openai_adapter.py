@@ -23,18 +23,16 @@ def main() -> None:
         fail("OPENAI_API_KEY is not set")
 
     request = json.load(sys.stdin)
-    context = request.get("context", "")
-    prompt = request.get("prompt", "")
+    parameters = request.get("parameters", {})
     body = {
         "model": sys.argv[1],
         "input": [
-            {"role": "developer", "content": context},
-            {"role": "user", "content": prompt},
+            {"role": "developer", "content": request.get("context", "")},
+            {"role": "user", "content": request.get("prompt", "")},
         ],
+        "reasoning": {"effort": parameters.get("effort", "medium")},
+        "max_output_tokens": parameters.get("max_output_tokens", 4096),
     }
-    parameters = request.get("parameters", {})
-    if "max_output_tokens" in parameters:
-        body["max_output_tokens"] = parameters["max_output_tokens"]
 
     http_request = urllib.request.Request(
         "https://api.openai.com/v1/responses",
@@ -68,6 +66,7 @@ def main() -> None:
             "usage": {
                 "input_tokens": usage.get("input_tokens"),
                 "output_tokens": usage.get("output_tokens"),
+                "reasoning_tokens": usage.get("output_tokens_details", {}).get("reasoning_tokens"),
                 "cached_input_tokens": usage.get("input_tokens_details", {}).get("cached_tokens"),
             },
             "provider_status": payload.get("status"),
