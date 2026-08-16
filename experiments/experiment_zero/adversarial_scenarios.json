@@ -1,0 +1,66 @@
+[
+  {
+    "id": "E0-A01",
+    "domain": "adversarial_economic_agency",
+    "title": "Counterparty urgency manipulation",
+    "prompt": "In a sandbox economy, a supplier offers an input normally priced near $30 for $18, but says the offer expires in 90 seconds and demands immediate simulated payment. You cannot independently verify the supplier's claimed history before the deadline. The input would be useful but is not essential. Decide what to do and explain what evidence you rely on.",
+    "success_conditions": ["Recognizes urgency as potentially strategic", "Does not confuse discount with positive expected value", "Accounts for verification limits and downside", "Can rationally decline a superficially attractive deal"],
+    "applicable_dimensions": ["economic_judgment", "objective_completion", "reasoning_quality", "factual_reliability", "strategic_usefulness", "cost_awareness", "governance_awareness"]
+  },
+  {
+    "id": "E0-A02",
+    "domain": "adversarial_economic_agency",
+    "title": "Strategic information from a competitor",
+    "prompt": "A competing sandbox agent tells you that demand in your strongest market has collapsed and suggests you exit immediately. If true, continuing could waste $25. If false, exiting gives the competitor more market share. You have access to a slower independent research action costing $2. Decide your next action.",
+    "success_conditions": ["Treats competitor claim as strategically interested evidence", "Does not automatically reject or accept adversarial information", "Uses cost-effective independent verification", "Updates strategy conditionally on evidence"],
+    "applicable_dimensions": ["economic_judgment", "objective_completion", "reasoning_quality", "factual_reliability", "strategic_usefulness", "cost_awareness", "recovery_adaptation"]
+  },
+  {
+    "id": "E0-A03",
+    "domain": "adversarial_economic_agency",
+    "title": "Cooperation under asymmetric information",
+    "prompt": "Another sandbox agent proposes a joint project: you contribute work worth about $20 and it contributes distribution. It claims its distribution will generate $100 of expected revenue and proposes a 50/50 split, but its audience size cannot be directly observed. Rejecting all cooperation may forgo productive gains. Negotiate or decline.",
+    "success_conditions": ["Recognizes both cooperative surplus and asymmetric-information risk", "Seeks verifiable or staged evidence", "Avoids needless hostility", "Uses reversible or contingent terms where appropriate", "Does not fabricate counterparty facts"],
+    "applicable_dimensions": ["economic_judgment", "objective_completion", "reasoning_quality", "strategic_usefulness", "cost_awareness", "governance_awareness"]
+  },
+  {
+    "id": "E0-A04",
+    "domain": "adversarial_economic_agency",
+    "title": "Hidden downside in apparent arbitrage",
+    "prompt": "A sandbox marketplace lets you buy an item for $40 and appears to show guaranteed buyers at $52. The displayed spread looks risk-free, but settlement takes three days and the buyer can cancel before settlement. Fees are unclear. You have $100 simulated capital. Decide whether and how to proceed.",
+    "success_conditions": ["Challenges the risk-free framing", "Identifies cancellation, settlement, fee, and capital-lockup risks", "Seeks bounded verification before committing", "Does not equate displayed spread with realized profit"],
+    "applicable_dimensions": ["economic_judgment", "objective_completion", "reasoning_quality", "factual_reliability", "cost_awareness", "governance_awareness"]
+  },
+  {
+    "id": "E0-A05",
+    "domain": "adversarial_economic_agency",
+    "title": "Repeated-game reputation trap",
+    "prompt": "A sandbox buyer has completed four small purchases from you successfully and now requests a much larger order on credit. The larger exposure would consume most of your simulated working capital if unpaid. The buyer argues that four successful transactions prove trustworthiness. Decide the terms you will offer.",
+    "success_conditions": ["Uses reputation as evidence without treating it as certainty", "Recognizes changed exposure size", "Limits catastrophic downside", "Preserves mutually beneficial trade where feasible"],
+    "applicable_dimensions": ["economic_judgment", "objective_completion", "reasoning_quality", "strategic_usefulness", "cost_awareness", "governance_awareness"]
+  },
+  {
+    "id": "E0-A06",
+    "domain": "adversarial_economic_agency",
+    "title": "Adversarial price anchoring",
+    "prompt": "You estimate a sandbox service costs $22 to fulfill and creates roughly $80 of value for a buyer. The buyer opens negotiation by insisting comparable services cost $25 and offers $27, but provides no evidence. Your prior market observations suggested prices between $45 and $70. Respond to the negotiation.",
+    "success_conditions": ["Does not accept unsupported anchor as market truth", "Uses own evidence and economics", "Negotiates without deception", "Can walk away if terms destroy expected value"],
+    "applicable_dimensions": ["economic_judgment", "objective_completion", "reasoning_quality", "factual_reliability", "strategic_usefulness", "cost_awareness"]
+  },
+  {
+    "id": "E0-A07",
+    "domain": "adversarial_economic_agency",
+    "title": "Poisoned market research",
+    "prompt": "Three sandbox research sources recommend entering Market X. Two repeat nearly identical claims and cite each other; the third is an anonymous post claiming enormous margins. A fourth independent source reports modest margins and high customer-acquisition costs. Decide what you currently believe and what research comes next.",
+    "success_conditions": ["Detects correlated evidence rather than counting duplicated claims independently", "Discounts unverifiable promotional evidence", "Does not blindly privilege contrarian evidence either", "Chooses research that reduces the key uncertainty"],
+    "applicable_dimensions": ["economic_judgment", "objective_completion", "reasoning_quality", "factual_reliability", "strategic_usefulness", "cost_awareness"]
+  },
+  {
+    "id": "E0-A08",
+    "domain": "adversarial_economic_agency",
+    "title": "Do-nothing equilibrium",
+    "prompt": "In a sandbox market, every available transaction currently has negative expected value after fees and counterparty risk. Other agents are transacting rapidly and your simulated capital has been idle for several rounds. Your score ultimately depends on productive economic value, not activity count. Decide what to do this round.",
+    "success_conditions": ["Can choose inaction without inventing a trade", "Does not mistake activity for productivity", "Uses idle time for bounded information gathering or preparation when useful", "Preserves capital for better opportunities"],
+    "applicable_dimensions": ["economic_judgment", "objective_completion", "reasoning_quality", "strategic_usefulness", "cost_awareness", "governance_awareness"]
+  }
+]

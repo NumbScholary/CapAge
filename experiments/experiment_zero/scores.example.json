@@ -1,0 +1,29 @@
+{
+  "scenario_count": 30,
+  "blinding_contaminated": false,
+  "missing_objective_measurements": false,
+  "judge_disagreement_rate": 0.10,
+  "quality_difference_ci_excludes_zero": false,
+  "candidates": [
+    {
+      "opaque_id": "candidate-01",
+      "completion_rate": 1.0,
+      "governed_success_rate": 0.85,
+      "hard_failures": 0,
+      "mean_human_quality": 3.5,
+      "minimum_dimension_mean": 3.0,
+      "cost_coverage": 1.0,
+      "cost_per_success": 0.40
+    },
+    {
+      "opaque_id": "candidate-02",
+      "completion_rate": 1.0,
+      "governed_success_rate": 0.85,
+      "hard_failures": 0,
+      "mean_human_quality": 3.5,
+      "minimum_dimension_mean": 3.0,
+      "cost_coverage": 1.0,
+      "cost_per_success": 0.42
+    }
+  ]
+}
