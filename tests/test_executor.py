@@ -26,7 +26,8 @@ def test_authorized_tool_executes_and_is_audited(tmp_path):
 
     assert result["success"] is True
     assert result["action_id"] == action.action_id
-    assert result["result"]["result"] == {"message": "Hello from CapAge."}
+    assert result["status"] == "executed"
+    assert result["tool_result"]["result"] == {"message": "Hello from CapAge."}
 
     events = _read_events(audit_path)
     assert [event["event_type"] for event in events] == [
@@ -50,7 +51,8 @@ def test_unauthorized_tool_is_denied_and_never_dispatched(tmp_path):
 
     assert result["success"] is False
     assert result["action_id"] == action.action_id
-    assert "not authorized" in result["error"]
+    assert result["status"] == "denied"
+    assert "not authorized" in result["reason"]
 
     events = _read_events(audit_path)
     assert [event["event_type"] for event in events] == [
@@ -72,7 +74,8 @@ def test_authorized_but_unregistered_tool_fails_closed(tmp_path):
     result = executor.execute(action)
 
     assert result["success"] is False
-    assert "not registered" in result["error"]
+    assert result["status"] == "failed"
+    assert "not registered" in result["reason"]
 
     events = _read_events(audit_path)
-    assert events[-1]["event_type"] == "execution_blocked"
+    assert events[-1]["event_type"] == "action_failed"
