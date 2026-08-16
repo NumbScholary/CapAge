@@ -27,11 +27,11 @@ def main() -> None:
     body = {
         "model": sys.argv[1],
         "max_tokens": parameters.get("max_output_tokens", 4096),
+        "thinking": {"type": "adaptive"},
+        "output_config": {"effort": parameters.get("effort", "medium")},
         "system": request.get("context", ""),
         "messages": [{"role": "user", "content": request.get("prompt", "")}],
     }
-    if "temperature" in parameters:
-        body["temperature"] = parameters["temperature"]
 
     http_request = urllib.request.Request(
         "https://api.anthropic.com/v1/messages",
