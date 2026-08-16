@@ -36,6 +36,9 @@ jobs:
           test -n "$ANTHROPIC_API_KEY"
       - name: Confirm candidate models are available
         run: python experiments/experiment_zero/probe_models.py
+      - name: Run requested non-scored provider diagnostic
+        if: hashFiles('experiments/experiment_zero/DIAGNOSTIC_LAUNCH.md') != ''
+        run: python experiments/experiment_zero/diagnose_provider_calls.py
       - name: Validate adapter syntax and runner tests
         run: |
           python -m py_compile experiments/experiment_zero/adapters/*.py
