@@ -10,9 +10,9 @@ import urllib.error
 import urllib.request
 
 
-def fail(message: str) -> None:
+def fail(message: str, exit_code: int = 1) -> None:
     print(message, file=sys.stderr)
-    raise SystemExit(1)
+    raise SystemExit(exit_code)
 
 
 def main() -> None:
@@ -47,9 +47,10 @@ def main() -> None:
         with urllib.request.urlopen(http_request, timeout=150) as response:
             payload = json.load(response)
     except urllib.error.HTTPError as exc:
-        fail(f"Anthropic API HTTP {exc.code}")
+        retryable = exc.code in (408, 409, 429) or exc.code >= 500
+        fail(f"Anthropic API HTTP {exc.code}", 75 if retryable else 1)
     except urllib.error.URLError as exc:
-        fail(f"Anthropic API transport error: {exc.reason}")
+        fail(f"Anthropic API transport error: {exc.reason}", 75)
 
     output = "".join(
         block.get("text", "")
