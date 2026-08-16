@@ -7,7 +7,7 @@ This directory contains the blinded benchmark protocol and provider-neutral runn
 - `PROTOCOL.md` — frozen execution, failure, decision, inconclusive, and reveal rules.
 - `RUBRIC.md` — evaluation dimensions and hard-failure overlay.
 - `scenarios.json` — frozen ten-scenario smoke suite.
-- `adversarial_scenarios.json` and `cooperative_scenarios.json` — development suites until named in a sealed manifest.
+- `adversarial_scenarios.json` and `cooperative_scenarios.json` — frozen adversarial and cooperative portions of the 30-scenario selection suite.
 - `manifest.example.json` — private run-configuration template.
 - `scores.example.json` — locked scoring/measurement input shape for the decision command.
 - `runner.py` — standard-library seal, randomized execution, decision, and reveal tool.
@@ -15,7 +15,7 @@ This directory contains the blinded benchmark protocol and provider-neutral runn
 
 ## Status
 
-**IMPLEMENTED / NOT YET RUN.** The smoke suite can validate the machinery but must return `INCONCLUSIVE`. A model-selection run requires at least 30 frozen scenarios and completed candidate configurations.
+**30-SCENARIO SUITE IMPLEMENTED / NOT YET SEALED OR RUN.** The smoke suite can validate the machinery but must return `INCONCLUSIVE`. The selection suite is complete; exact candidate configurations and adapters must be filled in before sealing.
 
 ## Lifecycle
 

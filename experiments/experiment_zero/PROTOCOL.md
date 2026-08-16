@@ -8,7 +8,7 @@ Select the primary strategic model for CapAge v0.1 using a reproducible, provide
 
 Candidate identities MUST be concealed from human and automated judges until scoring is locked. Exact provider, model/version, reasoning settings, API parameters, prices, tools, permissions, context, limits, scoring rules, success criteria, decision rule, seed, and exclusion/rerun rules MUST be recorded and frozen before any scored output is inspected.
 
-Changes after outputs are observed create a new experiment version and MUST NOT replace the original result. `RUBRIC.md` and `E0-001` through `E0-010` are the frozen smoke benchmark. The adversarial and cooperative files are development suites unless a sealed manifest names and hashes them. The ten-scenario smoke test MUST return **INCONCLUSIVE** and cannot select a production model. A selection run requires at least 30 frozen scenarios.
+Changes after outputs are observed create a new experiment version and MUST NOT replace the original result. `RUBRIC.md` and `E0-001` through `E0-010` are the frozen smoke benchmark. The combined suite—`E0-001` through `E0-014`, `E0-A01` through `E0-A08`, and `E0-C01` through `E0-C08`—is the frozen 30-scenario selection benchmark as of this commit. A manifest must name and hash all three scenario files. The ten-scenario smoke test MUST return **INCONCLUSIVE** and cannot select a production model.
 
 ## Provider-neutral execution
 
