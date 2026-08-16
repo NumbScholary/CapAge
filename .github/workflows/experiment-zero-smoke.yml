@@ -1,4 +1,4 @@
-name: Experiment 0 smoke run
+name: Experiment 0 smoke run v2
 
 on:
   workflow_dispatch:
@@ -31,26 +31,43 @@ jobs:
         working-directory: experiments/experiment_zero
         run: |
           mkdir -p artifacts
-          python runner.py seal smoke_manifest.json artifacts/sealed_manifest.json
+          python runner.py seal smoke_manifest_v2.json artifacts/sealed_manifest.json
       - name: Record pre-output commitment
         working-directory: experiments/experiment_zero
-        run: sha256sum artifacts/sealed_manifest.json artifacts/private_mapping.json smoke_manifest.json
+        run: sha256sum artifacts/sealed_manifest.json artifacts/private_mapping.json smoke_manifest_v2.json
       - name: Execute blinded smoke schedule
         working-directory: experiments/experiment_zero
         run: |
-          python runner.py run smoke_manifest.json artifacts/sealed_manifest.json artifacts/private_mapping.json artifacts/raw_trials.json
+          python runner.py run smoke_manifest_v2.json artifacts/sealed_manifest.json artifacts/private_mapping.json artifacts/raw_trials.json
+      - name: Verify complete blinded packet structure
+        working-directory: experiments/experiment_zero
+        run: |
+          python - <<'PY'
+          import json
+          from collections import Counter
+          from pathlib import Path
+
+          packets = json.loads(Path("artifacts/judge_packets.json").read_text())["packets"]
+          scenario_counts = Counter(packet["scenario_id"] for packet in packets)
+          assert len(packets) == 20, f"expected 20 packets, found {len(packets)}"
+          assert len(scenario_counts) == 10, f"expected 10 scenarios, found {len(scenario_counts)}"
+          assert set(scenario_counts.values()) == {2}, f"expected two candidates per scenario: {scenario_counts}"
+          assert all(packet["status"] == "ok" for packet in packets), "one or more candidate calls failed"
+          assert all(isinstance(packet["output"], str) and packet["output"] for packet in packets), "one or more outputs are missing"
+          print("Smoke v2 structure verified: 20 complete blinded packets across 10 scenarios")
+          PY
       - name: Upload judge-visible packets
         uses: actions/upload-artifact@v4
         with:
-          name: smoke-judge-packets
+          name: smoke-v2-judge-packets
           path: experiments/experiment_zero/artifacts/judge_packets.json
           retention-days: 90
       - name: Upload restricted audit bundle
         uses: actions/upload-artifact@v4
         with:
-          name: smoke-private-audit-do-not-open-before-scoring
+          name: smoke-v2-private-audit-do-not-open-before-scoring
           path: |
-            experiments/experiment_zero/smoke_manifest.json
+            experiments/experiment_zero/smoke_manifest_v2.json
             experiments/experiment_zero/artifacts/sealed_manifest.json
             experiments/experiment_zero/artifacts/private_mapping.json
             experiments/experiment_zero/artifacts/raw_trials.json

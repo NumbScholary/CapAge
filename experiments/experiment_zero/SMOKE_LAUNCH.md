@@ -1,9 +1,7 @@
-# Experiment 0 Smoke Launch — 2026-08-16
+# Experiment 0 Smoke v2 Launch
 
-Owner authorization: recorded in the CapAge working session before launch.
+Launch the corrected, blinded, non-selection smoke run using `smoke_manifest_v2.json` and exactly scenarios E0-001 through E0-010.
 
-This marker triggers exactly one preregistered ten-scenario smoke run using `smoke_manifest.json`.
+The original smoke attempt (workflow run 31940697619) remains preserved as a failed historical attempt: it unintentionally scheduled 14 scenarios and suffered OpenAI provider failures. Smoke v2 does not overwrite or reinterpret those artifacts.
 
-The run validates execution, blinding, cost capture, artifact preservation, and scoring mechanics. By protocol, its outcome is **INCONCLUSIVE** and cannot select CapAge's production model.
-
-Do not modify the manifest, frozen scenarios, rubric, adapters, or runner after this launch marker without creating a new experiment version.
+Smoke v2 must produce exactly 20 complete judge-visible packets: two opaque candidates across ten scenarios. Structural validation must pass before artifacts are accepted.
