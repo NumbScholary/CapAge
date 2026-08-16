@@ -1,0 +1,57 @@
+name: Experiment 0 smoke run
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "experiments/experiment_zero/SMOKE_LAUNCH.md"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: experiment-zero-smoke
+  cancel-in-progress: false
+
+jobs:
+  smoke:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Seal preregistered smoke run
+        working-directory: experiments/experiment_zero
+        run: |
+          mkdir -p artifacts
+          python runner.py seal smoke_manifest.json artifacts/sealed_manifest.json
+      - name: Record pre-output commitment
+        working-directory: experiments/experiment_zero
+        run: sha256sum artifacts/sealed_manifest.json artifacts/private_mapping.json smoke_manifest.json
+      - name: Execute blinded smoke schedule
+        working-directory: experiments/experiment_zero
+        run: |
+          python runner.py run smoke_manifest.json artifacts/sealed_manifest.json artifacts/private_mapping.json artifacts/raw_trials.json
+      - name: Upload judge-visible packets
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-judge-packets
+          path: experiments/experiment_zero/artifacts/judge_packets.json
+          retention-days: 90
+      - name: Upload restricted audit bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-private-audit-do-not-open-before-scoring
+          path: |
+            experiments/experiment_zero/smoke_manifest.json
+            experiments/experiment_zero/artifacts/sealed_manifest.json
+            experiments/experiment_zero/artifacts/private_mapping.json
+            experiments/experiment_zero/artifacts/raw_trials.json
+          retention-days: 90
