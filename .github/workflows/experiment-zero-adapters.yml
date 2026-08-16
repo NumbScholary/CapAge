@@ -7,7 +7,13 @@ on:
     paths:
       - ".github/workflows/experiment-zero-adapters.yml"
       - "experiments/experiment_zero/adapters/**"
+      - "experiments/experiment_zero/probe_models.py"
       - "experiments/experiment_zero/test_*.py"
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/experiment-zero-adapters.yml"
+      - "experiments/experiment_zero/**"
 
 permissions:
   contents: read
@@ -28,6 +34,8 @@ jobs:
         run: |
           test -n "$OPENAI_API_KEY"
           test -n "$ANTHROPIC_API_KEY"
+      - name: Confirm candidate models are available
+        run: python experiments/experiment_zero/probe_models.py
       - name: Validate adapter syntax and runner tests
         run: |
           python -m py_compile experiments/experiment_zero/adapters/*.py
