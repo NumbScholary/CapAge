@@ -1,0 +1,28 @@
+name: Experiment 0 adapter checks
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check-adapters:
+    runs-on: ubuntu-latest
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Confirm repository secrets are available
+        shell: bash
+        run: |
+          test -n "$OPENAI_API_KEY"
+          test -n "$ANTHROPIC_API_KEY"
+      - name: Validate adapter syntax and runner tests
+        run: |
+          python -m py_compile experiments/experiment_zero/adapters/*.py
+          python -m unittest discover -s experiments/experiment_zero -p "test_*.py"
