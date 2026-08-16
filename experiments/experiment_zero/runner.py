@@ -130,14 +130,19 @@ def call_adapter(candidate: dict[str, Any], request: dict[str, Any], timeout: fl
         )
     except subprocess.TimeoutExpired:
         return {"status": "timeout", "latency_seconds": time.monotonic() - started}, "timeout"
+    adapter_status = (
+        "ok" if process.returncode == 0
+        else "retryable_adapter_error" if process.returncode == 75
+        else "adapter_error"
+    )
     record: dict[str, Any] = {
-        "status": "ok" if process.returncode == 0 else "adapter_error",
+        "status": adapter_status,
         "latency_seconds": time.monotonic() - started,
         "returncode": process.returncode,
         "stderr_sha256": digest_bytes(process.stderr),
     }
     if process.returncode != 0:
-        return record, "adapter_error"
+        return record, adapter_status
     try:
         response = json.loads(process.stdout)
     except json.JSONDecodeError:
@@ -182,7 +187,7 @@ def run(args: argparse.Namespace) -> None:
             result, status = call_adapter(candidates[private_id], request, manifest["timeout_seconds"])
             result["attempt"] = attempt
             attempts.append(result)
-            if status == "ok" or status not in ("timeout", "adapter_error"):
+            if status == "ok" or status not in ("timeout", "retryable_adapter_error"):
                 break
         records.append({
             "sequence": sequence, "scenario_id": scenario["id"], "trial": trial,
