@@ -173,3 +173,17 @@ The immediate objective is not to make money.
 The immediate objective is to demonstrate that CapAge can think autonomously, request actions, encounter enforceable authority boundaries, use permitted tools, observe results, and produce a trustworthy record of what happened.
 
 Once that foundation works, economic autonomy can be introduced incrementally and tested empirically.
+
+Current Research Status
+
+Experiment Zero now provides provider-neutral, blinded model evaluation. The corrected Smoke v2 completed 20 judge-visible responses across 10 frozen scenarios and passed its structural completeness gate. Human scoring is pending. Smoke v2 validates the machinery; it is not the final model-selection study.
+
+The next proposed research layers are:
+
+- a separately versioned and frozen 30–50-scenario full model-selection benchmark;
+- a seeded, multi-round sandbox economy for conditional cooperation, adversarial resilience, and exploration/exploitation under scarce capital; and
+- only after single-model evaluation, an empirical test of whether model routing improves governed work per attributable dollar.
+
+These proposals do not modify the Constitution or frozen Experiment Zero artifacts.
+
+See [the reconciled development state](docs/PROJECT_STATE_2026-08-16.md) for the verified repository status, authority hierarchy, preserved failed attempt, and immediate continuation plan.
