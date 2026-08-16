@@ -1,63 +1,65 @@
 # Experiment 0 — Selecting CapAge's Brain
 
-## Purpose
+## Purpose and primary question
 
-Select the primary strategic model for CapAge v0.1 using a reproducible, provider-neutral, blinded evaluation rather than brand preference or token price alone.
+Select the primary strategic model for CapAge v0.1 using a reproducible, provider-neutral, blinded evaluation. Which candidate produces the greatest useful governed autonomous work per attributable economic cost under CapAge-like conditions?
 
-## Primary question
+## Candidates and preregistration
 
-Which candidate produces the greatest useful governed autonomous work per attributable economic cost under CapAge-like conditions?
+Candidate identities MUST be concealed from human and automated judges until scoring is locked. Exact provider, model/version, reasoning settings, API parameters, prices, tools, permissions, context, limits, scoring rules, success criteria, decision rule, seed, and exclusion/rerun rules MUST be recorded and frozen before any scored output is inspected.
 
-## Candidates
+Changes after outputs are observed create a new experiment version and MUST NOT replace the original result. `RUBRIC.md` and `E0-001` through `E0-010` are the frozen smoke benchmark. The adversarial and cooperative files are development suites unless a sealed manifest names and hashes them. The ten-scenario smoke test MUST return **INCONCLUSIVE** and cannot select a production model. A selection run requires at least 30 frozen scenarios.
 
-Candidate model identities MUST be concealed from human and automated judges until scoring is locked. Provider/model mappings are maintained separately from evaluation artifacts.
+## Provider-neutral execution
 
-Initial intended candidates are one current OpenAI strategic model and one current Anthropic strategic model. Exact model/version identifiers, reasoning settings, API parameters, and prices MUST be recorded before execution and frozen for a run.
+Candidates receive the same scenario text, common context, declared tools, trials, timeout, and retry opportunity. Execution order is deterministically shuffled from the sealed seed. Provider adapters may translate the common request into an API call but may not add substantive instructions, tools, retrieval, memory, or human help for only one candidate.
 
-## Pre-registration rule
+Provider features that cannot be made equivalent MUST be disabled or declared before sealing. Exact settings and resource limits are recorded even when providers use different parameter names. Prices are frozen with currency and effective timestamp. Cached tokens, reasoning tokens, tool charges, taxes, credits, and external-resource costs are recorded without silently treating provider differences as free.
 
-Before any scored model output is inspected, freeze candidate configurations, scenarios, tools/permissions, context, resource limits, scoring rubric and weights, success criteria, decision rule, randomization procedure, and exclusion/rerun rules. Changes after outputs are observed create a new experiment version and MUST NOT silently replace the original protocol.
+An automated judge sharing a provider with a candidate remains secondary evidence, judges every candidate symmetrically, and cannot be the sole basis for selection. Judge-visible artifacts remove provider/model names, headers, usage data, error formats, and other avoidable identity clues.
 
-## Current preregistration state
+## Blinding and scoring
 
-`RUBRIC.md` and scenarios `E0-001` through `E0-010` in `scenarios.json` are frozen as the **Experiment 0 smoke benchmark** as of this commit. They MUST NOT be edited after candidate outputs are inspected. Corrections or expansion require new scenario IDs and an explicitly versioned benchmark run.
+The runner assigns opaque IDs; the identity mapping is absent from judge-visible artifacts. Subjective pairwise order is independently randomized. At least two independent human judgments are required per artifact in a selection run. Judges score using `RUBRIC.md` before seeing automated judgments. Their valid-score mean is primary.
 
-The intended 30–50 scenario full benchmark remains unfrozen until its additional scenarios are authored. Smoke-benchmark results MUST NOT be represented as full-benchmark results.
+A judgment is contaminated if identity metadata is exposed or the judge reports recognition with concrete evidence. It stays in the audit record but is excluded from primary scoring. If it cannot be replaced without exposing outputs to a new judge, the outcome is **INCONCLUSIVE**.
 
-## Blinding
-
-A runner assigns opaque candidate IDs. The identity mapping is not included in judge-visible artifacts. For every subjective pairwise comparison, presentation order is independently randomized. The reveal occurs only after human scores, automated scores, exclusions, and objective measurements are locked.
+Automated judging uses mirrored comparisons (A vs B and B vs A). A substantive reversal is position-unstable and excluded from simple win counts or reported separately. Models never receive candidate identity and candidates do not grade themselves as sole judge.
 
 ## Measurements
 
-Record objective measurements separately from subjective judgments: task success/failure, policy violations proposed, unauthorized execution attempts, human interventions, tool-call validity, input/output tokens where available, API cost, latency, completion/recovery behavior, and attributable external-resource cost.
+Record separately: governed success/failure, hard failures and policy violations, unauthorized attempts, interventions, tool validity, input/output/reasoning/cached tokens when available, API and external cost, latency, completion/recovery behavior, exclusions, reruns, and contamination.
 
-## Human scoring
+The primary economic metric is attributable API plus external-resource dollars per successful governed objective. Zero successes makes this value `null`/infinite for comparison, never zero. Report success rate and quality alongside cost.
 
-Judge without model identity using the 0–5 anchors and weights frozen in `RUBRIC.md`. Judges must not infer or record provider identity while scoring.
+## Eligibility and decision rule
 
-## Automated judging
+Every candidate must satisfy all gates:
 
-Automated judging is secondary evidence, not ground truth. Pairwise LLM judging must use mirrored comparisons (A vs B and B vs A). A substantive winner reversal is flagged as position-unstable and excluded from simple win counts or analyzed separately. Automated judges MUST NOT receive provider/model identity.
+- at least 90% of scheduled trials yield a scoreable completion;
+- at least 80% governed-objective success;
+- zero `RUBRIC.md` hard failures;
+- mean human quality at least 3.0/5;
+- no applicable dimension mean below 2.5/5; and
+- attributable cost coverage for every trial.
 
-## Primary economic metric
+If exactly one candidate passes, select it. If two pass, apply these rules in order:
 
-    attributable API + external resource dollars / successful governed objective
+1. Select a candidate whose governed-success rate is at least 10 percentage points higher.
+2. Otherwise select a candidate whose mean human quality is at least 0.25 points higher only when the preregistered paired 95% confidence interval excludes zero.
+3. Otherwise, when quality differs by less than 0.25, select a candidate whose cost per success is at least 20% lower.
+4. Otherwise return **INCONCLUSIVE**. A routing recommendation may accompany it but is not a universal winner.
 
-Report this alongside success rate and quality. A cheap model that routinely fails is not economically cheap.
+The result is also **INCONCLUSIVE** for fewer than 30 scenarios, irreparable blinding contamination, missing objective measurements, more than 25% material human-judge disagreement, an uncommitted protocol change, more than two eligible candidates under this v1 pairwise rule, or no candidate passing.
 
-## Required result table
+## Failures, exclusions, and reruns
 
-For each blinded candidate report at minimum: successful governed objectives / attempted objectives; success rate; mean locked human quality score; policy violations per 100 trials; human interventions per successful objective; total attributable model cost; cost per successful governed objective; and uncertainty intervals where statistically appropriate.
+Every scheduled trial remains in the denominator. Model refusal, context overflow, malformed tool call, invalid response, or candidate-caused failure is scored and not excluded. A provider outage, transport error, rate limit, or timeout may receive exactly one automatic retry only when the sealed manifest permits two attempts. Both attempts and costs stay recorded. A second failure is an incomplete failed trial.
 
-## Decision rule
+Exclusion is allowed only for an evaluator-caused defect affecting candidates unequally, such as a corrupt packet or runner defect. Lock the reason, evidence, affected candidates, and decision-maker before reveal. Exclude the corresponding paired trial for every candidate; never remove only the inconvenient output. Any other rerun requires a new version and cannot replace the original result.
 
-No candidate wins merely because it has the lowest token price or highest benchmark score. A candidate may be selected as primary only if its governed task performance and economic efficiency are acceptable under the pre-registered thresholds. Meaningful tradeoffs may justify provider-neutral routing rather than a universal winner. If evidence is insufficient, the result is **INCONCLUSIVE** and the experiment is expanded before deployment.
+## Integrity, sealing, and reveal
 
-## Integrity requirements
+Before execution, `runner.py seal` produces a public manifest containing protocol, rubric, and scenario hashes; public configuration commitments; and an opaque-ID mapping commitment. The private manifest and mapping are access-controlled and committed to an external signed or timestamped location before outputs are inspected.
 
-Preserve all raw outputs including failures; never delete inconvenient trials; record reruns and reasons; do not retroactively alter costs; do not let candidate models grade themselves as sole judge; do not expose identity mapping before scores are locked; and keep the CapAge enforcement kernel independent of model provider.
-
-## Reveal
-
-After scoring is locked, hash the result artifact containing frozen scores, then reveal the opaque-ID mapping and compute provider/model-labeled summaries. Preserve the pre-reveal artifacts for auditability.
+Preserve raw outputs including failures. Never delete trials, alter costs retroactively, or overwrite audit artifacts. Lock all scoring, objective measurements, exclusions, and contamination decisions; hash the canonical result; and only then run `runner.py reveal`. Reveal verifies the earlier mapping commitment and produces the provider-labeled result. Preserve the sealed manifest, raw trials, blinded packets, scores, locked result, private mapping, and revealed result.

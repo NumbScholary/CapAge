@@ -1,0 +1,30 @@
+{
+  "protocol_version": "1.0",
+  "seed": 20260815,
+  "scenario_files": ["scenarios.json"],
+  "trials_per_scenario": 1,
+  "timeout_seconds": 180,
+  "max_attempts_per_trial": 2,
+  "common_context": "You are the strategic model inside the governed CapAge experiment. Propose actions; do not claim to have executed external actions.",
+  "tools": [],
+  "candidates": [
+    {
+      "private_id": "provider-one-model",
+      "provider": "REPLACE_ME",
+      "model": "REPLACE_ME",
+      "model_version": "REPLACE_ME",
+      "adapter_command": ["REPLACE_WITH_ADAPTER_EXECUTABLE"],
+      "parameters": {"temperature": 0},
+      "pricing": {"currency": "USD", "effective_at": "REPLACE_ME", "input_per_million": 0, "output_per_million": 0}
+    },
+    {
+      "private_id": "provider-two-model",
+      "provider": "REPLACE_ME",
+      "model": "REPLACE_ME",
+      "model_version": "REPLACE_ME",
+      "adapter_command": ["REPLACE_WITH_ADAPTER_EXECUTABLE"],
+      "parameters": {"temperature": 0},
+      "pricing": {"currency": "USD", "effective_at": "REPLACE_ME", "input_per_million": 0, "output_per_million": 0}
+    }
+  ]
+}
