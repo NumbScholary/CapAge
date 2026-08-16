@@ -3,7 +3,7 @@ name: Experiment 0 adapter checks
 on:
   workflow_dispatch:
   push:
-    branches: [agent/experiment-zero]
+    branches: [main]
     paths:
       - ".github/workflows/experiment-zero-adapters.yml"
       - "experiments/experiment_zero/adapters/**"
