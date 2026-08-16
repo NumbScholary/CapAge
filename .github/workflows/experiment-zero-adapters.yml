@@ -2,6 +2,12 @@ name: Experiment 0 adapter checks
 
 on:
   workflow_dispatch:
+  push:
+    branches: [agent/experiment-zero]
+    paths:
+      - ".github/workflows/experiment-zero-adapters.yml"
+      - "experiments/experiment_zero/adapters/**"
+      - "experiments/experiment_zero/test_*.py"
 
 permissions:
   contents: read
