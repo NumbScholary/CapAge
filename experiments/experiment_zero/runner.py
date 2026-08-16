@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parent
-SCENARIO_FILES = ("scenarios.json", "adversarial_scenarios.json", "cooperative_scenarios.json")
+SCENARIO_FILES = ("scenarios.json", "smoke_scenarios_v2.json", "adversarial_scenarios.json", "cooperative_scenarios.json")
 
 
 def canonical(value: Any) -> bytes:
