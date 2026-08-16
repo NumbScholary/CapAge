@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sys
 import urllib.error
 import urllib.request
@@ -13,6 +14,14 @@ import urllib.request
 def fail(message: str, exit_code: int = 1) -> None:
     print(message, file=sys.stderr)
     raise SystemExit(exit_code)
+
+
+def safe_error_label(value: object) -> str:
+    """Return a log-safe provider error label without account or request data."""
+    if not isinstance(value, str):
+        return "unknown"
+    cleaned = re.sub(r"[^A-Za-z0-9_.-]", "_", value)
+    return cleaned[:80] or "unknown"
 
 
 def main() -> None:
@@ -47,8 +56,20 @@ def main() -> None:
         with urllib.request.urlopen(http_request, timeout=150) as response:
             payload = json.load(response)
     except urllib.error.HTTPError as exc:
+        error_code = "unknown"
+        error_type = "unknown"
+        try:
+            error_payload = json.loads(exc.read().decode("utf-8", errors="replace"))
+            error = error_payload.get("error", {})
+            error_code = safe_error_label(error.get("code"))
+            error_type = safe_error_label(error.get("type"))
+        except (json.JSONDecodeError, AttributeError, TypeError):
+            pass
         retryable = exc.code in (408, 409, 429) or exc.code >= 500
-        fail(f"OpenAI API HTTP {exc.code}", 75 if retryable else 1)
+        fail(
+            f"OpenAI API HTTP {exc.code} code={error_code} type={error_type}",
+            75 if retryable else 1,
+        )
     except urllib.error.URLError as exc:
         fail(f"OpenAI API transport error: {exc.reason}", 75)
 
