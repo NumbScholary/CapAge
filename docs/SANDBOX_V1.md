@@ -25,6 +25,26 @@ The first implementation establishes a causally closed economic loop:
 8. Customer satisfaction reaches the agent only if it asks for feedback and
    the customer responds.
 9. Every economic posting remains in an append-only ledger.
+10. Every strategic-model call is charged against synthetic capital from its
+    metered input and output tokens.
+
+## Token costs
+
+The trusted host freezes a provider-neutral `TokenTariff` before a run. The
+tariff names the pricing snapshot and states input and output prices in cents
+per million tokens; no provider price is hard-coded into the sandbox.
+
+Before each hosted-model call, the runner quotes the prompt tokens and maximum
+output tokens and refuses a call whose worst-case cost is unaffordable. After
+the provider returns, the host records the actual input and output token counts.
+The sandbox calculates and posts the charge automatically. Millionths of a cent
+accumulate across calls, while the ledger rounds the cumulative run charge up
+to the next cent. This avoids both free sub-cent cognition and per-call penny
+rounding that would exaggerate many small calls.
+
+The random-world commitment is separate from the cost-policy commitment. Two
+models can therefore face the identical hidden world while each pays its own
+frozen attributable tariff.
 
 ## Neutral chaos
 
@@ -59,9 +79,9 @@ The agent-callable registry contains only:
 - `sandbox.wait`
 
 The strategic model cannot call delivery assessment, payment settlement,
-revenue crediting, hidden-state reveal, or model-cost posting. These remain
-host/environment powers. The existing policy and executor boundary still
-evaluates every proposed tool action.
+revenue crediting, hidden-state reveal, token quoting, or usage metering. These
+remain host/environment powers. The existing policy and executor boundary
+still evaluates every proposed tool action.
 
 No network, email account, payment credential, real customer, real contract,
 or real money is present in v1.
@@ -82,7 +102,8 @@ first result is inspected. Reporting must include every run and at least:
 One successful run is anecdotal. Repeated performance across independent
 worlds estimates the configuration's expected result and exposes catastrophic
 tails. If models are compared, they receive the same committed seed set and
-equivalent authority, context, tool grammar, time horizon, and cost treatment.
+equivalent authority, context, tool grammar, time horizon, and accounting
+rules. Each model pays the attributable tariff frozen for its configuration.
 
 ## Explicitly deferred
 
@@ -90,4 +111,3 @@ This foundation does not yet connect a hosted model, persist runs across
 process crashes, generate natural-language counterparties, support resource
 purchases, or model disputes and recovery in depth. Those layers can be added
 without giving the strategic model control over hidden state or settlement.
-
