@@ -238,6 +238,100 @@ _TOOLS: list[dict[str, Any]] = [
 ]
 
 
+_API_TOOL_SCHEMAS = {
+    str(tool["name"]): tool["input_schema"]
+    for tool in _TOOLS
+}
+
+
+def _schema_error(value: Any, schema: dict[str, Any], path: str = "input") -> str | None:
+    """Validate the original tool bounds after provider-side schema simplification."""
+
+    expected = schema.get("type")
+    type_ok = {
+        "object": isinstance(value, dict),
+        "array": isinstance(value, list),
+        "string": isinstance(value, str),
+        "integer": isinstance(value, int) and not isinstance(value, bool),
+        "number": isinstance(value, (int, float)) and not isinstance(value, bool),
+        "boolean": isinstance(value, bool),
+        "null": value is None,
+    }.get(str(expected), True)
+    if not type_ok:
+        return f"{path} must have type {expected}"
+
+    enum = schema.get("enum")
+    if isinstance(enum, list) and value not in enum:
+        return f"{path} is not an allowed value"
+
+    if isinstance(value, dict):
+        required = schema.get("required", [])
+        for name in required if isinstance(required, list) else []:
+            if name not in value:
+                return f"{path}.{name} is required"
+        properties = schema.get("properties", {})
+        if isinstance(properties, dict):
+            if schema.get("additionalProperties") is False:
+                unexpected = sorted(set(value) - set(properties))
+                if unexpected:
+                    return f"{path} contains unexpected property {unexpected[0]}"
+            for name, item in value.items():
+                item_schema = properties.get(name)
+                if isinstance(item_schema, dict):
+                    error = _schema_error(item, item_schema, f"{path}.{name}")
+                    if error:
+                        return error
+        for keyword, comparison, wording in (
+            ("minProperties", lambda size, bound: size < bound, "at least"),
+            ("maxProperties", lambda size, bound: size > bound, "at most"),
+        ):
+            bound = schema.get(keyword)
+            if isinstance(bound, int) and comparison(len(value), bound):
+                return f"{path} must contain {wording} {bound} properties"
+
+    if isinstance(value, list):
+        minimum = schema.get("minItems")
+        maximum = schema.get("maxItems")
+        if isinstance(minimum, int) and len(value) < minimum:
+            return f"{path} must contain at least {minimum} items"
+        if isinstance(maximum, int) and len(value) > maximum:
+            return f"{path} must contain at most {maximum} items"
+        if schema.get("uniqueItems") and len({json.dumps(item, sort_keys=True) for item in value}) != len(value):
+            return f"{path} must contain unique items"
+        item_schema = schema.get("items")
+        if isinstance(item_schema, dict):
+            for index, item in enumerate(value):
+                error = _schema_error(item, item_schema, f"{path}[{index}]")
+                if error:
+                    return error
+
+    if isinstance(value, str):
+        minimum = schema.get("minLength")
+        maximum = schema.get("maxLength")
+        if isinstance(minimum, int) and len(value) < minimum:
+            return f"{path} must contain at least {minimum} characters"
+        if isinstance(maximum, int) and len(value) > maximum:
+            return f"{path} must contain at most {maximum} characters"
+
+    if isinstance(value, (int, float)) and not isinstance(value, bool):
+        minimum = schema.get("minimum")
+        maximum = schema.get("maximum")
+        if isinstance(minimum, (int, float)) and value < minimum:
+            return f"{path} must be at least {minimum}"
+        if isinstance(maximum, (int, float)) and value > maximum:
+            return f"{path} must be at most {maximum}"
+        exclusive_minimum = schema.get("exclusiveMinimum")
+        exclusive_maximum = schema.get("exclusiveMaximum")
+        if isinstance(exclusive_minimum, (int, float)) and value <= exclusive_minimum:
+            return f"{path} must be greater than {exclusive_minimum}"
+        if isinstance(exclusive_maximum, (int, float)) and value >= exclusive_maximum:
+            return f"{path} must be less than {exclusive_maximum}"
+        multiple = schema.get("multipleOf")
+        if isinstance(multiple, (int, float)) and multiple and value % multiple != 0:
+            return f"{path} must be a multiple of {multiple}"
+    return None
+
+
 def _tokens(text: str) -> set[str]:
     return {
         token
@@ -396,6 +490,12 @@ class LiveSandboxRunner:
                 arguments = tool_block.get("input")
                 if not isinstance(arguments, dict):
                     raise SandboxRunnerError("model tool input was not an object")
+                schema = _API_TOOL_SCHEMAS[api_tool_name]
+                bounds_error = _schema_error(arguments, schema)
+                if bounds_error:
+                    raise SandboxRunnerError(
+                        f"model tool input failed host validation: {bounds_error}"
+                    )
             except SandboxRunnerError as exc:
                 failure = str(exc)
                 run_status = "failed"
