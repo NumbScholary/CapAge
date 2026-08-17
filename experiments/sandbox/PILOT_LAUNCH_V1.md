@@ -13,3 +13,5 @@ The pilot has no network tools, real customers, payment credentials, contracts,
 or authority outside the synthetic world. Its result is evidence for runner
 debugging, not evidence of reliable economic performance. No additional seed
 may be launched until this transcript and its metering are inspected.
+
+Launch nonce: `2026-08-17T18:16Z`.
