@@ -71,7 +71,7 @@ class AnthropicMessagesClient:
             with self._urlopen(request, timeout=self._timeout_seconds) as response:
                 payload = json.load(response)
         except urllib.error.HTTPError as exc:
-            raise AnthropicAPIError(f"Anthropic API returned HTTP {exc.code}") from exc
+            raise AnthropicAPIError(self._http_error_message(exc)) from exc
         except urllib.error.URLError as exc:
             raise AnthropicAPIError(
                 f"Anthropic API transport failure: {exc.reason}"
@@ -82,3 +82,33 @@ class AnthropicMessagesClient:
         if not isinstance(payload, dict):
             raise AnthropicAPIError("Anthropic API returned a non-object payload")
         return payload
+
+    def _http_error_message(self, exc: urllib.error.HTTPError) -> str:
+        """Extract bounded provider diagnostics without exposing credentials."""
+
+        error_type = ""
+        error_message = ""
+        request_id = ""
+        try:
+            raw = exc.read(4096).decode("utf-8", errors="replace")
+            payload = json.loads(raw)
+            if isinstance(payload, dict):
+                error = payload.get("error")
+                if isinstance(error, dict):
+                    error_type = str(error.get("type", "")).strip()
+                    error_message = str(error.get("message", "")).strip()
+                request_id = str(payload.get("request_id", "")).strip()
+        except (AttributeError, json.JSONDecodeError, OSError):
+            pass
+        if not request_id and exc.headers is not None:
+            request_id = str(exc.headers.get("request-id", "")).strip()
+
+        pieces = [f"Anthropic API returned HTTP {exc.code}"]
+        if error_type:
+            pieces.append(error_type[:120])
+        if error_message:
+            pieces.append(error_message[:1000])
+        if request_id:
+            pieces.append(f"request_id={request_id[:160]}")
+        sanitized = ": ".join(pieces)
+        return sanitized.replace(self._api_key, "[redacted]")
