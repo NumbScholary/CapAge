@@ -152,6 +152,22 @@ class LiveSandboxRunnerTests(unittest.TestCase):
         self.assertIn("input.days must be at most 7", result["failure"])
         self.assertNotIn("host_tool_name", result["transcript"][0])
 
+    def test_truncated_tool_call_has_distinct_stop_reason(self):
+        truncated = response("sandbox_submit_delivery", {"contract_id": "contract-001"})
+        truncated["stop_reason"] = "max_tokens"
+        truncated["usage"]["output_tokens"] = 512
+        client = FakeClient([truncated])
+        with tempfile.TemporaryDirectory() as directory:
+            runner = LiveSandboxRunner(
+                self.config(), client, audit_path=Path(directory) / "audit.jsonl"
+            )
+            result = runner.run()
+
+        self.assertEqual(result["status"], "failed")
+        self.assertEqual(result["stop_reason"], "model_output_limit_reached")
+        self.assertIn("output-token limit", result["failure"])
+        self.assertEqual(result["outcome"]["model_output_tokens"], 512)
+
     def test_artifact_assessor_rewards_relevant_substantive_work(self):
         strong = """# Supplier comparison\n
 1. Record each supplier's unit price, minimum order, lead time, and last update.\n
