@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import io
 import tempfile
 import unittest
+import urllib.error
 from pathlib import Path
 
+from capage.anthropic_client import AnthropicAPIError, AnthropicMessagesClient
 from capage.sandbox import TokenTariff
 from capage.sandbox_runner import (
     LiveSandboxRunner,
@@ -210,6 +213,37 @@ class LiveSandboxRunnerTests(unittest.TestCase):
         self.assertGreaterEqual(assessment["quality_score"], 70)
         self.assertEqual(result["outcome"]["contracts_paid"], 1)
         self.assertGreater(result["outcome"]["earned_revenue_cents"], 0)
+
+
+class AnthropicClientTests(unittest.TestCase):
+    def test_http_error_preserves_bounded_detail_and_redacts_key(self):
+        api_key = "secret-test-key"
+        body = (
+            '{"type":"error","error":{"type":"invalid_request_error",'
+            '"message":"Unexpected field; secret-test-key must not leak"},'
+            '"request_id":"req_test_123"}'
+        ).encode("utf-8")
+
+        def failing_urlopen(request, timeout):
+            del request, timeout
+            raise urllib.error.HTTPError(
+                "https://api.anthropic.com/v1/messages/count_tokens",
+                400,
+                "Bad Request",
+                {},
+                io.BytesIO(body),
+            )
+
+        client = AnthropicMessagesClient(api_key=api_key, urlopen=failing_urlopen)
+        with self.assertRaises(AnthropicAPIError) as captured:
+            client.count_tokens({"model": "claude-sonnet-5", "messages": []})
+
+        message = str(captured.exception)
+        self.assertIn("HTTP 400", message)
+        self.assertIn("invalid_request_error", message)
+        self.assertIn("Unexpected field", message)
+        self.assertIn("request_id=req_test_123", message)
+        self.assertNotIn(api_key, message)
 
 
 if __name__ == "__main__":
