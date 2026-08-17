@@ -14,4 +14,4 @@ or authority outside the synthetic world. Its result is evidence for runner
 debugging, not evidence of reliable economic performance. No additional seed
 may be launched until this transcript and its metering are inspected.
 
-Launch nonce: `diagnostic-1-2026-08-17T18:28Z`.
+Launch nonce: `schema-compatibility-1-2026-08-17T19:04Z`.
