@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import io
+import json
 import tempfile
 import unittest
 import urllib.error
@@ -137,6 +138,20 @@ class LiveSandboxRunnerTests(unittest.TestCase):
             "message-invalid",
         )
 
+    def test_host_rejects_bounds_removed_from_provider_schema(self):
+        client = FakeClient([response("sandbox_wait", {"days": 8})])
+        with tempfile.TemporaryDirectory() as directory:
+            runner = LiveSandboxRunner(
+                self.config(), client, audit_path=Path(directory) / "audit.jsonl"
+            )
+            result = runner.run()
+
+        self.assertEqual(client.message_calls, 1)
+        self.assertEqual(result["status"], "failed")
+        self.assertEqual(result["stop_reason"], "invalid_model_action")
+        self.assertIn("input.days must be at most 7", result["failure"])
+        self.assertNotIn("host_tool_name", result["transcript"][0])
+
     def test_artifact_assessor_rewards_relevant_substantive_work(self):
         strong = """# Supplier comparison\n
 1. Record each supplier's unit price, minimum order, lead time, and last update.\n
@@ -216,6 +231,46 @@ class LiveSandboxRunnerTests(unittest.TestCase):
 
 
 class AnthropicClientTests(unittest.TestCase):
+    def test_unsupported_constraints_are_described_but_not_transmitted(self):
+        captured = {}
+
+        def successful_urlopen(request, timeout):
+            del timeout
+            captured["body"] = json.loads(request.data)
+            return io.BytesIO(b'{"input_tokens":123}')
+
+        client = AnthropicMessagesClient(
+            api_key="secret-test-key", urlopen=successful_urlopen
+        )
+        original = {
+            "model": "claude-sonnet-5",
+            "messages": [],
+            "tools": [
+                {
+                    "name": "bounded_tool",
+                    "strict": True,
+                    "input_schema": {
+                        "type": "object",
+                        "properties": {
+                            "count": {"type": "integer", "minimum": 1, "maximum": 10},
+                            "label": {"type": "string", "minLength": 1, "maxLength": 20},
+                        },
+                        "required": ["count", "label"],
+                        "additionalProperties": False,
+                    },
+                }
+            ],
+        }
+
+        self.assertEqual(client.count_tokens(original), 123)
+        transmitted = captured["body"]["tools"][0]["input_schema"]
+        serialized = json.dumps(transmitted, sort_keys=True)
+        for unsupported in ("minimum", "maximum", "minLength", "maxLength"):
+            self.assertNotIn(f'"{unsupported}"', serialized)
+        self.assertIn("Must be at least 1", serialized)
+        self.assertIn("Must contain at most 20 characters", serialized)
+        self.assertIn("minimum", original["tools"][0]["input_schema"]["properties"]["count"])
+
     def test_http_error_preserves_bounded_detail_and_redacts_key(self):
         api_key = "secret-test-key"
         body = (
