@@ -480,6 +480,11 @@ class LiveSandboxRunner:
                 break
 
             try:
+                if response.get("stop_reason") == "max_tokens":
+                    raise SandboxRunnerError(
+                        "provider response reached the output-token limit before "
+                        "completing a valid action"
+                    )
                 tool_block = self._one_tool_block(response)
                 api_tool_name = str(tool_block.get("name", ""))
                 host_tool_name = _API_TO_HOST_TOOL.get(api_tool_name)
@@ -499,7 +504,11 @@ class LiveSandboxRunner:
             except SandboxRunnerError as exc:
                 failure = str(exc)
                 run_status = "failed"
-                stop_reason = "invalid_model_action"
+                stop_reason = (
+                    "model_output_limit_reached"
+                    if response.get("stop_reason") == "max_tokens"
+                    else "invalid_model_action"
+                )
                 record["metered_usage"] = usage
                 record["failure"] = failure
                 self.transcript.append(record)
