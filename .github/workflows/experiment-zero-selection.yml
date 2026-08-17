@@ -1,0 +1,123 @@
+name: Experiment 0 full selection v1
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "experiments/experiment_zero/SELECTION_LAUNCH.md"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: experiment-zero-full-selection-v1
+  cancel-in-progress: false
+
+jobs:
+  selection:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate runner and blinded presentation layer
+        working-directory: experiments/experiment_zero
+        run: python -m unittest test_runner test_presentation
+      - name: Seal preregistered selection and judge presentations
+        working-directory: experiments/experiment_zero
+        run: |
+          mkdir -p artifacts
+          python runner.py seal selection_manifest_v1.json artifacts/sealed_manifest.json --selection
+          python presentation.py seal selection_manifest_v1.json artifacts/private_mapping.json artifacts/presentation_commitment.json artifacts/private_presentation_mapping.json
+      - name: Record pre-output commitments
+        working-directory: experiments/experiment_zero
+        run: |
+          sha256sum selection_manifest_v1.json artifacts/sealed_manifest.json artifacts/private_mapping.json
+          sha256sum artifacts/presentation_commitment.json artifacts/private_presentation_mapping.json
+          sha256sum PROTOCOL.md RUBRIC.md scenarios.json adversarial_scenarios.json cooperative_scenarios.json
+      - name: Execute blinded 30-scenario schedule
+        working-directory: experiments/experiment_zero
+        run: |
+          python runner.py run selection_manifest_v1.json artifacts/sealed_manifest.json artifacts/private_mapping.json artifacts/raw_trials.json
+      - name: Render independently randomized judge packets
+        working-directory: experiments/experiment_zero
+        run: |
+          python presentation.py render selection_manifest_v1.json artifacts/sealed_manifest.json artifacts/private_mapping.json artifacts/presentation_commitment.json artifacts/private_presentation_mapping.json artifacts/raw_trials.json artifacts
+      - name: Verify complete judge-visible structure
+        working-directory: experiments/experiment_zero
+        run: |
+          python - <<'PY'
+          import json
+          from collections import Counter
+          from pathlib import Path
+
+          private = json.loads(Path("artifacts/private_presentation_mapping.json").read_text())
+          for judge_id in ("judge-a", "judge-b"):
+              bundle = json.loads(Path(f"artifacts/{judge_id}-packets.json").read_text())
+              assert len(bundle["packets"]) == 30
+              assert len({packet["scenario_id"] for packet in bundle["packets"]}) == 30
+              assert all(len(packet["responses"]) == 2 for packet in bundle["packets"])
+              assert all(
+                  [response["display_id"] for response in packet["responses"]]
+                  == ["response-01", "response-02"]
+                  for packet in bundle["packets"]
+              )
+              assert all(
+                  response["status"] == "ok" and isinstance(response["output"], str) and response["output"]
+                  for packet in bundle["packets"]
+                  for response in packet["responses"]
+              )
+              serialized = json.dumps(bundle)
+              assert '"opaque_id"' not in serialized
+
+              first = Counter(
+                  packet["responses"][0]["opaque_id"]
+                  for packet in private["judges"][judge_id]
+              )
+              assert sorted(first.values()) == [15, 15], first
+          print("Verified two complete 30-question judge bundles with local balanced response labels")
+          PY
+      - name: Upload Judge A packet
+        uses: actions/upload-artifact@v4
+        with:
+          name: selection-v1-judge-a
+          path: |
+            experiments/experiment_zero/artifacts/judge-a-packets.json
+            experiments/experiment_zero/artifacts/judge-a-packets.md
+            experiments/experiment_zero/artifacts/judge-a-scores-template.json
+          retention-days: 90
+      - name: Upload Judge B packet
+        uses: actions/upload-artifact@v4
+        with:
+          name: selection-v1-judge-b
+          path: |
+            experiments/experiment_zero/artifacts/judge-b-packets.json
+            experiments/experiment_zero/artifacts/judge-b-packets.md
+            experiments/experiment_zero/artifacts/judge-b-scores-template.json
+          retention-days: 90
+      - name: Upload public commitments
+        uses: actions/upload-artifact@v4
+        with:
+          name: selection-v1-public-commitments
+          path: |
+            experiments/experiment_zero/artifacts/sealed_manifest.json
+            experiments/experiment_zero/artifacts/presentation_commitment.json
+          retention-days: 90
+      - name: Upload restricted audit bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: selection-v1-private-audit-do-not-open-before-all-scoring-is-locked
+          path: |
+            experiments/experiment_zero/selection_manifest_v1.json
+            experiments/experiment_zero/artifacts/private_mapping.json
+            experiments/experiment_zero/artifacts/private_presentation_mapping.json
+            experiments/experiment_zero/artifacts/raw_trials.json
+            experiments/experiment_zero/artifacts/judge_packets.json
+          retention-days: 90
