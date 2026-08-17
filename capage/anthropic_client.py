@@ -142,7 +142,7 @@ class AnthropicMessagesClient:
             with self._urlopen(request, timeout=self._timeout_seconds) as response:
                 payload = json.load(response)
         except urllib.error.HTTPError as exc:
-            raise AnthropicAPIError(self._http_error_message(exc)) from exc
+            raise AnthropicAPIError(self._http_error_message(exc, path)) from exc
         except urllib.error.URLError as exc:
             raise AnthropicAPIError(
                 f"Anthropic API transport failure: {exc.reason}"
@@ -154,7 +154,7 @@ class AnthropicMessagesClient:
             raise AnthropicAPIError("Anthropic API returned a non-object payload")
         return payload
 
-    def _http_error_message(self, exc: urllib.error.HTTPError) -> str:
+    def _http_error_message(self, exc: urllib.error.HTTPError, path: str) -> str:
         """Extract bounded provider diagnostics without exposing credentials."""
 
         error_type = ""
@@ -174,7 +174,7 @@ class AnthropicMessagesClient:
         if not request_id and exc.headers is not None:
             request_id = str(exc.headers.get("request-id", "")).strip()
 
-        pieces = [f"Anthropic API returned HTTP {exc.code}"]
+        pieces = [f"Anthropic API returned HTTP {exc.code} during {path[:120]}"]
         if error_type:
             pieces.append(error_type[:120])
         if error_message:
