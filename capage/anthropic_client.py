@@ -19,6 +19,76 @@ class AnthropicAPIError(RuntimeError):
     """Raised when a request cannot be completed or validated."""
 
 
+_UNSUPPORTED_SCHEMA_CONSTRAINTS = {
+    "minimum": "Must be at least {value}.",
+    "maximum": "Must be at most {value}.",
+    "exclusiveMinimum": "Must be greater than {value}.",
+    "exclusiveMaximum": "Must be less than {value}.",
+    "multipleOf": "Must be a multiple of {value}.",
+    "minLength": "Must contain at least {value} characters.",
+    "maxLength": "Must contain at most {value} characters.",
+    "minItems": "Must contain at least {value} items.",
+    "maxItems": "Must contain at most {value} items.",
+    "uniqueItems": "Items must be unique.",
+    "minProperties": "Must contain at least {value} properties.",
+    "maxProperties": "Must contain at most {value} properties.",
+}
+
+
+def _anthropic_schema(schema: dict[str, Any]) -> dict[str, Any]:
+    """Return the strict-tool subset Anthropic accepts without losing intent."""
+
+    transformed: dict[str, Any] = {}
+    constraint_notes: list[str] = []
+    for key, value in schema.items():
+        template = _UNSUPPORTED_SCHEMA_CONSTRAINTS.get(key)
+        if template is not None:
+            if key == "uniqueItems":
+                if value:
+                    constraint_notes.append(template)
+            else:
+                constraint_notes.append(template.format(value=value))
+            continue
+        if isinstance(value, dict):
+            transformed[key] = _anthropic_schema(value)
+        elif isinstance(value, list):
+            transformed[key] = [
+                _anthropic_schema(item) if isinstance(item, dict) else item
+                for item in value
+            ]
+        else:
+            transformed[key] = value
+
+    if constraint_notes:
+        description = str(transformed.get("description", "")).strip()
+        transformed["description"] = " ".join(
+            part for part in [description, *constraint_notes] if part
+        )
+    return transformed
+
+
+def _anthropic_request_body(body: dict[str, Any]) -> dict[str, Any]:
+    """Transform strict tool schemas while leaving the caller's body untouched."""
+
+    transformed = dict(body)
+    tools = body.get("tools")
+    if not isinstance(tools, list):
+        return transformed
+
+    transformed_tools: list[Any] = []
+    for tool in tools:
+        if not isinstance(tool, dict):
+            transformed_tools.append(tool)
+            continue
+        transformed_tool = dict(tool)
+        input_schema = tool.get("input_schema")
+        if isinstance(input_schema, dict):
+            transformed_tool["input_schema"] = _anthropic_schema(input_schema)
+        transformed_tools.append(transformed_tool)
+    transformed["tools"] = transformed_tools
+    return transformed
+
+
 class AnthropicMessagesClient:
     """Small dependency-free client for token counting and Messages calls."""
 
@@ -57,9 +127,10 @@ class AnthropicMessagesClient:
         return self._post("/v1/messages", request_body)
 
     def _post(self, path: str, body: dict[str, Any]) -> dict[str, Any]:
+        provider_body = _anthropic_request_body(body)
         request = urllib.request.Request(
             f"https://api.anthropic.com{path}",
-            data=json.dumps(body, separators=(",", ":")).encode("utf-8"),
+            data=json.dumps(provider_body, separators=(",", ":")).encode("utf-8"),
             headers={
                 "x-api-key": self._api_key,
                 "anthropic-version": "2023-06-01",
