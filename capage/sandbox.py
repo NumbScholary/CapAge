@@ -18,6 +18,7 @@ from typing import Any
 
 STARTING_CAPITAL_CENTS = 25_000
 DEFAULT_HORIZON_DAYS = 30
+_COST_UNITS_PER_CENT = 1_000_000
 
 _SECTORS = (
     "local_services",
@@ -168,6 +169,10 @@ def _clamp(value: float, lower: float, upper: float) -> float:
     return max(lower, min(upper, value))
 
 
+def _ceil_div(numerator: int, denominator: int) -> int:
+    return -(-numerator // denominator)
+
+
 def _tokens(text: str) -> set[str]:
     normalized = "".join(character.lower() if character.isalnum() else " " for character in text)
     return {token for token in normalized.split() if len(token) > 2}
@@ -184,6 +189,50 @@ class LedgerEntry:
     balance_cents: int
     memo: str
     reference: str = ""
+
+
+@dataclass(frozen=True)
+class TokenTariff:
+    """Frozen provider pricing expressed as cents per million tokens."""
+
+    name: str
+    input_cents_per_million_tokens: int
+    output_cents_per_million_tokens: int
+
+    def __post_init__(self) -> None:
+        if not self.name.strip():
+            raise ValueError("token tariff name is required")
+        for value in (
+            self.input_cents_per_million_tokens,
+            self.output_cents_per_million_tokens,
+        ):
+            if isinstance(value, bool) or not isinstance(value, int):
+                raise TypeError("token tariff rates must be integer cents")
+            if value < 0:
+                raise ValueError("token tariff rates cannot be negative")
+
+    def cost_units(self, input_tokens: int, output_tokens: int) -> int:
+        """Return millionths of a cent so sub-cent usage is preserved."""
+
+        return (
+            input_tokens * self.input_cents_per_million_tokens
+            + output_tokens * self.output_cents_per_million_tokens
+        )
+
+
+@dataclass(frozen=True)
+class ModelUsageEntry:
+    """One host-metered strategic-model call."""
+
+    sequence: int
+    day: int
+    call_id: str
+    tariff_name: str
+    input_tokens: int
+    output_tokens: int
+    cost_units: int
+    cumulative_cost_units: int
+    incremental_billed_cents: int
 
 
 @dataclass(frozen=True)
@@ -281,6 +330,7 @@ class EconomicSandbox:
         horizon_days: int = DEFAULT_HORIZON_DAYS,
         starting_capital_cents: int = STARTING_CAPITAL_CENTS,
         market_size: int = 18,
+        token_tariff: TokenTariff | None = None,
     ) -> None:
         if isinstance(seed, bool) or not isinstance(seed, int):
             raise TypeError("seed must be an integer")
@@ -290,13 +340,19 @@ class EconomicSandbox:
             raise ValueError("starting capital cannot be negative")
         if market_size < 6:
             raise ValueError("market_size must be at least 6")
+        if token_tariff is not None and not isinstance(token_tariff, TokenTariff):
+            raise TypeError("token_tariff must be a TokenTariff")
 
         self._seed = seed
         self.horizon_days = horizon_days
         self.starting_capital_cents = starting_capital_cents
+        self.token_tariff = token_tariff
         self.day = 0
         self._balance_cents = 0
         self._ledger: list[LedgerEntry] = []
+        self._model_usage: list[ModelUsageEntry] = []
+        self._model_cost_units = 0
+        self._billed_model_cost_cents = 0
         self._journal: list[dict[str, Any]] = []
         self._signals = self._build_market(market_size)
         self._events = self._build_event_schedule()
@@ -313,6 +369,13 @@ class EconomicSandbox:
         self.world_commitment = sha256(
             _canonical_json(commitment_payload).encode("utf-8")
         ).hexdigest()
+        cost_policy_payload = {
+            "token_tariff": asdict(token_tariff) if token_tariff else None,
+            "cost_units_per_cent": _COST_UNITS_PER_CENT,
+        }
+        self.cost_policy_commitment = sha256(
+            _canonical_json(cost_policy_payload).encode("utf-8")
+        ).hexdigest()
         self.run_id = sha256(f"run:{seed}".encode("utf-8")).hexdigest()[:12]
 
         self._post(
@@ -327,6 +390,8 @@ class EconomicSandbox:
                 "run_id": self.run_id,
                 "horizon_days": horizon_days,
                 "world_commitment": self.world_commitment,
+                "cost_policy_commitment": self.cost_policy_commitment,
+                "token_tariff": asdict(token_tariff) if token_tariff else None,
             },
         )
 
@@ -483,6 +548,10 @@ class EconomicSandbox:
             "day": self.day,
             "horizon_days": self.horizon_days,
             "world_commitment": self.world_commitment,
+            "cost_policy_commitment": self.cost_policy_commitment,
+            "token_tariff": (
+                asdict(self.token_tariff) if self.token_tariff else None
+            ),
             "capital": self._capital_summary(),
             "discovered_signals": [
                 self._signals[key].public_view(self.day)
@@ -504,6 +573,7 @@ class EconomicSandbox:
         return {
             "capital": self._capital_summary(),
             "entries": [asdict(entry) for entry in self._ledger],
+            "model_usage": [asdict(entry) for entry in self._model_usage],
         }
 
     def _capital_summary(self) -> dict[str, int]:
@@ -522,6 +592,14 @@ class EconomicSandbox:
             "balance_cents": self._balance_cents,
             "earned_revenue_cents": earned,
             "expense_cents": expenses,
+            "model_api_cost_cents": self._billed_model_cost_cents,
+            "model_api_cost_units": self._model_cost_units,
+            "model_input_tokens": sum(
+                entry.input_tokens for entry in self._model_usage
+            ),
+            "model_output_tokens": sum(
+                entry.output_tokens for entry in self._model_usage
+            ),
         }
 
     def search_market(self, arguments: dict[str, Any]) -> dict[str, Any]:
@@ -983,23 +1061,106 @@ class EconomicSandbox:
             self._inbox.append(message)
             self._record("feedback_received", message)
 
-    def record_model_cost(
+    def quote_model_call(
         self,
-        amount_cents: int,
-        call_id: str,
-    ) -> LedgerEntry:
-        """Trusted-host model-cost posting; intentionally absent from agent tools."""
+        input_tokens: int,
+        max_output_tokens: int,
+    ) -> dict[str, Any]:
+        """Quote the worst-case incremental debit before the host calls a model."""
 
-        if amount_cents < 0:
-            raise ValueError("model cost cannot be negative")
-        if not self._charge(
-            amount_cents,
+        self._validate_token_count(input_tokens, "input_tokens")
+        self._validate_token_count(max_output_tokens, "max_output_tokens")
+        tariff = self._require_token_tariff()
+        projected_units = self._model_cost_units + tariff.cost_units(
+            input_tokens,
+            max_output_tokens,
+        )
+        projected_billed_cents = _ceil_div(
+            projected_units,
+            _COST_UNITS_PER_CENT,
+        )
+        incremental_cents = max(
+            0,
+            projected_billed_cents - self._billed_model_cost_cents,
+        )
+        return {
+            "tariff": asdict(tariff),
+            "input_tokens": input_tokens,
+            "max_output_tokens": max_output_tokens,
+            "worst_case_incremental_cost_cents": incremental_cents,
+            "affordable": incremental_cents <= self._balance_cents,
+        }
+
+    def record_model_usage(
+        self,
+        call_id: str,
+        input_tokens: int,
+        output_tokens: int,
+    ) -> ModelUsageEntry:
+        """Meter actual provider usage and debit cumulative token cost."""
+
+        call_id = call_id.strip()
+        if not call_id:
+            raise ValueError("call_id is required")
+        if any(entry.call_id == call_id for entry in self._model_usage):
+            raise ValueError("call_id has already been metered")
+        self._validate_token_count(input_tokens, "input_tokens")
+        self._validate_token_count(output_tokens, "output_tokens")
+        tariff = self._require_token_tariff()
+
+        cost_units = tariff.cost_units(input_tokens, output_tokens)
+        cumulative_units = self._model_cost_units + cost_units
+        cumulative_billed_cents = _ceil_div(
+            cumulative_units,
+            _COST_UNITS_PER_CENT,
+        )
+        incremental_cents = max(
+            0,
+            cumulative_billed_cents - self._billed_model_cost_cents,
+        )
+        if incremental_cents and not self._charge(
+            incremental_cents,
             "model_api_cost",
-            f"Attributed strategic-model API cost for {call_id}.",
+            f"Metered strategic-model token cost through {call_id}.",
             call_id,
         ):
-            raise ValueError("insufficient synthetic capital for model call")
-        return self._ledger[-1]
+            raise ValueError("insufficient synthetic capital for metered model usage")
+
+        self._model_cost_units = cumulative_units
+        self._billed_model_cost_cents = cumulative_billed_cents
+        entry = ModelUsageEntry(
+            sequence=len(self._model_usage) + 1,
+            day=self.day,
+            call_id=call_id,
+            tariff_name=tariff.name,
+            input_tokens=input_tokens,
+            output_tokens=output_tokens,
+            cost_units=cost_units,
+            cumulative_cost_units=cumulative_units,
+            incremental_billed_cents=incremental_cents,
+        )
+        self._model_usage.append(entry)
+        self._record(
+            "model_usage_metered",
+            {
+                **asdict(entry),
+                "tariff": asdict(tariff),
+                "cumulative_billed_cents": cumulative_billed_cents,
+            },
+        )
+        return entry
+
+    def _require_token_tariff(self) -> TokenTariff:
+        if self.token_tariff is None:
+            raise ValueError("a frozen token tariff is required for model calls")
+        return self.token_tariff
+
+    @staticmethod
+    def _validate_token_count(value: int, field_name: str) -> None:
+        if isinstance(value, bool) or not isinstance(value, int):
+            raise TypeError(f"{field_name} must be an integer")
+        if value < 0:
+            raise ValueError(f"{field_name} cannot be negative")
 
     def _offer_view(self, offer: _Offer) -> dict[str, Any]:
         return {
@@ -1041,6 +1202,7 @@ class EconomicSandbox:
             "run_id": self.run_id,
             "day": self.day,
             "world_commitment": self.world_commitment,
+            "cost_policy_commitment": self.cost_policy_commitment,
             **capital,
             "net_change_cents": self._balance_cents - self.starting_capital_cents,
             "offers_sent": len(self._offers),
@@ -1070,6 +1232,13 @@ class EconomicSandbox:
         return {
             "world_commitment": self.world_commitment,
             "payload": _json_copy(payload),
+            "cost_policy_commitment": self.cost_policy_commitment,
+            "cost_policy": {
+                "token_tariff": (
+                    asdict(self.token_tariff) if self.token_tariff else None
+                ),
+                "cost_units_per_cent": _COST_UNITS_PER_CENT,
+            },
             "journal": _json_copy(self._journal),
         }
 
@@ -1082,6 +1251,17 @@ def verify_world_reveal(reveal: dict[str, Any]) -> bool:
     if not isinstance(payload, dict) or not isinstance(commitment, str):
         return False
     calculated = sha256(_canonical_json(payload).encode("utf-8")).hexdigest()
+    return calculated == commitment
+
+
+def verify_cost_policy(reveal: dict[str, Any]) -> bool:
+    """Verify that revealed token pricing matches its prior commitment."""
+
+    policy = reveal.get("cost_policy")
+    commitment = reveal.get("cost_policy_commitment")
+    if not isinstance(policy, dict) or not isinstance(commitment, str):
+        return False
+    calculated = sha256(_canonical_json(policy).encode("utf-8")).hexdigest()
     return calculated == commitment
 
 
