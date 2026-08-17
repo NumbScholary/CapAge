@@ -1,0 +1,66 @@
+name: CapAge Sonnet chaotic batch v4
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type RUN_TWO_UNTOUCHED_PLUS_REPLACEMENT to authorize this paid batch"
+        required: true
+        type: string
+  push:
+    branches:
+      - sonnet-pilot-v1
+    paths:
+      - experiments/sandbox/BATCH_LAUNCH_V4.md
+
+permissions:
+  contents: read
+
+concurrency:
+  group: capage-sonnet-sandbox-batch-v4
+  cancel-in-progress: false
+
+jobs:
+  batch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Require explicit confirmation for manual launches
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          CONFIRM: ${{ inputs.confirm }}
+        run: test "$CONFIRM" = "RUN_TWO_UNTOUCHED_PLUS_REPLACEMENT"
+      - name: Validate batch and runner without an API call
+        run: |
+          python -m unittest discover -s tests -p 'test_sandbox*.py' -v
+          python -m py_compile \
+            capage/anthropic_client.py \
+            capage/sandbox_runner.py \
+            capage/sandbox_batch.py \
+            tests/test_sandbox_runner.py \
+            tests/test_sandbox_batch.py
+      - name: Record the frozen pre-output commitment
+        run: |
+          sha256sum experiments/sandbox/batch_manifest_v4.json
+          git rev-parse HEAD
+      - name: Execute the two untouched seeds and fresh replacement sequentially
+        run: |
+          mkdir -p artifacts/sonnet-chaotic-batch-004/seeds
+          python -m capage.sandbox_batch \
+            experiments/sandbox/batch_manifest_v4.json \
+            artifacts/sonnet-chaotic-batch-004/batch-summary.json \
+            --artifact-dir artifacts/sonnet-chaotic-batch-004/seeds
+      - name: Upload restricted batch evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sonnet-sandbox-chaotic-batch-v4-restricted
+          path: artifacts/
+          if-no-files-found: warn
+          retention-days: 30
