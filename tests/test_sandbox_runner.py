@@ -311,6 +311,7 @@ class AnthropicClientTests(unittest.TestCase):
 
         message = str(captured.exception)
         self.assertIn("HTTP 400", message)
+        self.assertIn("/v1/messages/count_tokens", message)
         self.assertIn("invalid_request_error", message)
         self.assertIn("Unexpected field", message)
         self.assertIn("request_id=req_test_123", message)
