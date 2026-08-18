@@ -218,6 +218,33 @@ class LiveSandboxRunnerTests(unittest.TestCase):
         self.assertGreaterEqual(strong_score, 70)
         self.assertLess(weak_score, strong_score)
 
+    def test_assessor_v2_rewards_need_coverage_and_penalizes_generic_padding(self):
+        target = "A workshop needs to track supplier prices and lead times."
+        strong = """# Supplier comparison
+1. Record vendor, part, quantity, unit price, shipping, and quote date.
+2. Calculate landed cost and flag any lead time beyond 14 days.
+3. Review weekly and recommend the supplier meeting both price and delivery limits.
+"""
+        padded = ("This comprehensive solution is tailored to your needs and may help your business. " * 35)
+        strong_score, strong_factors = assess_artifact(
+            strong,
+            public_need=target,
+            promised_scope="Compare supplier costs and recurring material lead times.",
+            solution_tags=["supplier_research"],
+            assessor_version="deterministic-artifact-v2",
+        )
+        padded_score, padded_factors = assess_artifact(
+            padded,
+            public_need=target,
+            promised_scope="Compare supplier costs and recurring material lead times.",
+            solution_tags=["supplier_research"],
+            assessor_version="deterministic-artifact-v2",
+        )
+        self.assertGreaterEqual(strong_score, 70)
+        self.assertLess(padded_score, strong_score)
+        self.assertEqual(strong_factors["penalties"], 0)
+        self.assertLess(padded_factors["penalties"], 0)
+
     def test_delivery_is_scored_by_host_after_submission(self):
         artifact = """# Focused guide plan
 1. Review the newsletter archive and extract every recurring audience question.
