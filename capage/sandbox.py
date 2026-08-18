@@ -12,6 +12,7 @@ from dataclasses import asdict, dataclass
 from hashlib import sha256
 import json
 import random
+import re
 from statistics import fmean, median, pstdev
 from typing import Any
 
@@ -143,6 +144,117 @@ _MARKET_TEMPLATES = (
     ),
 )
 
+_TRANSFER_MARKET_TEMPLATES = (
+    (
+        "local_services",
+        "intake_triage",
+        "business_page",
+        (
+            "A home-maintenance company receives incomplete service requests and "
+            "cannot reliably distinguish urgent work from routine inquiries."
+        ),
+    ),
+    (
+        "community_organizations",
+        "event_budget_reconciliation",
+        "public_forum",
+        (
+            "A community festival committee reports that planned, approved, and paid "
+            "expenses are recorded in separate lists that no longer agree."
+        ),
+    ),
+    (
+        "independent_media",
+        "sponsorship_inventory",
+        "creator_post",
+        (
+            "A small podcast network has several sponsorship placements but no clear "
+            "inventory showing availability, audience fit, and delivery obligations."
+        ),
+    ),
+    (
+        "small_retail",
+        "return_reason_analysis",
+        "review_stream",
+        (
+            "A specialty shop sees recurring returns but has not grouped the stated "
+            "reasons or connected them to product information and fulfillment choices."
+        ),
+    ),
+    (
+        "professional_services",
+        "workflow_bottleneck_analysis",
+        "discussion_board",
+        (
+            "A small consulting practice says client projects repeatedly wait between "
+            "intake, review, and approval without a clear account of the bottleneck."
+        ),
+    ),
+    (
+        "micro_manufacturing",
+        "quality_issue_prioritization",
+        "trade_forum",
+        (
+            "A workshop tracks several recurring defects but lacks a consistent way to "
+            "rank them by frequency, rework cost, and customer impact."
+        ),
+    ),
+    (
+        "local_services",
+        "route_planning",
+        "community_post",
+        (
+            "A mobile service spends too much time crossing its service area and wants "
+            "a repeatable way to group appointments by location and urgency."
+        ),
+    ),
+    (
+        "independent_media",
+        "content_schedule_analysis",
+        "creator_post",
+        (
+            "A publisher has draft, commissioned, and evergreen material but no shared "
+            "method for choosing what should be released next."
+        ),
+    ),
+    (
+        "small_retail",
+        "bundle_margin_analysis",
+        "business_page",
+        (
+            "A seller is considering product bundles but has not compared component "
+            "cost, expected discount, fulfillment effort, and likely customer value."
+        ),
+    ),
+    (
+        "community_organizations",
+        "volunteer_retention_analysis",
+        "public_forum",
+        (
+            "A volunteer program records signups and attendance but has not examined "
+            "where repeat participation falls away or which follow-ups appear useful."
+        ),
+    ),
+    (
+        "professional_services",
+        "document_intake_design",
+        "business_page",
+        (
+            "A professional office receives client documents through several channels, "
+            "causing missing items, duplicate requests, and uncertain review status."
+        ),
+    ),
+    (
+        "micro_manufacturing",
+        "maintenance_schedule",
+        "trade_forum",
+        (
+            "A small producer performs equipment maintenance reactively and wants to "
+            "prioritize recurring checks by downtime risk, cost, and required effort."
+        ),
+    ),
+)
+
 _EVENT_KINDS = (
     "demand_up",
     "demand_down",
@@ -165,6 +277,18 @@ _TASK_NOUNS = {
     "process_documentation": "process change",
     "lead_qualification": "lead segment",
     "inventory_analysis": "inventory policy",
+    "intake_triage": "intake rule",
+    "event_budget_reconciliation": "budget correction",
+    "sponsorship_inventory": "sponsorship package",
+    "return_reason_analysis": "return-reduction option",
+    "workflow_bottleneck_analysis": "workflow change",
+    "quality_issue_prioritization": "quality intervention",
+    "route_planning": "route policy",
+    "content_schedule_analysis": "publishing option",
+    "bundle_margin_analysis": "bundle option",
+    "volunteer_retention_analysis": "retention action",
+    "document_intake_design": "intake design",
+    "maintenance_schedule": "maintenance policy",
 }
 
 _LAST_OUTCOMES = {
@@ -178,6 +302,18 @@ _LAST_OUTCOMES = {
     "feedback_mixed",
     "feedback_dissatisfied",
 }
+
+_CUSTOMER_NAMESPACE = re.compile(r"^[a-z0-9][a-z0-9-]{0,31}$")
+
+
+def validate_customer_namespace(value: str) -> str:
+    """Validate an optional namespace that prevents cross-population identity reuse."""
+
+    if not isinstance(value, str):
+        raise TypeError("customer_namespace must be a string")
+    if value and not _CUSTOMER_NAMESPACE.fullmatch(value):
+        raise ValueError("customer_namespace must be a lowercase stable identifier")
+    return value
 
 
 def _canonical_json(value: Any) -> str:
@@ -364,6 +500,69 @@ class ScheduledEvent:
     magnitude: int = 0
 
 
+@dataclass(frozen=True)
+class _MarketProfile:
+    """Host-owned market mechanics used for preregistered transfer tests."""
+
+    name: str
+    market_catalog: str
+    budget_multiplier: float
+    buyer_intent_probability: float
+    responsiveness_delta: float
+    payment_reliability_delta: float
+    quality_threshold_delta: int
+    discoverability_multiplier: float
+    event_probability: float
+    event_magnitudes: tuple[int, ...]
+    research_cost_cents: int
+    communication_cost_cents: int
+    feedback_cost_cents: int
+
+
+_MARKET_PROFILES = {
+    "baseline-v1": _MarketProfile(
+        name="baseline-v1",
+        market_catalog="baseline-v1",
+        budget_multiplier=1.0,
+        buyer_intent_probability=0.65,
+        responsiveness_delta=0.0,
+        payment_reliability_delta=0.0,
+        quality_threshold_delta=0,
+        discoverability_multiplier=1.0,
+        event_probability=0.45,
+        event_magnitudes=(10, 15, 20),
+        research_cost_cents=2,
+        communication_cost_cents=1,
+        feedback_cost_cents=1,
+    ),
+    "transfer-tight-market-v1": _MarketProfile(
+        name="transfer-tight-market-v1",
+        market_catalog="transfer-unseen-v1",
+        budget_multiplier=0.8,
+        buyer_intent_probability=0.50,
+        responsiveness_delta=-0.08,
+        payment_reliability_delta=-0.12,
+        quality_threshold_delta=5,
+        discoverability_multiplier=0.85,
+        event_probability=0.65,
+        event_magnitudes=(15, 20, 25),
+        research_cost_cents=3,
+        communication_cost_cents=2,
+        feedback_cost_cents=2,
+    ),
+}
+
+
+def validate_market_profile(value: str) -> str:
+    """Validate a frozen host-owned market profile identifier."""
+
+    if not isinstance(value, str):
+        raise TypeError("market_profile must be a string")
+    if value not in _MARKET_PROFILES:
+        raise ValueError("unsupported market profile")
+    return value
+
+
 @dataclass
 class _MarketSignal:
     signal_id: str
@@ -460,6 +659,8 @@ class EconomicSandbox:
         token_tariff: TokenTariff | None = None,
         continuity_state: dict[str, Any] | None = None,
         customer_population_seed: int = 0,
+        customer_namespace: str = "",
+        market_profile: str = "baseline-v1",
     ) -> None:
         if isinstance(seed, bool) or not isinstance(seed, int):
             raise TypeError("seed must be an integer")
@@ -475,12 +676,17 @@ class EconomicSandbox:
             customer_population_seed, int
         ):
             raise TypeError("customer_population_seed must be an integer")
+        validate_customer_namespace(customer_namespace)
+        validate_market_profile(market_profile)
 
         self._seed = seed
         self.horizon_days = horizon_days
         self.starting_capital_cents = starting_capital_cents
         self.token_tariff = token_tariff
         self.customer_population_seed = customer_population_seed
+        self.customer_namespace = customer_namespace
+        self.market_profile = market_profile
+        self._market_profile = _MARKET_PROFILES[market_profile]
         self._continuity = validate_continuity_state(continuity_state)
         self.day = 0
         self._balance_cents = 0
@@ -511,7 +717,10 @@ class EconomicSandbox:
         self.cost_policy_commitment = sha256(
             _canonical_json(cost_policy_payload).encode("utf-8")
         ).hexdigest()
-        self.run_id = sha256(f"run:{seed}".encode("utf-8")).hexdigest()[:12]
+        run_material = f"run:{seed}"
+        if customer_namespace or market_profile != "baseline-v1":
+            run_material += f":{customer_namespace}:{market_profile}"
+        self.run_id = sha256(run_material.encode("utf-8")).hexdigest()[:12]
 
         self._post(
             "owner_capital",
@@ -532,7 +741,11 @@ class EconomicSandbox:
 
     def _build_market(self, market_size: int) -> dict[str, _MarketSignal]:
         rng = _derived_rng(self._seed, "market")
-        templates = list(_MARKET_TEMPLATES)
+        templates = list(
+            _MARKET_TEMPLATES
+            if self._market_profile.market_catalog == "baseline-v1"
+            else _TRANSFER_MARKET_TEMPLATES
+        )
         rng.shuffle(templates)
         signals: dict[str, _MarketSignal] = {}
         customer_occurrences: dict[str, int] = {}
@@ -546,22 +759,68 @@ class EconomicSandbox:
             active_until = rng.randint(lower_end, self.horizon_days)
             signal_id = f"signal-{index + 1:03d}"
             customer_occurrences[need_tag] = customer_occurrences.get(need_tag, 0) + 1
-            customer_id = f"customer-{need_tag.replace('_', '-')}-{customer_occurrences[need_tag]:02d}"
+            namespace = f"{self.customer_namespace}-" if self.customer_namespace else ""
+            customer_id = (
+                f"customer-{namespace}{need_tag.replace('_', '-')}-"
+                f"{customer_occurrences[need_tag]:02d}"
+            )
             customer_rng = _derived_rng(
                 self.customer_population_seed, f"customer-traits:{customer_id}"
             )
             if self.customer_population_seed == 0:
                 budget_cents = rng.randrange(2_500, 20_001, 500)
-                buyer_intent = rng.random() < 0.65
+                buyer_intent = (
+                    rng.random() < self._market_profile.buyer_intent_probability
+                )
                 responsiveness = round(rng.uniform(0.25, 0.95), 4)
                 payment_reliability = round(rng.uniform(0.55, 0.98), 4)
                 quality_threshold = rng.randint(55, 90)
             else:
                 budget_cents = customer_rng.randrange(2_500, 20_001, 500)
-                buyer_intent = rng.random() < 0.65
+                buyer_intent = (
+                    rng.random() < self._market_profile.buyer_intent_probability
+                )
                 responsiveness = round(customer_rng.uniform(0.25, 0.95), 4)
                 payment_reliability = round(customer_rng.uniform(0.55, 0.98), 4)
                 quality_threshold = customer_rng.randint(55, 90)
+            budget_cents = max(
+                100,
+                round(budget_cents * self._market_profile.budget_multiplier),
+            )
+            responsiveness = round(
+                _clamp(
+                    responsiveness + self._market_profile.responsiveness_delta,
+                    0.10,
+                    0.98,
+                ),
+                4,
+            )
+            payment_reliability = round(
+                _clamp(
+                    payment_reliability
+                    + self._market_profile.payment_reliability_delta,
+                    0.35,
+                    0.99,
+                ),
+                4,
+            )
+            quality_threshold = int(
+                _clamp(
+                    quality_threshold
+                    + self._market_profile.quality_threshold_delta,
+                    55,
+                    98,
+                )
+            )
+            discoverability = round(
+                _clamp(
+                    rng.uniform(0.1, 0.95)
+                    * self._market_profile.discoverability_multiplier,
+                    0.05,
+                    0.95,
+                ),
+                4,
+            )
             signals[signal_id] = _MarketSignal(
                 signal_id=signal_id,
                 customer_id=customer_id,
@@ -574,7 +833,7 @@ class EconomicSandbox:
                 responsiveness=responsiveness,
                 payment_reliability=payment_reliability,
                 quality_threshold=quality_threshold,
-                discoverability=round(rng.uniform(0.1, 0.95), 4),
+                discoverability=discoverability,
                 active_from=active_from,
                 active_until=active_until,
                 task_brief=self._build_task_brief(signal_id, customer_id, need_tag),
@@ -629,16 +888,16 @@ class EconomicSandbox:
         rng = _derived_rng(self._seed, "events")
         events: list[ScheduledEvent] = []
         for day in range(1, self.horizon_days + 1):
-            if rng.random() >= 0.45:
+            if rng.random() >= self._market_profile.event_probability:
                 continue
             kind = rng.choice(_EVENT_KINDS)
             sector = rng.choice(_SECTORS) if kind.startswith("demand_") else ""
-            magnitude = rng.choice((10, 15, 20))
+            magnitude = rng.choice(self._market_profile.event_magnitudes)
             events.append(ScheduledEvent(day, kind, sector, magnitude))
         return tuple(events)
 
     def _commitment_payload(self) -> dict[str, Any]:
-        return {
+        payload = {
             "seed": self._seed,
             "horizon_days": self.horizon_days,
             "starting_capital_cents": self.starting_capital_cents,
@@ -648,6 +907,11 @@ class EconomicSandbox:
             ],
             "events": [asdict(event) for event in self._events],
         }
+        if self.customer_namespace:
+            payload["customer_namespace"] = self.customer_namespace
+        if self.market_profile != "baseline-v1":
+            payload["market_profile"] = asdict(self._market_profile)
+        return payload
 
     def _record(self, event_type: str, data: dict[str, Any]) -> None:
         self._journal.append(
@@ -815,7 +1079,7 @@ class EconomicSandbox:
         except (TypeError, ValueError):
             return {"ok": False, "reason": "limit must be an integer"}
         limit = max(1, min(requested_limit, 10))
-        cost = self._tool_cost(2)
+        cost = self._tool_cost(self._market_profile.research_cost_cents)
         prior_searches = sum(
             event["event_type"] == "market_searched" for event in self._journal
         )
@@ -907,7 +1171,7 @@ class EconomicSandbox:
             return {"ok": False, "reason": "at least one solution tag is required"}
 
         offer_id = f"offer-{len(self._offers) + 1:03d}"
-        cost = self._tool_cost(1)
+        cost = self._tool_cost(self._market_profile.communication_cost_cents)
         if not self._charge(
             cost,
             "communication_cost",
@@ -1085,7 +1349,7 @@ class EconomicSandbox:
             return {"ok": False, "reason": "delivery has not been assessed"}
         if contract.feedback_requested:
             return {"ok": False, "reason": "feedback has already been requested"}
-        cost = self._tool_cost(1)
+        cost = self._tool_cost(self._market_profile.feedback_cost_cents)
         if not self._charge(
             cost,
             "communication_cost",

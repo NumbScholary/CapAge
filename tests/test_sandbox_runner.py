@@ -139,6 +139,31 @@ class LiveSandboxRunnerTests(unittest.TestCase):
             )
         )
 
+    def test_transfer_profile_and_namespace_are_hidden_from_the_model_prompt(self):
+        client = FakeClient([response("sandbox_wait", {"days": 7})])
+        with tempfile.TemporaryDirectory() as directory:
+            runner = LiveSandboxRunner(
+                self.config(
+                    max_decisions=1,
+                    customer_population_seed=909_909,
+                    customer_namespace="holdout-shift-v1",
+                    market_profile="transfer-tight-market-v1",
+                ),
+                client,
+                audit_path=Path(directory) / "audit.jsonl",
+            )
+            result = runner.run()
+
+        encoded_prompt = json.dumps(client.request_bodies[0], sort_keys=True)
+        self.assertNotIn("transfer-tight-market-v1", encoded_prompt)
+        self.assertNotIn("holdout-shift-v1", encoded_prompt)
+        self.assertNotIn("market_profile", encoded_prompt)
+        self.assertNotIn("customer_namespace", encoded_prompt)
+        self.assertEqual(
+            result["world_reveal"]["payload"]["market_profile"]["name"],
+            "transfer-tight-market-v1",
+        )
+
     def test_invalid_paid_response_is_metered_and_preserved_without_retry(self):
         invalid = {
             "id": "message-invalid",

@@ -1,0 +1,55 @@
+{
+  "schema_version": "capage-transfer-v1",
+  "experiment_name": "sonnet-memory-transfer-001",
+  "source_training": {
+    "config_commitment": "53f296d19c12cad8edefd982f413e40bc19551e6cdb615f2c974e46429739920",
+    "months_per_arm": 6,
+    "month_seeds": [740193, 882041, 519337, 961204, 673558, 348729],
+    "customer_population_seed": 426811
+  },
+  "phases": [
+    {
+      "phase_id": "same-distribution",
+      "seeds": [585861, 431634, 749277],
+      "customer_population_seed": 100346694,
+      "customer_namespace": "holdout-same-v1",
+      "market_profile": "baseline-v1"
+    },
+    {
+      "phase_id": "shifted-market",
+      "seeds": [442865, 571536, 828407],
+      "customer_population_seed": 389899024,
+      "customer_namespace": "holdout-shift-v1",
+      "market_profile": "transfer-tight-market-v1"
+    }
+  ],
+  "experiment_epoch": "2026-07-01T00:00:00+00:00",
+  "starting_capital_cents": 25000,
+  "horizon_days": 30,
+  "max_decisions_per_cell": 25,
+  "per_cell_model_cost_cap_cents": 75,
+  "per_condition_model_cost_cap_cents": 450,
+  "aggregate_model_cost_cap_cents": 900,
+  "model": {
+    "name": "claude-sonnet-5",
+    "effort": "medium",
+    "max_output_tokens": 1024
+  },
+  "token_tariff": {
+    "name": "anthropic-sonnet-5-introductory-2026-08",
+    "input_cents_per_million_tokens": 200,
+    "output_cents_per_million_tokens": 1000
+  },
+  "assessor_version": "deterministic-artifact-v2",
+  "freeze_training_memory": true,
+  "reset_economic_state_per_cell": true,
+  "implementation_commitments": {
+    "capage/sandbox.py": "35b4eec2eb80a9184ca5511fdfd72c51a0d26194b7c1b211abe3ffd8e5b0a5d3",
+    "capage/sandbox_runner.py": "9712f321b898b66a7e129d78fc8218eed8639344b3a5d0486b0e9c70778f98cb",
+    "capage/memory.py": "6a1348a6230b7431d12853ada5ba66f2cea9bad93ff1ba2d4e0e77986c22fcee",
+    "capage/longitudinal.py": "7a8e0cb895807869afe10ac1d9f7e9d6b503b15750d546d0434601e97fb965ab",
+    "capage/transfer.py": "3759bac970094f28d4107a6e40baa65b2bd88e54e46305864e942df7c7fac879"
+  },
+  "python_runtime": "3.12",
+  "tariff_valid_through": "2026-08-31"
+}
