@@ -11,7 +11,7 @@ from statistics import fmean, median
 from typing import Any, Callable, Protocol
 
 from capage.memory import AuditedMemoryStore
-from capage.sandbox import TokenTariff
+from capage.sandbox import TokenTariff, empty_continuity_state, validate_continuity_state
 from capage.sandbox_runner import LiveSandboxRunner, ModelClient, SandboxRunConfig
 
 
@@ -21,6 +21,10 @@ _ARMS = ("control", "memory")
 
 def _canonical_json(value: Any) -> str:
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+
+def _continuity_hash(value: dict[str, Any]) -> str:
+    return sha256(_canonical_json(value).encode("utf-8")).hexdigest()
 
 
 def _atomic_json(path: Path, payload: dict[str, Any]) -> None:
@@ -81,6 +85,11 @@ class LongitudinalConfig:
             raise ValueError("max_output_tokens must be between 128 and 4096")
         if self.tariff_valid_through:
             date.fromisoformat(self.tariff_valid_through)
+        if self.assessor_version not in {
+            "deterministic-artifact-v1",
+            "deterministic-artifact-v2",
+        }:
+            raise ValueError("unsupported artifact assessor version")
 
     @classmethod
     def from_manifest(cls, path: str | Path) -> "LongitudinalConfig":
@@ -240,6 +249,7 @@ class LongitudinalRunner:
                             self.client,
                             audit_path=audit_path,
                             durable_context=context,
+                            continuity_state=arm_state["business_continuity"],
                         )
                         result = runner.run()
                         self._validate_result(result, month_config)
@@ -255,9 +265,13 @@ class LongitudinalRunner:
 
                     _atomic_json(result_path, result)
                     outcome = result["outcome"]
+                    continuity = validate_continuity_state(
+                        result["business_continuity"]
+                    )
                     used_units = int(result["actual_model_cost_units"])
                     self.state["model_cost_units"] += used_units
                     arm_state["balance_cents"] = int(outcome["balance_cents"])
+                    arm_state["business_continuity"] = continuity
                     arm_state["months_completed"] += 1
                     record = {
                         "cell_id": cell_id,
@@ -280,6 +294,11 @@ class LongitudinalRunner:
                         "memory_record_count": (
                             len(context.get("records", [])) if context else 0
                         ),
+                        "known_customers": len(continuity["customers"]),
+                        "global_reputation_points": int(
+                            continuity["global_reputation_points"]
+                        ),
+                        "business_continuity_hash": _continuity_hash(continuity),
                         "result_file": result_path.name,
                         "audit_file": audit_path.name,
                     }
@@ -393,6 +412,9 @@ class LongitudinalRunner:
     ) -> None:
         if not isinstance(result, dict) or not isinstance(result.get("outcome"), dict):
             raise ValueError("month runner omitted an outcome")
+        if "business_continuity" not in result:
+            raise ValueError("month runner omitted business continuity state")
+        validate_continuity_state(result["business_continuity"])
         outcome = result["outcome"]
         required = {
             "owner_capital_cents",
@@ -465,13 +487,23 @@ class LongitudinalRunner:
         commitment = self.config.commitment()
         if self.checkpoint_path.exists():
             state = json.loads(self.checkpoint_path.read_text(encoding="utf-8"))
-            if state.get("schema_version") != "capage-longitudinal-checkpoint-v1":
+            if state.get("schema_version") != "capage-longitudinal-checkpoint-v2":
                 raise ValueError("unsupported longitudinal checkpoint schema")
             if state.get("config_commitment") != commitment:
                 raise ValueError("checkpoint does not match the frozen configuration")
+            for arm in _ARMS:
+                arm_state = state.get("arms", {}).get(arm, {})
+                continuity = validate_continuity_state(
+                    arm_state.get("business_continuity")
+                )
+                months = arm_state.get("months", [])
+                if months and months[-1].get("business_continuity_hash") != _continuity_hash(
+                    continuity
+                ):
+                    raise ValueError("checkpoint business continuity hash mismatch")
             return state
         return {
-            "schema_version": "capage-longitudinal-checkpoint-v1",
+            "schema_version": "capage-longitudinal-checkpoint-v2",
             "experiment_name": self.config.experiment_name,
             "config_commitment": commitment,
             "status": "ready",
@@ -485,6 +517,7 @@ class LongitudinalRunner:
                     "balance_cents": self.config.starting_capital_cents,
                     "months_completed": 0,
                     "months": [],
+                    "business_continuity": empty_continuity_state(),
                 }
                 for arm in _ARMS
             },
