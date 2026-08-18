@@ -383,6 +383,7 @@ class LiveSandboxRunner:
         client: ModelClient,
         *,
         audit_path: str | Path,
+        durable_context: dict[str, Any] | None = None,
     ) -> None:
         self.config = config
         self.client = client
@@ -400,6 +401,15 @@ class LiveSandboxRunner:
         )
         self.transcript: list[dict[str, Any]] = []
         self.actual_cost_units = 0
+        self.durable_context = (
+            json.loads(json.dumps(durable_context, sort_keys=True))
+            if durable_context is not None
+            else None
+        )
+        if self.durable_context is not None and not isinstance(
+            self.durable_context, dict
+        ):
+            raise TypeError("durable_context must be an object")
 
     def run(self) -> dict[str, Any]:
         if self.config.tariff_valid_through:
@@ -579,6 +589,8 @@ class LiveSandboxRunner:
                 self._prompt_history_item(item) for item in self.transcript[-6:]
             ],
         }
+        if self.durable_context is not None:
+            state["durable_memory"] = self.durable_context
         return {
             "model": self.config.model,
             "max_tokens": self.config.max_output_tokens,

@@ -429,6 +429,20 @@ class AuditedMemoryStore:
         ).fetchone()
         return str(row["record_hash"]) if row is not None else _GENESIS_HASH
 
+    def has_event(self, event_id: str) -> bool:
+        event_id = _identifier(event_id, "event_id")
+        row = self._connection.execute(
+            "SELECT 1 FROM memory_audit_records "
+            "WHERE stream = 'event' AND subject_id = ? LIMIT 1",
+            (event_id,),
+        ).fetchone()
+        return row is not None
+
+    def latest_memory_revision(self, memory_id: str) -> int:
+        memory_id = _identifier(memory_id, "memory_id")
+        row = self._latest_memory_row(memory_id)
+        return int(row["revision"]) if row is not None else 0
+
     def verify_chain(self) -> bool:
         previous_hash = _GENESIS_HASH
         expected_sequence = 1
