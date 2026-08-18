@@ -67,7 +67,7 @@ jobs:
       - name: Restore verified cell 003 checkpoint
         uses: actions/download-artifact@v4
         with:
-          name: sonnet-longitudinal-v2-cell-004-restricted
+          name: sonnet-longitudinal-v2-cell-003-restricted
           path: artifacts/longitudinal-v2
           github-token: ${{ github.token }}
           repository: Numbscholar/CapAge
