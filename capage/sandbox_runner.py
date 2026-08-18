@@ -61,6 +61,11 @@ class SandboxRunConfig:
             raise ValueError("max_decisions must be between 1 and 100")
         if self.max_run_cost_cents < 1:
             raise ValueError("max_run_cost_cents must be positive")
+        if self.assessor_version not in {
+            "deterministic-artifact-v1",
+            "deterministic-artifact-v2",
+        }:
+            raise ValueError("unsupported artifact assessor version")
         if self.tariff_valid_through:
             date.fromisoformat(self.tariff_valid_through)
 
@@ -346,8 +351,19 @@ def assess_artifact(
     public_need: str,
     promised_scope: str,
     solution_tags: list[str],
+    assessor_version: str = "deterministic-artifact-v1",
 ) -> tuple[int, dict[str, int]]:
     """Return a deterministic host score without asking the strategic model."""
+
+    if assessor_version == "deterministic-artifact-v2":
+        return _assess_artifact_v2(
+            artifact,
+            public_need=public_need,
+            promised_scope=promised_scope,
+            solution_tags=solution_tags,
+        )
+    if assessor_version != "deterministic-artifact-v1":
+        raise ValueError("unsupported artifact assessor version")
 
     artifact_tokens = _tokens(artifact)
     target_tokens = _tokens(
@@ -374,6 +390,79 @@ def assess_artifact(
     return min(100, sum(factors.values())), factors
 
 
+_V2_CRITERIA = {
+    "service_clarity": (("service", "include"), ("price", "scope"), ("question", "faq")),
+    "data_cleanup": (("column", "field"), ("duplicate", "deduplicate"), ("validate", "check")),
+    "documentation": (("index", "search"), ("transcript", "archive"), ("topic", "tag")),
+    "customer_research": (("review", "customer"), ("pattern", "theme"), ("recommend", "change")),
+    "comparison_research": (("cost", "price"), ("feature", "requirement"), ("compare", "matrix")),
+    "supplier_research": (("supplier", "vendor"), ("lead", "delivery"), ("cost", "price")),
+    "scheduling": (("availability", "schedule"), ("response", "confirm"), ("time", "window")),
+    "audience_research": (("archive", "interview"), ("question", "topic"), ("guide", "index")),
+    "catalog_cleanup": (("product", "item"), ("duplicate", "consistent"), ("description", "listing")),
+    "process_documentation": (("step", "checklist"), ("handoff", "owner"), ("event", "setup")),
+    "lead_qualification": (("qualify", "criteria"), ("service", "scope"), ("question", "intake")),
+    "inventory_analysis": (("stock", "inventory"), ("reorder", "shortage"), ("usage", "quantity")),
+}
+
+
+def _assess_artifact_v2(
+    artifact: str,
+    *,
+    public_need: str,
+    promised_scope: str,
+    solution_tags: list[str],
+) -> tuple[int, dict[str, int]]:
+    """Frozen rubric rewarding need coverage and penalizing generic padding."""
+
+    normalized = artifact.strip()
+    tokens = _tokens(normalized)
+    lines = [line.strip() for line in normalized.splitlines() if line.strip()]
+    target = _tokens(" ".join((public_need, promised_scope, " ".join(solution_tags))))
+    overlap = len(tokens & target)
+    relevance = min(25, round(25 * overlap / max(4, min(10, len(target)))))
+
+    criteria = []
+    for tag in solution_tags:
+        criteria.extend(_V2_CRITERIA.get(tag, ()))
+    covered = sum(any(word in tokens for word in alternatives) for alternatives in criteria)
+    need_coverage = min(30, round(30 * covered / max(1, len(criteria))))
+
+    structured = sum(
+        line.startswith(("-", "*", "#")) or re.match(r"^\d+[.)]", line) is not None
+        for line in lines
+    )
+    action_words = {
+        "compare", "record", "review", "rank", "group", "validate", "flag",
+        "calculate", "publish", "update", "assign", "measure", "recommend",
+    }
+    actionability = min(25, (3 * min(structured, 4)) + (2 * len(tokens & action_words)))
+    specificity = min(15, len(tokens) // 8) + min(5, sum(char.isdigit() for char in normalized))
+    clarity = 5 if 3 <= len(lines) <= 30 else 2 if lines else 0
+
+    generic_phrases = (
+        "may help your business",
+        "comprehensive solution",
+        "best in class",
+        "leverage synergies",
+        "tailored to your needs",
+    )
+    generic_penalty = 5 * sum(phrase in normalized.lower() for phrase in generic_phrases)
+    word_list = re.findall(r"[a-z0-9]+", normalized.lower())
+    repetition_penalty = 10 if len(word_list) >= 80 and len(set(word_list)) / len(word_list) < 0.35 else 0
+    verbosity_penalty = min(15, max(0, (len(normalized) - 2_500) // 250))
+    penalties = generic_penalty + repetition_penalty + verbosity_penalty
+    factors = {
+        "relevance": relevance,
+        "need_coverage": need_coverage,
+        "actionability": actionability,
+        "specificity": specificity,
+        "clarity": clarity,
+        "penalties": -penalties,
+    }
+    return max(0, min(100, sum(factors.values()))), factors
+
+
 class LiveSandboxRunner:
     """Orchestrate bounded model decisions while preserving the authority split."""
 
@@ -384,6 +473,7 @@ class LiveSandboxRunner:
         *,
         audit_path: str | Path,
         durable_context: dict[str, Any] | None = None,
+        continuity_state: dict[str, Any] | None = None,
     ) -> None:
         self.config = config
         self.client = client
@@ -392,6 +482,7 @@ class LiveSandboxRunner:
             horizon_days=config.horizon_days,
             starting_capital_cents=config.starting_capital_cents,
             token_tariff=config.tariff,
+            continuity_state=continuity_state,
         )
         registry = self.world.agent_tools()
         self.executor = Executor(
@@ -569,6 +660,7 @@ class LiveSandboxRunner:
             ),
             "transcript": self.transcript,
             "outcome": self.world.outcome(),
+            "business_continuity": self.world.continuity_state(),
             "world_reveal": self.world.reveal_world(),
         }
         return result
@@ -671,6 +763,7 @@ class LiveSandboxRunner:
             public_need=str(signal["text"]),
             promised_scope=str(offer["scope"]),
             solution_tags=list(offer["solution_tags"]),
+            assessor_version=self.config.assessor_version,
         )
         result = self.world.assess_delivery(
             str(tool_result["delivery_id"]),
