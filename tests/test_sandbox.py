@@ -10,6 +10,8 @@ from capage.sandbox import (
     EconomicSandbox,
     TokenTariff,
     aggregate_outcomes,
+    empty_continuity_state,
+    validate_continuity_state,
     verify_cost_policy,
     verify_world_reveal,
 )
@@ -150,6 +152,94 @@ def test_satisfaction_requires_an_explicit_feedback_request_to_reach_agent():
         if message["type"] == "customer_feedback"
     ]
     assert feedback[-1]["rating"] == "very_satisfied"
+
+
+def test_customer_history_and_reputation_persist_without_exposing_hidden_score():
+    first = EconomicSandbox(6)
+    _open_seed_six_contract(first)
+    first.submit_delivery(
+        {
+            "contract_id": "contract-001",
+            "artifact": "A useful indexed guide grounded in recurring archive questions.",
+        }
+    )
+    first.assess_delivery("delivery-001", 100)
+    first.wait({"days": 3})
+    continuity = first.continuity_state()
+
+    customer = continuity["customers"]["customer-audience-research-01"]
+    assert customer["contracts_paid"] == 1
+    assert customer["reputation_points"] > 0
+
+    repeat = EconomicSandbox(6, continuity_state=continuity)
+    search = repeat.search_market(
+        {"query": "newsletter publisher recurring questions archive guide", "limit": 5}
+    )
+    signal = next(
+        row for row in search["results"] if row["customer_id"] == "customer-audience-research-01"
+    )
+    assert signal["prior_relationship"]["contracts_paid"] == 1
+    assert "reputation_points" not in signal["prior_relationship"]
+
+
+def test_customer_core_traits_are_stable_across_month_seeds():
+    population_seed = 404_404
+    first = EconomicSandbox(101, customer_population_seed=population_seed)
+    second = EconomicSandbox(202, customer_population_seed=population_seed)
+    customer_id = "customer-audience-research-01"
+    first_signal = next(
+        row
+        for row in first.reveal_world()["payload"]["signals"]
+        if row["customer_id"] == customer_id
+    )
+    second_signal = next(
+        row
+        for row in second.reveal_world()["payload"]["signals"]
+        if row["customer_id"] == customer_id
+    )
+    for field in (
+        "budget_cents",
+        "responsiveness",
+        "payment_reliability",
+        "quality_threshold",
+    ):
+        assert first_signal[field] == second_signal[field]
+    assert first.world_commitment != second.world_commitment
+
+
+def test_customer_task_is_hidden_until_acceptance_and_then_supplied():
+    world = EconomicSandbox(6)
+    search = world.search_market(
+        {"query": "newsletter publisher recurring questions archive focused guide", "limit": 5}
+    )
+    signal = next(row for row in search["results"] if row["signal_id"] == "signal-007")
+    assert "task_brief" not in signal
+    accepted = EconomicSandbox(6)
+    _open_seed_six_contract(accepted)
+    contract = accepted.observe()["contracts"][0]
+    assert contract["delivery_brief"]["schema_version"] == "capage-customer-task-v1"
+    assert len(contract["delivery_brief"]["source_records"]) == 3
+
+
+def test_continuity_validation_rejects_impossible_histories():
+    state = empty_continuity_state()
+    state["customers"]["customer-impossible-01"] = {
+        "offers_sent": 0,
+        "contracts_accepted": 0,
+        "deliveries_assessed": 0,
+        "contracts_paid": 1,
+        "contracts_defaulted": 0,
+        "contracts_disputed": 0,
+        "feedback_responses": 0,
+        "reputation_points": 0,
+        "last_outcome": "paid",
+    }
+    try:
+        validate_continuity_state(state)
+    except ValueError as exc:
+        assert "terminal contract outcomes" in str(exc)
+    else:
+        raise AssertionError("impossible continuity state was accepted")
 
 
 def test_token_usage_is_metered_from_a_frozen_tariff_and_debited():
