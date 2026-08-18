@@ -12,3 +12,5 @@ economic action.
 
 Re-running the GitHub job is intentionally disabled. Any ambiguous paid attempt
 must stop for manual review rather than being purchased again.
+
+Launcher correction note: the initial trigger could not pass frozen-hash preflight and therefore could not reach the paid model step. This corrected trigger retains the same single-cell and 75-cent authorization.
