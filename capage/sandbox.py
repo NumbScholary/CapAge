@@ -19,6 +19,7 @@ from typing import Any
 STARTING_CAPITAL_CENTS = 25_000
 DEFAULT_HORIZON_DAYS = 30
 _COST_UNITS_PER_CENT = 1_000_000
+_CONTINUITY_SCHEMA = "capage-business-continuity-v1"
 
 _SECTORS = (
     "local_services",
@@ -178,6 +179,62 @@ def _tokens(text: str) -> set[str]:
     return {token for token in normalized.split() if len(token) > 2}
 
 
+def empty_continuity_state() -> dict[str, Any]:
+    """Return a new host-owned customer and reputation ledger."""
+
+    return {
+        "schema_version": _CONTINUITY_SCHEMA,
+        "global_reputation_points": 0,
+        "customers": {},
+    }
+
+
+def validate_continuity_state(value: dict[str, Any] | None) -> dict[str, Any]:
+    """Validate and detach longitudinal business state before a world uses it."""
+
+    if value is None:
+        return empty_continuity_state()
+    state = _json_copy(value)
+    if not isinstance(state, dict) or state.get("schema_version") != _CONTINUITY_SCHEMA:
+        raise ValueError("unsupported business continuity schema")
+    points = state.get("global_reputation_points")
+    customers = state.get("customers")
+    if isinstance(points, bool) or not isinstance(points, int) or not -100 <= points <= 100:
+        raise ValueError("global reputation points must be an integer from -100 to 100")
+    if not isinstance(customers, dict):
+        raise ValueError("continuity customers must be an object")
+    count_fields = (
+        "offers_sent",
+        "contracts_accepted",
+        "deliveries_assessed",
+        "contracts_paid",
+        "contracts_defaulted",
+        "contracts_disputed",
+        "feedback_responses",
+    )
+    for customer_id, record in customers.items():
+        if not isinstance(customer_id, str) or not customer_id.startswith("customer-"):
+            raise ValueError("continuity contains an invalid customer identifier")
+        if not isinstance(record, dict):
+            raise ValueError("continuity customer record must be an object")
+        if set(record) != {*count_fields, "reputation_points", "last_outcome"}:
+            raise ValueError("continuity customer record has unexpected fields")
+        for field in count_fields:
+            item = record[field]
+            if isinstance(item, bool) or not isinstance(item, int) or item < 0:
+                raise ValueError(f"continuity {field} must be a nonnegative integer")
+        reputation = record["reputation_points"]
+        if (
+            isinstance(reputation, bool)
+            or not isinstance(reputation, int)
+            or not -100 <= reputation <= 100
+        ):
+            raise ValueError("customer reputation points must be an integer from -100 to 100")
+        if not isinstance(record["last_outcome"], str):
+            raise ValueError("customer last_outcome must be a string")
+    return state
+
+
 @dataclass(frozen=True)
 class LedgerEntry:
     """One immutable posting in the synthetic economic ledger."""
@@ -248,6 +305,7 @@ class ScheduledEvent:
 @dataclass
 class _MarketSignal:
     signal_id: str
+    customer_id: str
     sector: str
     need_tag: str
     source_type: str
@@ -264,14 +322,20 @@ class _MarketSignal:
     def is_active(self, day: int) -> bool:
         return self.active_from <= day <= self.active_until
 
-    def public_view(self, day: int) -> dict[str, Any]:
-        return {
+    def public_view(
+        self, day: int, relationship: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
+        view = {
             "signal_id": self.signal_id,
+            "customer_id": self.customer_id,
             "source_type": self.source_type,
             "sector": self.sector,
             "text": self.public_text,
             "currently_visible": self.is_active(day),
         }
+        if relationship is not None:
+            view["prior_relationship"] = relationship
+        return view
 
 
 @dataclass
@@ -331,6 +395,7 @@ class EconomicSandbox:
         starting_capital_cents: int = STARTING_CAPITAL_CENTS,
         market_size: int = 18,
         token_tariff: TokenTariff | None = None,
+        continuity_state: dict[str, Any] | None = None,
     ) -> None:
         if isinstance(seed, bool) or not isinstance(seed, int):
             raise TypeError("seed must be an integer")
@@ -347,6 +412,7 @@ class EconomicSandbox:
         self.horizon_days = horizon_days
         self.starting_capital_cents = starting_capital_cents
         self.token_tariff = token_tariff
+        self._continuity = validate_continuity_state(continuity_state)
         self.day = 0
         self._balance_cents = 0
         self._ledger: list[LedgerEntry] = []
@@ -400,6 +466,7 @@ class EconomicSandbox:
         templates = list(_MARKET_TEMPLATES)
         rng.shuffle(templates)
         signals: dict[str, _MarketSignal] = {}
+        customer_occurrences: dict[str, int] = {}
 
         for index in range(market_size):
             sector, need_tag, source_type, public_text = templates[
@@ -409,8 +476,11 @@ class EconomicSandbox:
             lower_end = max(active_from + 3, self.horizon_days // 2)
             active_until = rng.randint(lower_end, self.horizon_days)
             signal_id = f"signal-{index + 1:03d}"
+            customer_occurrences[need_tag] = customer_occurrences.get(need_tag, 0) + 1
+            customer_id = f"customer-{need_tag.replace('_', '-')}-{customer_occurrences[need_tag]:02d}"
             signals[signal_id] = _MarketSignal(
                 signal_id=signal_id,
+                customer_id=customer_id,
                 sector=sector,
                 need_tag=need_tag,
                 source_type=source_type,
@@ -554,7 +624,9 @@ class EconomicSandbox:
             ),
             "capital": self._capital_summary(),
             "discovered_signals": [
-                self._signals[key].public_view(self.day)
+                self._signals[key].public_view(
+                    self.day, self._relationship_view(self._signals[key].customer_id)
+                )
                 for key in sorted(self._discovered)
             ],
             "offers": [self._offer_view(offer) for offer in self._offers.values()],
@@ -648,10 +720,14 @@ class EconomicSandbox:
             public_tokens = _tokens(signal.public_text + " " + signal.sector)
             overlap = len(query_tokens & public_tokens)
             relevance = overlap / max(1, len(query_tokens))
-            score = relevance + (0.30 * signal.discoverability)
+            repeat_bonus = 0.12 if signal.customer_id in self._continuity["customers"] else 0.0
+            score = relevance + (0.30 * signal.discoverability) + repeat_bonus
             ranked.append((score, signal))
         ranked.sort(key=lambda item: (-item[0], item[1].signal_id))
-        results = [signal.public_view(self.day) for _, signal in ranked[:limit]]
+        results = [
+            signal.public_view(self.day, self._relationship_view(signal.customer_id))
+            for _, signal in ranked[:limit]
+        ]
         self._discovered.update(result["signal_id"] for result in results)
         self._record(
             "market_searched",
@@ -720,6 +796,7 @@ class EconomicSandbox:
         intent = 1.0 if signal.buyer_intent else 0.08
         active = 1.0 if signal.is_active(self.day) else 0.05
         demand = self._sector_demand[signal.sector]
+        reputation_multiplier = self._reputation_multiplier(signal.customer_id)
         acceptance_probability = _clamp(
             0.70
             * signal.responsiveness
@@ -727,7 +804,8 @@ class EconomicSandbox:
             * fit
             * price_fit
             * active
-            * demand,
+            * demand
+            * reputation_multiplier,
             0.005,
             0.92,
         )
@@ -751,6 +829,7 @@ class EconomicSandbox:
             planned_outcome=planned_outcome,
         )
         self._offers[offer_id] = offer
+        self._customer_record(signal.customer_id)["offers_sent"] += 1
         self._record(
             "offer_sent",
             {
@@ -768,6 +847,62 @@ class EconomicSandbox:
             "response_not_before_day": offer.response_day,
             "cost_cents": cost,
         }
+
+    def _customer_record(self, customer_id: str) -> dict[str, Any]:
+        customers = self._continuity["customers"]
+        if customer_id not in customers:
+            customers[customer_id] = {
+                "offers_sent": 0,
+                "contracts_accepted": 0,
+                "deliveries_assessed": 0,
+                "contracts_paid": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "feedback_responses": 0,
+                "reputation_points": 0,
+                "last_outcome": "",
+            }
+        return customers[customer_id]
+
+    def _relationship_view(self, customer_id: str) -> dict[str, Any] | None:
+        record = self._continuity["customers"].get(customer_id)
+        if record is None:
+            return None
+        return {
+            "offers_sent": record["offers_sent"],
+            "contracts_accepted": record["contracts_accepted"],
+            "contracts_paid": record["contracts_paid"],
+            "contracts_defaulted": record["contracts_defaulted"],
+            "contracts_disputed": record["contracts_disputed"],
+            "feedback_responses": record["feedback_responses"],
+            "last_outcome": record["last_outcome"],
+        }
+
+    def _reputation_multiplier(self, customer_id: str) -> float:
+        customer = self._continuity["customers"].get(customer_id)
+        customer_points = int(customer["reputation_points"]) if customer else 0
+        global_points = int(self._continuity["global_reputation_points"])
+        weighted = (0.7 * customer_points) + (0.3 * global_points)
+        return _clamp(1.0 + (weighted / 200), 0.60, 1.40)
+
+    def _adjust_reputation(self, customer_id: str, delta: int, outcome: str) -> None:
+        record = self._customer_record(customer_id)
+        record["reputation_points"] = int(
+            _clamp(int(record["reputation_points"]) + delta, -100, 100)
+        )
+        self._continuity["global_reputation_points"] = int(
+            _clamp(
+                int(self._continuity["global_reputation_points"]) + delta,
+                -100,
+                100,
+            )
+        )
+        record["last_outcome"] = outcome
+
+    def continuity_state(self) -> dict[str, Any]:
+        """Export detached host-owned state only after the run is settled."""
+
+        return validate_continuity_state(self._continuity)
 
     def submit_delivery(self, arguments: dict[str, Any]) -> dict[str, Any]:
         """Submit work for independent assessment; submission cannot create revenue."""
@@ -912,6 +1047,8 @@ class EconomicSandbox:
                     deadline_day=self.day + offer.promise_days,
                 )
                 self._contracts[contract_id] = contract
+                customer = self._signals[offer.signal_id].customer_id
+                self._customer_record(customer)["contracts_accepted"] += 1
                 message = {
                     "day": self.day,
                     "from": offer.signal_id,
@@ -962,6 +1099,8 @@ class EconomicSandbox:
         satisfaction = int(_clamp(quality_score - (5 * lateness), 0, 100))
         delivery.assessment_status = "assessed"
         contract.satisfaction = satisfaction
+        customer = self._customer_record(signal.customer_id)
+        customer["deliveries_assessed"] += 1
 
         if satisfaction >= signal.quality_threshold:
             contract.status = "accepted_pending_payment"
@@ -973,9 +1112,15 @@ class EconomicSandbox:
             contract.planned_payment = (
                 "paid" if payment_roll < signal.payment_reliability else "defaulted"
             )
+            reputation_delta = 12 if satisfaction >= 85 else 6
+            self._adjust_reputation(
+                signal.customer_id, reputation_delta, "delivery_accepted"
+            )
         else:
             contract.status = "disputed"
             contract.planned_payment = "not_due"
+            customer["contracts_disputed"] += 1
+            self._adjust_reputation(signal.customer_id, -18, "delivery_disputed")
 
         self._record(
             "delivery_assessed",
@@ -1016,6 +1161,15 @@ class EconomicSandbox:
             else:
                 contract.status = "defaulted"
                 message_type = "payment_defaulted"
+            customer = self._customer_record(
+                self._signals[contract.signal_id].customer_id
+            )
+            if message_type == "payment_received":
+                customer["contracts_paid"] += 1
+                customer["last_outcome"] = "paid"
+            else:
+                customer["contracts_defaulted"] += 1
+                customer["last_outcome"] = "customer_payment_default"
             message = {
                 "day": self.day,
                 "from": contract.signal_id,
@@ -1060,6 +1214,9 @@ class EconomicSandbox:
             }
             self._inbox.append(message)
             self._record("feedback_received", message)
+            customer = self._customer_record(signal.customer_id)
+            customer["feedback_responses"] += 1
+            customer["last_outcome"] = f"feedback_{rating}"
 
     def quote_model_call(
         self,
