@@ -152,6 +152,34 @@ def test_satisfaction_requires_an_explicit_feedback_request_to_reach_agent():
     assert feedback[-1]["rating"] == "very_satisfied"
 
 
+def test_customer_history_and_reputation_persist_without_exposing_hidden_score():
+    first = EconomicSandbox(6)
+    _open_seed_six_contract(first)
+    first.submit_delivery(
+        {
+            "contract_id": "contract-001",
+            "artifact": "A useful indexed guide grounded in recurring archive questions.",
+        }
+    )
+    first.assess_delivery("delivery-001", 100)
+    first.wait({"days": 3})
+    continuity = first.continuity_state()
+
+    customer = continuity["customers"]["customer-audience-research-01"]
+    assert customer["contracts_paid"] == 1
+    assert customer["reputation_points"] > 0
+
+    repeat = EconomicSandbox(6, continuity_state=continuity)
+    search = repeat.search_market(
+        {"query": "newsletter publisher recurring questions archive guide", "limit": 5}
+    )
+    signal = next(
+        row for row in search["results"] if row["customer_id"] == "customer-audience-research-01"
+    )
+    assert signal["prior_relationship"]["contracts_paid"] == 1
+    assert "reputation_points" not in signal["prior_relationship"]
+
+
 def test_token_usage_is_metered_from_a_frozen_tariff_and_debited():
     tariff = TokenTariff(
         name="test-tariff",
