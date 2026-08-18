@@ -101,8 +101,8 @@ jobs:
         run: |
           set -eu
           git rev-parse HEAD > artifacts/longitudinal-v2/resume-commit-cell-004.txt
-          printf '%s\\n' '32121174747' > artifacts/longitudinal-v2/resume-source-run-cell-003.txt
-          printf '%s\\n' \
+          printf '%s\n' '32121174747' > artifacts/longitudinal-v2/resume-source-run-cell-003.txt
+          printf '%s\n' \
             '# Cell 003 provenance correction' \
             '' \
             'The Cell 003 artifact file resume-source-run-cell-002.txt contains 32115679232.' \
