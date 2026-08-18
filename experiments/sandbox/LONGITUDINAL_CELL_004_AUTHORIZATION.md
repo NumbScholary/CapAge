@@ -12,3 +12,5 @@ economic action.
 
 Re-running the GitHub job is intentionally disabled. Any ambiguous paid attempt
 must stop for manual review rather than being purchased again.
+
+Launcher correction note: run 32121906109 stopped while looking for a misnamed restore artifact. The hash checks, provenance step, and paid model step were never reached. This corrected trigger retains the same one-cell and 75-cent authorization.
