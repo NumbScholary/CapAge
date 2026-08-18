@@ -28,6 +28,14 @@ jobs:
             --artifact-dir /tmp/capage-months \
             --memory /tmp/capage-memory.sqlite3 \
             --validate-only
+      - name: Validate frozen longitudinal v3 launch without a provider call
+        run: |
+          python -m capage.longitudinal_v3 \
+            experiments/sandbox/longitudinal_manifest_v3.json \
+            --checkpoint /tmp/capage-v3-checkpoint.json \
+            --artifact-dir /tmp/capage-v3-months \
+            --memory /tmp/capage-v3-memory.sqlite3 \
+            --validate-only
       - name: Validate frozen transfer test without a provider call
         run: |
           python -m capage.transfer \
