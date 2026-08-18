@@ -4,11 +4,12 @@ from __future__ import annotations
 
 import json
 from copy import deepcopy
+from hashlib import sha256
 from pathlib import Path
 import tempfile
 import unittest
 
-from capage.longitudinal_v3 import LongitudinalV3Config, LongitudinalV3Runner
+from capage.longitudinal_v3 import LongitudinalV3Config, LongitudinalV3Runner, main
 from capage.memory import AuditedMemoryStore
 from capage.sandbox import TokenTariff
 
@@ -472,6 +473,56 @@ class LongitudinalV3Tests(unittest.TestCase):
                 LongitudinalV3Config.from_manifest(manifest)
 
         self.assertEqual(config.month_seeds, (11, 22))
+
+    def test_frozen_v3_manifest_has_mechanical_unseen_seeds_and_validates_unpaid(self):
+        repository_root = Path(__file__).parents[1]
+        manifest = (
+            repository_root
+            / "experiments"
+            / "sandbox"
+            / "longitudinal_manifest_v3.json"
+        )
+        prior_manifest = json.loads(
+            (
+                repository_root
+                / "experiments"
+                / "sandbox"
+                / "longitudinal_manifest_v2.json"
+            ).read_text(encoding="utf-8")
+        )
+        payload = json.loads(manifest.read_text(encoding="utf-8"))
+        derivation = payload["seed_derivation"]
+        label = derivation["label"]
+        expected = []
+        for purpose in derivation["purposes"]:
+            digest = sha256(f"{label}|{purpose}".encode("utf-8")).hexdigest()
+            expected.append(100_000 + (int(digest[:12], 16) % 900_000))
+
+        self.assertEqual(payload["month_seeds"], expected[:6])
+        self.assertEqual(payload["customer_population_seed"], expected[6])
+        self.assertTrue(
+            set(expected).isdisjoint(
+                {
+                    *prior_manifest["month_seeds"],
+                    prior_manifest["customer_population_seed"],
+                }
+            )
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            status = main(
+                [
+                    str(manifest),
+                    "--checkpoint",
+                    str(Path(directory) / "checkpoint.json"),
+                    "--artifact-dir",
+                    str(Path(directory) / "months"),
+                    "--memory",
+                    str(Path(directory) / "memory.sqlite3"),
+                    "--validate-only",
+                ]
+            )
+
+        self.assertEqual(status, 0)
 
 
 if __name__ == "__main__":
