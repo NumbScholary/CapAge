@@ -220,18 +220,43 @@ class LiveSandboxRunnerTests(unittest.TestCase):
 
     def test_assessor_v2_rewards_need_coverage_and_penalizes_generic_padding(self):
         target = "A workshop needs to track supplier prices and lead times."
-        strong = """# Supplier comparison
-1. Record vendor, part, quantity, unit price, shipping, and quote date.
-2. Calculate landed cost and flag any lead time beyond 14 days.
-3. Review weekly and recommend the supplier meeting both price and delivery limits.
-"""
-        padded = ("This comprehensive solution is tailored to your needs and may help your business. " * 35)
+        brief = {
+            "schema_version": "capage-customer-task-v1",
+            "brief_id": "brief-test-001",
+            "task_type": "supplier_research",
+            "source_records": [
+                {"record_id": "option-1", "label": "Supplier 1", "value_points": 80, "cost_points": 20, "risk_points": 5},
+                {"record_id": "option-2", "label": "Supplier 2", "value_points": 70, "cost_points": 10, "risk_points": 2},
+                {"record_id": "option-3", "label": "Supplier 3", "value_points": 90, "cost_points": 40, "risk_points": 20},
+            ],
+        }
+        strong = json.dumps(
+            {
+                "brief_id": "brief-test-001",
+                "record_evaluations": [
+                    {"record_id": "option-1", "computed_score": 135},
+                    {"record_id": "option-2", "computed_score": 128},
+                    {"record_id": "option-3", "computed_score": 120},
+                ],
+                "recommended_record_id": "option-1",
+                "customer_summary": (
+                    "Supplier 1 is the strongest option for tracking supplier prices "
+                    "and lead times because its computed score is highest."
+                ),
+                "implementation_steps": [
+                    "Confirm Supplier 1's current quote before placing the order.",
+                    "Record delivery performance and reassess the score after fulfillment.",
+                ],
+            }
+        )
+        padded = "Supplier vendor lead delivery cost price compare record review " * 40
         strong_score, strong_factors = assess_artifact(
             strong,
             public_need=target,
             promised_scope="Compare supplier costs and recurring material lead times.",
             solution_tags=["supplier_research"],
             assessor_version="deterministic-artifact-v2",
+            task_brief=brief,
         )
         padded_score, padded_factors = assess_artifact(
             padded,
@@ -239,11 +264,36 @@ class LiveSandboxRunnerTests(unittest.TestCase):
             promised_scope="Compare supplier costs and recurring material lead times.",
             solution_tags=["supplier_research"],
             assessor_version="deterministic-artifact-v2",
+            task_brief=brief,
         )
-        self.assertGreaterEqual(strong_score, 70)
+        self.assertEqual(strong_score, 100)
         self.assertLess(padded_score, strong_score)
         self.assertEqual(strong_factors["penalties"], 0)
-        self.assertLess(padded_factors["penalties"], 0)
+        self.assertEqual(padded_score, 0)
+        self.assertEqual(padded_factors["valid_structure"], 0)
+
+        self_scope_score, _ = assess_artifact(
+            strong,
+            public_need=target,
+            promised_scope="An unrelated model-written promise about astronomy.",
+            solution_tags=["unrelated_model_tag"],
+            assessor_version="deterministic-artifact-v2",
+            task_brief=brief,
+        )
+        self.assertEqual(self_scope_score, strong_score)
+
+        wrong = json.loads(strong)
+        for evaluation in wrong["record_evaluations"]:
+            evaluation["computed_score"] = 999
+        wrong_score, _ = assess_artifact(
+            json.dumps(wrong),
+            public_need=target,
+            promised_scope="Compare supplier costs and lead times.",
+            solution_tags=["supplier_research"],
+            assessor_version="deterministic-artifact-v2",
+            task_brief=brief,
+        )
+        self.assertLess(wrong_score, 55)
 
     def test_delivery_is_scored_by_host_after_submission(self):
         artifact = """# Focused guide plan

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 from dataclasses import asdict, dataclass
 from datetime import date, datetime, timedelta, timezone
 from hashlib import sha256
@@ -10,6 +11,7 @@ from pathlib import Path
 from statistics import fmean, median
 from typing import Any, Callable, Protocol
 
+from capage.anthropic_client import AnthropicMessagesClient
 from capage.memory import AuditedMemoryStore
 from capage.sandbox import TokenTariff, empty_continuity_state, validate_continuity_state
 from capage.sandbox_runner import LiveSandboxRunner, ModelClient, SandboxRunConfig
@@ -56,11 +58,13 @@ class LongitudinalConfig:
     max_decisions_per_month: int
     per_month_model_cost_cap_cents: int
     aggregate_model_cost_cap_cents: int
+    per_arm_model_cost_cap_cents: int
     model: str
     effort: str
     max_output_tokens: int
     tariff: TokenTariff
     assessor_version: str
+    customer_population_seed: int
     tariff_valid_through: str = ""
 
     def __post_init__(self) -> None:
@@ -79,6 +83,14 @@ class LongitudinalConfig:
             raise ValueError("per-month model cost cap must be positive")
         if self.aggregate_model_cost_cap_cents < 2:
             raise ValueError("aggregate model cost cap must be at least two cents")
+        if self.per_arm_model_cost_cap_cents < 1:
+            raise ValueError("per-arm model cost cap must be positive")
+        if self.aggregate_model_cost_cap_cents < 2 * self.per_arm_model_cost_cap_cents:
+            raise ValueError("aggregate model cost cap must reserve both arm budgets")
+        if isinstance(self.customer_population_seed, bool) or not isinstance(
+            self.customer_population_seed, int
+        ):
+            raise TypeError("customer_population_seed must be an integer")
         if self.effort not in {"low", "medium", "high", "max"}:
             raise ValueError("unsupported effort")
         if not 128 <= self.max_output_tokens <= 4096:
@@ -94,7 +106,7 @@ class LongitudinalConfig:
     @classmethod
     def from_manifest(cls, path: str | Path) -> "LongitudinalConfig":
         payload = json.loads(Path(path).read_text(encoding="utf-8"))
-        if payload.get("schema_version") != "capage-longitudinal-v1":
+        if payload.get("schema_version") != "capage-longitudinal-v2":
             raise ValueError("unsupported longitudinal manifest schema")
         model = payload["model"]
         tariff = payload["token_tariff"]
@@ -111,6 +123,9 @@ class LongitudinalConfig:
             aggregate_model_cost_cap_cents=int(
                 payload["aggregate_model_cost_cap_cents"]
             ),
+            per_arm_model_cost_cap_cents=int(
+                payload["per_arm_model_cost_cap_cents"]
+            ),
             model=str(model["name"]),
             effort=str(model["effort"]),
             max_output_tokens=int(model["max_output_tokens"]),
@@ -124,6 +139,7 @@ class LongitudinalConfig:
                 ),
             ),
             assessor_version=str(payload["assessor_version"]),
+            customer_population_seed=int(payload["customer_population_seed"]),
             tariff_valid_through=str(payload.get("tariff_valid_through", "")),
         )
 
@@ -152,6 +168,7 @@ class LongitudinalConfig:
             horizon_days=self.horizon_days,
             starting_capital_cents=starting_capital_cents,
             tariff=self.tariff,
+            customer_population_seed=self.customer_population_seed,
             assessor_version=self.assessor_version,
             tariff_valid_through=self.tariff_valid_through,
         )
@@ -214,15 +231,27 @@ class LongitudinalRunner:
                         * _COST_UNITS_PER_CENT
                         - int(self.state["model_cost_units"])
                     )
-                    remaining_whole_cents = remaining_units // _COST_UNITS_PER_CENT
+                    arm_state = self.state["arms"][arm]
+                    arm_remaining_units = (
+                        self.config.per_arm_model_cost_cap_cents
+                        * _COST_UNITS_PER_CENT
+                        - int(arm_state["model_cost_units"])
+                    )
+                    remaining_whole_cents = min(
+                        remaining_units, arm_remaining_units
+                    ) // _COST_UNITS_PER_CENT
                     if remaining_whole_cents < 1:
-                        return self._stop("aggregate_model_cost_cap_reached")
+                        reason = (
+                            "arm_model_cost_cap_reached"
+                            if arm_remaining_units < _COST_UNITS_PER_CENT
+                            else "aggregate_model_cost_cap_reached"
+                        )
+                        return self._stop(reason)
                     cost_cap = min(
                         self.config.per_month_model_cost_cap_cents,
                         int(remaining_whole_cents),
                     )
                     context = self._memory_context(memory, month_number, arm)
-                    arm_state = self.state["arms"][arm]
                     month_config = self.config.month_config(
                         arm=arm,
                         month_number=month_number,
@@ -231,7 +260,10 @@ class LongitudinalRunner:
                     )
                     result_path = self.artifact_dir / f"{month_config.run_name}.json"
                     audit_path = self.artifact_dir / f"{month_config.run_name}-audit.jsonl"
-                    if result_path.exists() or audit_path.exists():
+                    attempt_path = (
+                        self.artifact_dir / f"{month_config.run_name}-attempt.json"
+                    )
+                    if result_path.exists() or audit_path.exists() or attempt_path.exists():
                         self.state["errors"].append(
                             {
                                 "cell_id": cell_id,
@@ -243,6 +275,14 @@ class LongitudinalRunner:
                             }
                         )
                         return self._stop("ambiguous_uncheckpointed_attempt")
+                    attempt = {
+                        "schema_version": "capage-paid-attempt-v1",
+                        "cell_id": cell_id,
+                        "config_commitment": self.config.commitment(),
+                        "status": "started",
+                        "started_at": datetime.now(timezone.utc).isoformat(),
+                    }
+                    _atomic_json(attempt_path, attempt)
                     try:
                         runner = self.runner_factory(
                             month_config,
@@ -264,12 +304,24 @@ class LongitudinalRunner:
                         return self._stop("provider_or_runner_error")
 
                     _atomic_json(result_path, result)
+                    _atomic_json(
+                        attempt_path,
+                        {
+                            **attempt,
+                            "status": "completed",
+                            "completed_at": datetime.now(timezone.utc).isoformat(),
+                            "result_sha256": sha256(
+                                _canonical_json(result).encode("utf-8")
+                            ).hexdigest(),
+                        },
+                    )
                     outcome = result["outcome"]
                     continuity = validate_continuity_state(
                         result["business_continuity"]
                     )
                     used_units = int(result["actual_model_cost_units"])
                     self.state["model_cost_units"] += used_units
+                    arm_state["model_cost_units"] += used_units
                     arm_state["balance_cents"] = int(outcome["balance_cents"])
                     arm_state["business_continuity"] = continuity
                     arm_state["months_completed"] += 1
@@ -301,6 +353,7 @@ class LongitudinalRunner:
                         "business_continuity_hash": _continuity_hash(continuity),
                         "result_file": result_path.name,
                         "audit_file": audit_path.name,
+                        "attempt_file": attempt_path.name,
                     }
                     arm_state["months"].append(record)
                     self.state["completed_cells"][cell_id] = record
@@ -309,6 +362,19 @@ class LongitudinalRunner:
                         self.state["memory_head_hash"] = memory.head_hash()
                     self._checkpoint()
                     attempted_now += 1
+
+                    if (
+                        int(arm_state["model_cost_units"])
+                        > self.config.per_arm_model_cost_cap_cents
+                        * _COST_UNITS_PER_CENT
+                    ):
+                        return self._stop("arm_model_cost_cap_exceeded")
+                    if (
+                        int(self.state["model_cost_units"])
+                        > self.config.aggregate_model_cost_cap_cents
+                        * _COST_UNITS_PER_CENT
+                    ):
+                        return self._stop("aggregate_model_cost_cap_exceeded")
 
                     if int(outcome["open_obligations"]) != 0:
                         return self._stop("open_obligations_require_state_serialization")
@@ -464,6 +530,9 @@ class LongitudinalRunner:
                 "total_model_cost_units": sum(
                     int(row["actual_model_cost_units"]) for row in rows
                 ),
+                "reserved_model_cost_cap_cents": (
+                    self.config.per_arm_model_cost_cap_cents
+                ),
             }
         paired_deltas = []
         for month_number in range(1, len(self.config.month_seeds) + 1):
@@ -487,23 +556,47 @@ class LongitudinalRunner:
         commitment = self.config.commitment()
         if self.checkpoint_path.exists():
             state = json.loads(self.checkpoint_path.read_text(encoding="utf-8"))
-            if state.get("schema_version") != "capage-longitudinal-checkpoint-v2":
+            if state.get("schema_version") != "capage-longitudinal-checkpoint-v3":
                 raise ValueError("unsupported longitudinal checkpoint schema")
             if state.get("config_commitment") != commitment:
                 raise ValueError("checkpoint does not match the frozen configuration")
+            checkpoint_cells: set[str] = set()
+            total_units = 0
             for arm in _ARMS:
                 arm_state = state.get("arms", {}).get(arm, {})
                 continuity = validate_continuity_state(
                     arm_state.get("business_continuity")
                 )
                 months = arm_state.get("months", [])
+                if not isinstance(months, list):
+                    raise ValueError("checkpoint arm months must be a list")
+                if int(arm_state.get("months_completed", -1)) != len(months):
+                    raise ValueError("checkpoint month count mismatch")
+                expected_balance = (
+                    int(months[-1]["ending_balance_cents"])
+                    if months
+                    else self.config.starting_capital_cents
+                )
+                if int(arm_state.get("balance_cents", -1)) != expected_balance:
+                    raise ValueError("checkpoint arm balance mismatch")
+                recorded_units = sum(
+                    int(month["actual_model_cost_units"]) for month in months
+                )
+                if int(arm_state.get("model_cost_units", -1)) != recorded_units:
+                    raise ValueError("checkpoint arm model cost mismatch")
+                total_units += recorded_units
+                checkpoint_cells.update(str(month["cell_id"]) for month in months)
                 if months and months[-1].get("business_continuity_hash") != _continuity_hash(
                     continuity
                 ):
                     raise ValueError("checkpoint business continuity hash mismatch")
+            if int(state.get("model_cost_units", -1)) != total_units:
+                raise ValueError("checkpoint aggregate model cost mismatch")
+            if set(state.get("completed_cells", {})) != checkpoint_cells:
+                raise ValueError("checkpoint completed-cell index mismatch")
             return state
         return {
-            "schema_version": "capage-longitudinal-checkpoint-v2",
+            "schema_version": "capage-longitudinal-checkpoint-v3",
             "experiment_name": self.config.experiment_name,
             "config_commitment": commitment,
             "status": "ready",
@@ -518,6 +611,7 @@ class LongitudinalRunner:
                     "months_completed": 0,
                     "months": [],
                     "business_continuity": empty_continuity_state(),
+                    "model_cost_units": 0,
                 }
                 for arm in _ARMS
             },
@@ -545,3 +639,64 @@ class LongitudinalRunner:
             microseconds=-1,
         )
         return end.isoformat()
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("manifest")
+    parser.add_argument("--checkpoint", required=True)
+    parser.add_argument("--artifact-dir", required=True)
+    parser.add_argument("--memory", required=True)
+    parser.add_argument("--max-cells", type=int)
+    parser.add_argument("--validate-only", action="store_true")
+    parser.add_argument("--confirm", default="")
+    args = parser.parse_args(argv)
+
+    config = LongitudinalConfig.from_manifest(args.manifest)
+    if args.validate_only:
+        print(
+            json.dumps(
+                {
+                    "status": "validated",
+                    "config_commitment": config.commitment(),
+                    "cell_count": 2 * len(config.month_seeds),
+                    "maximum_external_model_cost_cents": (
+                        config.aggregate_model_cost_cap_cents
+                    ),
+                },
+                sort_keys=True,
+            )
+        )
+        return 0
+    if args.confirm != "RUN_MATCHED_LONGITUDINAL_V2":
+        parser.error(
+            "paid execution requires --confirm RUN_MATCHED_LONGITUDINAL_V2"
+        )
+
+    runner = LongitudinalRunner(
+        config,
+        AnthropicMessagesClient(),
+        checkpoint_path=args.checkpoint,
+        artifact_dir=args.artifact_dir,
+        memory_path=args.memory,
+    )
+    state = runner.run(max_cells=args.max_cells)
+    print(
+        json.dumps(
+            {
+                "status": state["status"],
+                "stop_reason": state["stop_reason"],
+                "completed_cell_count": len(state["completed_cells"]),
+                "model_cost_cents_known_unrounded": (
+                    int(state["model_cost_units"]) / _COST_UNITS_PER_CENT
+                ),
+                "summary": state.get("summary"),
+            },
+            sort_keys=True,
+        )
+    )
+    return 0 if state["status"] in {"completed", "paused"} else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

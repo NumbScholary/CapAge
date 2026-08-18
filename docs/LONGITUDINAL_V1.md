@@ -42,33 +42,10 @@ Memory is inserted into the ordinary model request as untrusted context data,
 so Anthropic's token-count preflight automatically includes its cost. No memory
 write or rewrite tool is exposed to the model.
 
-## Business continuity and reputation
+## Fail-closed limitation
 
-Each arm now carries an independent, host-owned business-continuity ledger.
-Stable customer identifiers allow counterparties to recur across seeded months.
-The ledger records offers, accepted contracts, assessed deliveries, payments,
-defaults, disputes, and feedback responses. Prior relationships make repeat
-customers easier to rediscover, while host-owned reputation can affect later
-acceptance odds. The model sees the factual interaction history, not the hidden
-reputation points or hidden satisfaction score, and it has no tool for editing
-either.
-
-The control and memory arms both receive their own continuity ledger. This
-holds the economic mechanism constant so the experiment isolates the value of
-durable model memory rather than confounding memory with access to repeat
-business.
-
-## Assessor v2
-
-`deterministic-artifact-v2` is a frozen host-side rubric. It scores relevance,
-need-specific coverage, actionability, specificity, and clarity. It also
-penalizes generic marketing phrases, highly repetitive padding, and excessive
-length. Need-specific criteria are fixed by solution tag; the strategic model
-cannot assess its own work or change the selected assessor version.
-
-## Remaining fail-closed limitation
-
-Active contracts are still not serialized across a month boundary. If a month
-ends with an open obligation, execution stops rather than silently discarding
-it. This keeps the longitudinal test honest while leaving full mid-contract
-continuation for a later sandbox-world version.
+This version carries capital and memory but does not yet serialize active
+contracts or counterparties. If a month ends with an open obligation, execution
+stops rather than silently discarding it. Customer continuity, repeat business,
+reputation, and stricter artifact assessment belong to the next sandbox-world
+version and must be implemented before a paid longitudinal experiment.

@@ -1,0 +1,30 @@
+name: CapAge dependency-free quality gate
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run every dependency-free test
+        run: python -m unittest discover -s tests -v
+      - name: Compile project and tests
+        run: python -m py_compile capage/*.py tests/*.py
+      - name: Validate frozen longitudinal launch without a provider call
+        run: |
+          python -m capage.longitudinal \
+            experiments/sandbox/longitudinal_manifest_v2.json \
+            --checkpoint /tmp/capage-checkpoint.json \
+            --artifact-dir /tmp/capage-months \
+            --memory /tmp/capage-memory.sqlite3 \
+            --validate-only

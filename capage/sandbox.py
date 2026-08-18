@@ -20,6 +20,8 @@ STARTING_CAPITAL_CENTS = 25_000
 DEFAULT_HORIZON_DAYS = 30
 _COST_UNITS_PER_CENT = 1_000_000
 _CONTINUITY_SCHEMA = "capage-business-continuity-v1"
+_MAX_CONTINUITY_CUSTOMERS = 10_000
+_MAX_CONTINUITY_COUNT = 1_000_000
 
 _SECTORS = (
     "local_services",
@@ -150,6 +152,33 @@ _EVENT_KINDS = (
     "operating_cost_down",
 )
 
+_TASK_NOUNS = {
+    "service_clarity": "service package",
+    "data_cleanup": "data source",
+    "documentation": "archive item",
+    "customer_research": "customer theme",
+    "comparison_research": "software option",
+    "supplier_research": "supplier option",
+    "scheduling": "scheduling policy",
+    "audience_research": "guide topic",
+    "catalog_cleanup": "catalog group",
+    "process_documentation": "process change",
+    "lead_qualification": "lead segment",
+    "inventory_analysis": "inventory policy",
+}
+
+_LAST_OUTCOMES = {
+    "",
+    "delivery_accepted",
+    "delivery_disputed",
+    "paid",
+    "customer_payment_default",
+    "feedback_very_satisfied",
+    "feedback_satisfied",
+    "feedback_mixed",
+    "feedback_dissatisfied",
+}
+
 
 def _canonical_json(value: Any) -> str:
     return json.dumps(value, sort_keys=True, separators=(",", ":"))
@@ -203,6 +232,8 @@ def validate_continuity_state(value: dict[str, Any] | None) -> dict[str, Any]:
         raise ValueError("global reputation points must be an integer from -100 to 100")
     if not isinstance(customers, dict):
         raise ValueError("continuity customers must be an object")
+    if len(customers) > _MAX_CONTINUITY_CUSTOMERS:
+        raise ValueError("continuity contains too many customers")
     count_fields = (
         "offers_sent",
         "contracts_accepted",
@@ -213,7 +244,15 @@ def validate_continuity_state(value: dict[str, Any] | None) -> dict[str, Any]:
         "feedback_responses",
     )
     for customer_id, record in customers.items():
-        if not isinstance(customer_id, str) or not customer_id.startswith("customer-"):
+        if (
+            not isinstance(customer_id, str)
+            or not customer_id.startswith("customer-")
+            or len(customer_id) > 96
+            or any(
+                character not in "abcdefghijklmnopqrstuvwxyz0123456789-"
+                for character in customer_id
+            )
+        ):
             raise ValueError("continuity contains an invalid customer identifier")
         if not isinstance(record, dict):
             raise ValueError("continuity customer record must be an object")
@@ -221,8 +260,12 @@ def validate_continuity_state(value: dict[str, Any] | None) -> dict[str, Any]:
             raise ValueError("continuity customer record has unexpected fields")
         for field in count_fields:
             item = record[field]
-            if isinstance(item, bool) or not isinstance(item, int) or item < 0:
-                raise ValueError(f"continuity {field} must be a nonnegative integer")
+            if (
+                isinstance(item, bool)
+                or not isinstance(item, int)
+                or not 0 <= item <= _MAX_CONTINUITY_COUNT
+            ):
+                raise ValueError(f"continuity {field} must be a bounded nonnegative integer")
         reputation = record["reputation_points"]
         if (
             isinstance(reputation, bool)
@@ -230,8 +273,27 @@ def validate_continuity_state(value: dict[str, Any] | None) -> dict[str, Any]:
             or not -100 <= reputation <= 100
         ):
             raise ValueError("customer reputation points must be an integer from -100 to 100")
-        if not isinstance(record["last_outcome"], str):
-            raise ValueError("customer last_outcome must be a string")
+        if record["last_outcome"] not in _LAST_OUTCOMES:
+            raise ValueError("customer last_outcome is unsupported")
+        offers = int(record["offers_sent"])
+        accepted = int(record["contracts_accepted"])
+        assessed = int(record["deliveries_assessed"])
+        terminal = sum(
+            int(record[field])
+            for field in (
+                "contracts_paid",
+                "contracts_defaulted",
+                "contracts_disputed",
+            )
+        )
+        if accepted > offers:
+            raise ValueError("accepted contracts cannot exceed offers")
+        if assessed > accepted:
+            raise ValueError("assessed deliveries cannot exceed accepted contracts")
+        if terminal > assessed:
+            raise ValueError("terminal contract outcomes cannot exceed assessed deliveries")
+        if int(record["feedback_responses"]) > assessed:
+            raise ValueError("feedback responses cannot exceed assessed deliveries")
     return state
 
 
@@ -318,6 +380,7 @@ class _MarketSignal:
     discoverability: float
     active_from: int
     active_until: int
+    task_brief: dict[str, Any]
 
     def is_active(self, day: int) -> bool:
         return self.active_from <= day <= self.active_until
@@ -396,6 +459,7 @@ class EconomicSandbox:
         market_size: int = 18,
         token_tariff: TokenTariff | None = None,
         continuity_state: dict[str, Any] | None = None,
+        customer_population_seed: int = 0,
     ) -> None:
         if isinstance(seed, bool) or not isinstance(seed, int):
             raise TypeError("seed must be an integer")
@@ -407,11 +471,16 @@ class EconomicSandbox:
             raise ValueError("market_size must be at least 6")
         if token_tariff is not None and not isinstance(token_tariff, TokenTariff):
             raise TypeError("token_tariff must be a TokenTariff")
+        if isinstance(customer_population_seed, bool) or not isinstance(
+            customer_population_seed, int
+        ):
+            raise TypeError("customer_population_seed must be an integer")
 
         self._seed = seed
         self.horizon_days = horizon_days
         self.starting_capital_cents = starting_capital_cents
         self.token_tariff = token_tariff
+        self.customer_population_seed = customer_population_seed
         self._continuity = validate_continuity_state(continuity_state)
         self.day = 0
         self._balance_cents = 0
@@ -478,6 +547,21 @@ class EconomicSandbox:
             signal_id = f"signal-{index + 1:03d}"
             customer_occurrences[need_tag] = customer_occurrences.get(need_tag, 0) + 1
             customer_id = f"customer-{need_tag.replace('_', '-')}-{customer_occurrences[need_tag]:02d}"
+            customer_rng = _derived_rng(
+                self.customer_population_seed, f"customer-traits:{customer_id}"
+            )
+            if self.customer_population_seed == 0:
+                budget_cents = rng.randrange(2_500, 20_001, 500)
+                buyer_intent = rng.random() < 0.65
+                responsiveness = round(rng.uniform(0.25, 0.95), 4)
+                payment_reliability = round(rng.uniform(0.55, 0.98), 4)
+                quality_threshold = rng.randint(55, 90)
+            else:
+                budget_cents = customer_rng.randrange(2_500, 20_001, 500)
+                buyer_intent = rng.random() < 0.65
+                responsiveness = round(customer_rng.uniform(0.25, 0.95), 4)
+                payment_reliability = round(customer_rng.uniform(0.55, 0.98), 4)
+                quality_threshold = customer_rng.randint(55, 90)
             signals[signal_id] = _MarketSignal(
                 signal_id=signal_id,
                 customer_id=customer_id,
@@ -485,16 +569,61 @@ class EconomicSandbox:
                 need_tag=need_tag,
                 source_type=source_type,
                 public_text=public_text,
-                budget_cents=rng.randrange(2_500, 20_001, 500),
-                buyer_intent=rng.random() < 0.65,
-                responsiveness=round(rng.uniform(0.25, 0.95), 4),
-                payment_reliability=round(rng.uniform(0.55, 0.98), 4),
-                quality_threshold=rng.randint(55, 90),
+                budget_cents=budget_cents,
+                buyer_intent=buyer_intent,
+                responsiveness=responsiveness,
+                payment_reliability=payment_reliability,
+                quality_threshold=quality_threshold,
                 discoverability=round(rng.uniform(0.1, 0.95), 4),
                 active_from=active_from,
                 active_until=active_until,
+                task_brief=self._build_task_brief(signal_id, customer_id, need_tag),
             )
         return signals
+
+    def _build_task_brief(
+        self,
+        signal_id: str,
+        customer_id: str,
+        need_tag: str,
+    ) -> dict[str, Any]:
+        """Create a committed, objectively checkable customer-supplied task."""
+
+        noun = _TASK_NOUNS[need_tag]
+        rng = _derived_rng(self._seed, f"customer-task:{signal_id}:{customer_id}")
+        records = []
+        for index in range(1, 4):
+            records.append(
+                {
+                    "record_id": f"option-{index}",
+                    "label": f"{noun.title()} {index}",
+                    "value_points": rng.randint(35, 95),
+                    "cost_points": rng.randint(5, 45),
+                    "risk_points": rng.randint(0, 25),
+                }
+            )
+        brief_id = sha256(
+            f"brief:{self._seed}:{signal_id}:{customer_id}".encode("utf-8")
+        ).hexdigest()[:16]
+        return {
+            "schema_version": "capage-customer-task-v1",
+            "brief_id": brief_id,
+            "task_type": need_tag,
+            "objective": (
+                f"Evaluate all three {noun} records and recommend the strongest option."
+            ),
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": records,
+            "required_delivery_schema": {
+                "brief_id": "exact brief_id",
+                "record_evaluations": [
+                    {"record_id": "option-N", "computed_score": "integer"}
+                ],
+                "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+                "customer_summary": "plain-language explanation",
+                "implementation_steps": ["at least two concrete next steps"],
+            },
+        }
 
     def _build_event_schedule(self) -> tuple[ScheduledEvent, ...]:
         rng = _derived_rng(self._seed, "events")
@@ -513,6 +642,7 @@ class EconomicSandbox:
             "seed": self._seed,
             "horizon_days": self.horizon_days,
             "starting_capital_cents": self.starting_capital_cents,
+            "customer_population_seed": self.customer_population_seed,
             "signals": [
                 asdict(self._signals[key]) for key in sorted(self._signals)
             ],
@@ -1057,6 +1187,9 @@ class EconomicSandbox:
                     "contract_id": contract_id,
                     "deadline_day": contract.deadline_day,
                     "agreed_price_cents": contract.price_cents,
+                    "delivery_brief": _json_copy(
+                        self._signals[offer.signal_id].task_brief
+                    ),
                 }
                 self._inbox.append(message)
                 self._record("offer_accepted", message)
@@ -1333,7 +1466,7 @@ class EconomicSandbox:
         }
 
     def _contract_view(self, contract: _Contract) -> dict[str, Any]:
-        return {
+        view = {
             "contract_id": contract.contract_id,
             "offer_id": contract.offer_id,
             "signal_id": contract.signal_id,
@@ -1344,6 +1477,11 @@ class EconomicSandbox:
             "delivery_id": contract.delivery_id,
             "feedback_requested": contract.feedback_requested,
         }
+        if contract.status != "accepted" or contract.accepted_day <= self.day:
+            view["delivery_brief"] = _json_copy(
+                self._signals[contract.signal_id].task_brief
+            )
+        return view
 
     def outcome(self) -> dict[str, Any]:
         """Return host-visible run measures without rewriting economic history."""

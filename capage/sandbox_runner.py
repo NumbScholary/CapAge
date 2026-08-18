@@ -47,6 +47,7 @@ class SandboxRunConfig:
     horizon_days: int
     starting_capital_cents: int
     tariff: TokenTariff
+    customer_population_seed: int = 0
     assessor_version: str = "deterministic-artifact-v1"
     tariff_valid_through: str = ""
 
@@ -61,6 +62,10 @@ class SandboxRunConfig:
             raise ValueError("max_decisions must be between 1 and 100")
         if self.max_run_cost_cents < 1:
             raise ValueError("max_run_cost_cents must be positive")
+        if isinstance(self.customer_population_seed, bool) or not isinstance(
+            self.customer_population_seed, int
+        ):
+            raise TypeError("customer_population_seed must be an integer")
         if self.assessor_version not in {
             "deterministic-artifact-v1",
             "deterministic-artifact-v2",
@@ -95,6 +100,7 @@ class SandboxRunConfig:
                     tariff["output_cents_per_million_tokens"]
                 ),
             ),
+            customer_population_seed=int(payload.get("customer_population_seed", 0)),
             assessor_version=str(payload["assessor_version"]),
             tariff_valid_through=str(payload["tariff_valid_through"]),
         )
@@ -113,6 +119,10 @@ time under uncertainty. The environment alone controls hidden counterparties,
 chance, quality assessment, settlement, and revenue recognition. Never claim
 that an unobserved event happened and never invent a customer, payment, or
 capability. All monetary amounts are integer cents.
+
+An accepted contract includes a delivery_brief. When its required delivery
+schema is present, submit the artifact as one strict JSON object matching that
+schema and calculate every requested value from the supplied source records.
 
 Every one of your input, thinking, and output tokens is automatically charged
 against the synthetic ledger. Be economical but think enough to avoid costly
@@ -352,6 +362,7 @@ def assess_artifact(
     promised_scope: str,
     solution_tags: list[str],
     assessor_version: str = "deterministic-artifact-v1",
+    task_brief: dict[str, Any] | None = None,
 ) -> tuple[int, dict[str, int]]:
     """Return a deterministic host score without asking the strategic model."""
 
@@ -359,8 +370,7 @@ def assess_artifact(
         return _assess_artifact_v2(
             artifact,
             public_need=public_need,
-            promised_scope=promised_scope,
-            solution_tags=solution_tags,
+            task_brief=task_brief,
         )
     if assessor_version != "deterministic-artifact-v1":
         raise ValueError("unsupported artifact assessor version")
@@ -390,76 +400,136 @@ def assess_artifact(
     return min(100, sum(factors.values())), factors
 
 
-_V2_CRITERIA = {
-    "service_clarity": (("service", "include"), ("price", "scope"), ("question", "faq")),
-    "data_cleanup": (("column", "field"), ("duplicate", "deduplicate"), ("validate", "check")),
-    "documentation": (("index", "search"), ("transcript", "archive"), ("topic", "tag")),
-    "customer_research": (("review", "customer"), ("pattern", "theme"), ("recommend", "change")),
-    "comparison_research": (("cost", "price"), ("feature", "requirement"), ("compare", "matrix")),
-    "supplier_research": (("supplier", "vendor"), ("lead", "delivery"), ("cost", "price")),
-    "scheduling": (("availability", "schedule"), ("response", "confirm"), ("time", "window")),
-    "audience_research": (("archive", "interview"), ("question", "topic"), ("guide", "index")),
-    "catalog_cleanup": (("product", "item"), ("duplicate", "consistent"), ("description", "listing")),
-    "process_documentation": (("step", "checklist"), ("handoff", "owner"), ("event", "setup")),
-    "lead_qualification": (("qualify", "criteria"), ("service", "scope"), ("question", "intake")),
-    "inventory_analysis": (("stock", "inventory"), ("reorder", "shortage"), ("usage", "quantity")),
-}
-
-
 def _assess_artifact_v2(
     artifact: str,
     *,
     public_need: str,
-    promised_scope: str,
-    solution_tags: list[str],
+    task_brief: dict[str, Any] | None,
 ) -> tuple[int, dict[str, int]]:
-    """Frozen rubric rewarding need coverage and penalizing generic padding."""
+    """Score a structured delivery against committed customer-supplied facts."""
 
-    normalized = artifact.strip()
-    tokens = _tokens(normalized)
-    lines = [line.strip() for line in normalized.splitlines() if line.strip()]
-    target = _tokens(" ".join((public_need, promised_scope, " ".join(solution_tags))))
-    overlap = len(tokens & target)
-    relevance = min(25, round(25 * overlap / max(4, min(10, len(target)))))
-
-    criteria = []
-    for tag in solution_tags:
-        criteria.extend(_V2_CRITERIA.get(tag, ()))
-    covered = sum(any(word in tokens for word in alternatives) for alternatives in criteria)
-    need_coverage = min(30, round(30 * covered / max(1, len(criteria))))
-
-    structured = sum(
-        line.startswith(("-", "*", "#")) or re.match(r"^\d+[.)]", line) is not None
-        for line in lines
-    )
-    action_words = {
-        "compare", "record", "review", "rank", "group", "validate", "flag",
-        "calculate", "publish", "update", "assign", "measure", "recommend",
-    }
-    actionability = min(25, (3 * min(structured, 4)) + (2 * len(tokens & action_words)))
-    specificity = min(15, len(tokens) // 8) + min(5, sum(char.isdigit() for char in normalized))
-    clarity = 5 if 3 <= len(lines) <= 30 else 2 if lines else 0
-
-    generic_phrases = (
-        "may help your business",
-        "comprehensive solution",
-        "best in class",
-        "leverage synergies",
-        "tailored to your needs",
-    )
-    generic_penalty = 5 * sum(phrase in normalized.lower() for phrase in generic_phrases)
-    word_list = re.findall(r"[a-z0-9]+", normalized.lower())
-    repetition_penalty = 10 if len(word_list) >= 80 and len(set(word_list)) / len(word_list) < 0.35 else 0
-    verbosity_penalty = min(15, max(0, (len(normalized) - 2_500) // 250))
-    penalties = generic_penalty + repetition_penalty + verbosity_penalty
     factors = {
-        "relevance": relevance,
-        "need_coverage": need_coverage,
-        "actionability": actionability,
-        "specificity": specificity,
-        "clarity": clarity,
-        "penalties": -penalties,
+        "valid_structure": 0,
+        "brief_identity": 0,
+        "record_coverage": 0,
+        "calculation_accuracy": 0,
+        "recommendation_accuracy": 0,
+        "implementation_quality": 0,
+        "customer_explanation": 0,
+        "penalties": 0,
     }
+    if not isinstance(task_brief, dict):
+        return 0, factors
+    if task_brief.get("schema_version") != "capage-customer-task-v1":
+        return 0, factors
+    try:
+        delivery = json.loads(artifact)
+    except (TypeError, json.JSONDecodeError):
+        return 0, factors
+    if not isinstance(delivery, dict):
+        return 0, factors
+    required = {
+        "brief_id",
+        "record_evaluations",
+        "recommended_record_id",
+        "customer_summary",
+        "implementation_steps",
+    }
+    if set(delivery) != required:
+        return 0, factors
+    factors["valid_structure"] = 10
+    if delivery.get("brief_id") == task_brief.get("brief_id"):
+        factors["brief_identity"] = 10
+
+    records = task_brief.get("source_records")
+    evaluations = delivery.get("record_evaluations")
+    if not isinstance(records, list) or not isinstance(evaluations, list):
+        return sum(factors.values()), factors
+    expected_scores: dict[str, int] = {}
+    for record in records:
+        if not isinstance(record, dict):
+            return 0, {key: 0 for key in factors}
+        try:
+            record_id = str(record["record_id"])
+            expected_scores[record_id] = (
+                (2 * int(record["value_points"]))
+                - int(record["cost_points"])
+                - int(record["risk_points"])
+            )
+        except (KeyError, TypeError, ValueError):
+            return 0, {key: 0 for key in factors}
+
+    submitted_scores: dict[str, int] = {}
+    malformed = False
+    for evaluation in evaluations:
+        if not isinstance(evaluation, dict) or set(evaluation) != {
+            "record_id",
+            "computed_score",
+        }:
+            malformed = True
+            continue
+        record_id = str(evaluation["record_id"])
+        score = evaluation["computed_score"]
+        if (
+            record_id in submitted_scores
+            or isinstance(score, bool)
+            or not isinstance(score, int)
+        ):
+            malformed = True
+            continue
+        submitted_scores[record_id] = score
+
+    expected_ids = set(expected_scores)
+    submitted_ids = set(submitted_scores)
+    covered = len(expected_ids & submitted_ids)
+    factors["record_coverage"] = round(15 * covered / max(1, len(expected_ids)))
+    correct = sum(
+        submitted_scores.get(record_id) == score
+        for record_id, score in expected_scores.items()
+    )
+    factors["calculation_accuracy"] = round(
+        30 * correct / max(1, len(expected_scores))
+    )
+
+    recommended = min(
+        expected_scores,
+        key=lambda record_id: (-expected_scores[record_id], record_id),
+    )
+    calculations_complete = correct == len(expected_scores)
+    if calculations_complete and delivery.get("recommended_record_id") == recommended:
+        factors["recommendation_accuracy"] = 20
+
+    steps = delivery.get("implementation_steps")
+    if (
+        isinstance(steps, list)
+        and 2 <= len(steps) <= 8
+        and all(isinstance(step, str) and 12 <= len(step.strip()) <= 300 for step in steps)
+    ):
+        factors["implementation_quality"] = 10
+
+    summary = delivery.get("customer_summary")
+    if isinstance(summary, str):
+        summary_tokens = _tokens(summary)
+        need_tokens = _tokens(public_need)
+        recommended_label = next(
+            str(record.get("label", ""))
+            for record in records
+            if str(record.get("record_id")) == recommended
+        )
+        label_tokens = _tokens(recommended_label)
+        if (
+            calculations_complete
+            and 60 <= len(summary.strip()) <= 1_000
+            and (summary_tokens & need_tokens)
+            and (recommended in summary or bool(summary_tokens & label_tokens))
+        ):
+            factors["customer_explanation"] = 10
+
+    unknown_ids = submitted_ids - expected_ids
+    if malformed or unknown_ids or len(evaluations) != len(expected_ids):
+        factors["penalties"] = -20
+    elif not calculations_complete:
+        factors["penalties"] = -30
     return max(0, min(100, sum(factors.values()))), factors
 
 
@@ -483,6 +553,7 @@ class LiveSandboxRunner:
             starting_capital_cents=config.starting_capital_cents,
             token_tariff=config.tariff,
             continuity_state=continuity_state,
+            customer_population_seed=config.customer_population_seed,
         )
         registry = self.world.agent_tools()
         self.executor = Executor(
@@ -764,6 +835,7 @@ class LiveSandboxRunner:
             promised_scope=str(offer["scope"]),
             solution_tags=list(offer["solution_tags"]),
             assessor_version=self.config.assessor_version,
+            task_brief=contract.get("delivery_brief"),
         )
         result = self.world.assess_delivery(
             str(tool_result["delivery_id"]),
