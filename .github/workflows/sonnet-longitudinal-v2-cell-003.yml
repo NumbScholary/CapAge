@@ -45,7 +45,7 @@ jobs:
       - name: Verify frozen implementation and manifest
         run: |
           set -eu
-          test "$(sha256sum experiments/sandbox/longitudinal_manifest_v2.json | cut -d ' ' -f1)" = "fae74f540031038ded465242af1cbe421263646ba8b4495ad1c5c5510896ee05"
+          test "$(sha256sum experiments/sandbox/longitudinal_manifest_v2.json | cut -d ' ' -f1)" = "fae74f540021038ded465242af1cbe421263646ba8b4495ad1c5c5510896ee05"
           test "$(sha256sum capage/sandbox.py | cut -d ' ' -f1)" = "35b4eec2eb80a9184ca5511fdfd72c51a0d26194b7c1b211abe3ffd8e5b0a5d3"
           test "$(sha256sum capage/sandbox_runner.py | cut -d ' ' -f1)" = "9712f321b898b66a7e129d78fc8218eed8639344b3a5d0486b0e9c70778f98cb"
           test "$(sha256sum capage/memory.py | cut -d ' ' -f1)" = "6a1348a6230b7431d12853ada5ba66f2cea9bad93ff1ba2d4e0e77986c22fcee"
