@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from copy import deepcopy
 from pathlib import Path
 import tempfile
 import unittest
@@ -16,10 +17,19 @@ class FakeMonthRunner:
     fail_cell: str | None = None
     open_obligation_cell: str | None = None
 
-    def __init__(self, config, client, *, audit_path, durable_context=None):
+    def __init__(
+        self,
+        config,
+        client,
+        *,
+        audit_path,
+        durable_context=None,
+        continuity_state=None,
+    ):
         del client, audit_path
         self.config = config
         self.context = durable_context
+        self.continuity = deepcopy(continuity_state)
 
     def run(self):
         arm = "memory" if "-memory-" in self.config.run_name else "control"
@@ -31,6 +41,7 @@ class FakeMonthRunner:
                 "seed": self.config.seed,
                 "starting_capital_cents": self.config.starting_capital_cents,
                 "context": self.context,
+                "continuity": deepcopy(self.continuity),
             }
         )
         if cell == type(self).fail_cell:
@@ -39,6 +50,29 @@ class FakeMonthRunner:
         expense = 5
         revenue = net + expense
         open_obligations = int(cell == type(self).open_obligation_cell)
+        continuity = deepcopy(self.continuity)
+        customer_id = "customer-audience-research-01"
+        customer = continuity["customers"].setdefault(
+            customer_id,
+            {
+                "offers_sent": 0,
+                "contracts_accepted": 0,
+                "deliveries_assessed": 0,
+                "contracts_paid": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "feedback_responses": 0,
+                "reputation_points": 0,
+                "last_outcome": "",
+            },
+        )
+        customer["offers_sent"] += 1
+        customer["contracts_accepted"] += 1
+        customer["deliveries_assessed"] += 1
+        customer["contracts_paid"] += 1
+        customer["reputation_points"] += 5
+        customer["last_outcome"] = "paid"
+        continuity["global_reputation_points"] += 5
         return {
             "status": "completed",
             "stop_reason": "horizon_reached",
@@ -57,6 +91,7 @@ class FakeMonthRunner:
                 "open_obligations": open_obligations,
             },
             "transcript": [],
+            "business_continuity": continuity,
         }
 
 
@@ -112,6 +147,12 @@ class LongitudinalRunnerTests(unittest.TestCase):
         self.assertEqual(control_calls[1]["starting_capital_cents"], 25_005)
         self.assertEqual(memory_calls[1]["starting_capital_cents"], 25_015)
         self.assertEqual(state["summary"]["mean_paired_delta_cents"], 20)
+        self.assertEqual(control_calls[1]["continuity"]["global_reputation_points"], 5)
+        self.assertEqual(memory_calls[1]["continuity"]["global_reputation_points"], 5)
+        self.assertIsNot(
+            state["arms"]["control"]["business_continuity"],
+            state["arms"]["memory"]["business_continuity"],
+        )
 
     def test_safe_pause_resumes_without_repeating_a_cell(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -167,6 +208,18 @@ class LongitudinalRunnerTests(unittest.TestCase):
         self.assertEqual(second["status"], "stopped")
         self.assertEqual(second["stop_reason"], "memory_checkpoint_mismatch")
         self.assertEqual(len(FakeMonthRunner.calls), calls)
+
+    def test_tampered_business_continuity_checkpoint_is_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            self.runner(directory).run(max_cells=2)
+            checkpoint = Path(directory) / "checkpoint.json"
+            payload = json.loads(checkpoint.read_text(encoding="utf-8"))
+            payload["arms"]["memory"]["business_continuity"][
+                "global_reputation_points"
+            ] = 99
+            checkpoint.write_text(json.dumps(payload), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "continuity hash mismatch"):
+                self.runner(directory)
 
     def test_open_obligations_stop_instead_of_being_discarded(self):
         FakeMonthRunner.open_obligation_cell = "month-001:memory"
