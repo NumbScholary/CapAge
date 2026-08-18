@@ -231,6 +231,19 @@ class LongitudinalRunnerTests(unittest.TestCase):
                 per_arm_model_cost_cap_cents=5,
             )
 
+    def test_expired_tariff_stops_before_creating_a_paid_attempt(self):
+        with tempfile.TemporaryDirectory() as directory:
+            runner = self.runner(
+                directory,
+                config=self.config(tariff_valid_through="2020-01-01"),
+            )
+            state = runner.run()
+
+        self.assertEqual(state["status"], "stopped")
+        self.assertEqual(state["stop_reason"], "frozen_tariff_expired")
+        self.assertEqual(FakeMonthRunner.calls, [])
+        self.assertEqual(list((Path(directory) / "artifacts").glob("*-attempt.json")), [])
+
     def test_an_arm_cannot_borrow_the_other_arms_unused_reservation(self):
         FakeMonthRunner.cost_units_by_arm = {
             "control": 1_000_000,
@@ -277,6 +290,16 @@ class LongitudinalRunnerTests(unittest.TestCase):
             ] = 99
             checkpoint.write_text(json.dumps(payload), encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "continuity hash mismatch"):
+                self.runner(directory)
+
+    def test_checkpoint_rejects_a_changed_host_implementation_commitment(self):
+        with tempfile.TemporaryDirectory() as directory:
+            self.runner(directory).run(max_cells=1)
+            checkpoint = Path(directory) / "checkpoint.json"
+            payload = json.loads(checkpoint.read_text(encoding="utf-8"))
+            payload["implementation_commitments"]["capage/sandbox.py"] = "f" * 64
+            checkpoint.write_text(json.dumps(payload), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "host implementation mismatch"):
                 self.runner(directory)
 
     def test_open_obligations_stop_instead_of_being_discarded(self):

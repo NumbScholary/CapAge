@@ -28,3 +28,8 @@ jobs:
             --artifact-dir /tmp/capage-months \
             --memory /tmp/capage-memory.sqlite3 \
             --validate-only
+      - name: Validate frozen transfer test without a provider call
+        run: |
+          python -m capage.transfer \
+            experiments/sandbox/transfer_manifest_v1.json \
+            --validate-only

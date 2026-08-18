@@ -15,7 +15,12 @@ from capage.audit import AuditLog
 from capage.executor import Executor
 from capage.models import ProposedAction
 from capage.policy import PolicyEngine
-from capage.sandbox import EconomicSandbox, TokenTariff
+from capage.sandbox import (
+    EconomicSandbox,
+    TokenTariff,
+    validate_customer_namespace,
+    validate_market_profile,
+)
 
 
 _COST_UNITS_PER_CENT = 1_000_000
@@ -48,6 +53,8 @@ class SandboxRunConfig:
     starting_capital_cents: int
     tariff: TokenTariff
     customer_population_seed: int = 0
+    customer_namespace: str = ""
+    market_profile: str = "baseline-v1"
     assessor_version: str = "deterministic-artifact-v1"
     tariff_valid_through: str = ""
 
@@ -66,6 +73,8 @@ class SandboxRunConfig:
             self.customer_population_seed, int
         ):
             raise TypeError("customer_population_seed must be an integer")
+        validate_customer_namespace(self.customer_namespace)
+        validate_market_profile(self.market_profile)
         if self.assessor_version not in {
             "deterministic-artifact-v1",
             "deterministic-artifact-v2",
@@ -101,6 +110,8 @@ class SandboxRunConfig:
                 ),
             ),
             customer_population_seed=int(payload.get("customer_population_seed", 0)),
+            customer_namespace=str(payload.get("customer_namespace", "")),
+            market_profile=str(payload.get("market_profile", "baseline-v1")),
             assessor_version=str(payload["assessor_version"]),
             tariff_valid_through=str(payload["tariff_valid_through"]),
         )
@@ -554,6 +565,8 @@ class LiveSandboxRunner:
             token_tariff=config.tariff,
             continuity_state=continuity_state,
             customer_population_seed=config.customer_population_seed,
+            customer_namespace=config.customer_namespace,
+            market_profile=config.market_profile,
         )
         registry = self.world.agent_tools()
         self.executor = Executor(

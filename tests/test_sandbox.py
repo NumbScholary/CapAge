@@ -207,6 +207,108 @@ def test_customer_core_traits_are_stable_across_month_seeds():
     assert first.world_commitment != second.world_commitment
 
 
+def test_transfer_namespace_prevents_old_customers_from_being_reidentified():
+    continuity = empty_continuity_state()
+    continuity["customers"]["customer-audience-research-01"] = {
+        "offers_sent": 1,
+        "contracts_accepted": 1,
+        "deliveries_assessed": 1,
+        "contracts_paid": 1,
+        "contracts_defaulted": 0,
+        "contracts_disputed": 0,
+        "feedback_responses": 0,
+        "reputation_points": 5,
+        "last_outcome": "paid",
+    }
+    world = EconomicSandbox(
+        202,
+        customer_population_seed=909_909,
+        customer_namespace="holdout-same-v1",
+        continuity_state=continuity,
+    )
+
+    search = world.search_market({"query": "newsletter archive guide", "limit": 10})
+
+    assert search["ok"] is True
+    assert all(
+        row["customer_id"].startswith("customer-holdout-same-v1-")
+        for row in search["results"]
+    )
+    assert all("prior_relationship" not in row for row in search["results"])
+
+
+def test_transfer_market_traits_are_stable_but_shift_from_baseline():
+    population_seed = 808_808
+    baseline = EconomicSandbox(
+        101,
+        customer_population_seed=population_seed,
+        customer_namespace="holdout-shift-v1",
+        market_profile="baseline-v1",
+    )
+    first_shift = EconomicSandbox(
+        101,
+        customer_population_seed=population_seed,
+        customer_namespace="holdout-shift-v1",
+        market_profile="transfer-tight-market-v1",
+    )
+    second_shift = EconomicSandbox(
+        202,
+        customer_population_seed=population_seed,
+        customer_namespace="holdout-shift-v1",
+        market_profile="transfer-tight-market-v1",
+    )
+    customer_id = "customer-holdout-shift-v1-content-schedule-analysis-01"
+
+    def customer(world):
+        return next(
+            row
+            for row in world.reveal_world()["payload"]["signals"]
+            if row["customer_id"] == customer_id
+        )
+
+    first_customer = customer(first_shift)
+    second_customer = customer(second_shift)
+    for field in (
+        "budget_cents",
+        "responsiveness",
+        "payment_reliability",
+        "quality_threshold",
+    ):
+        assert first_customer[field] == second_customer[field]
+    baseline_tags = {
+        row["need_tag"] for row in baseline.reveal_world()["payload"]["signals"]
+    }
+    shifted_tags = {
+        row["need_tag"] for row in first_shift.reveal_world()["payload"]["signals"]
+    }
+    assert baseline_tags.isdisjoint(shifted_tags)
+    assert (
+        first_shift.reveal_world()["payload"]["market_profile"][
+            "budget_multiplier"
+        ]
+        == 0.8
+    )
+    assert baseline.search_market({"query": "service", "limit": 1})["cost_cents"] == 2
+    assert first_shift.search_market({"query": "service", "limit": 1})["cost_cents"] == 3
+    observation = first_shift.observe()
+    assert "market_profile" not in observation
+    assert "customer_namespace" not in observation
+
+
+def test_explicit_baseline_profile_preserves_the_existing_world_commitment():
+    original = EconomicSandbox(313, customer_population_seed=424_242)
+    explicit = EconomicSandbox(
+        313,
+        customer_population_seed=424_242,
+        customer_namespace="",
+        market_profile="baseline-v1",
+    )
+
+    assert original.world_commitment == explicit.world_commitment
+    assert original.run_id == explicit.run_id
+    assert original.reveal_world() == explicit.reveal_world()
+
+
 def test_customer_task_is_hidden_until_acceptance_and_then_supplied():
     world = EconomicSandbox(6)
     search = world.search_market(

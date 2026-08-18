@@ -255,6 +255,41 @@ class AuditedMemoryStoreTests(unittest.TestCase):
                     1_000,
                 )
 
+    def test_read_only_memory_can_verify_and_retrieve_but_not_append(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = self.database(directory)
+            with AuditedMemoryStore(path) as store:
+                store.append_event(
+                    "event-001", "observed_outcome", {"topic": "pricing"}, occurred_at=T0
+                )
+                store.assert_memory(
+                    "pricing-memory",
+                    "operational",
+                    "Observed pricing evidence should be treated cautiously.",
+                    tags=["pricing"],
+                    evidence_event_ids=["event-001"],
+                    confidence=70,
+                    occurred_at=T1,
+                )
+                expected_head = store.head_hash()
+
+            before = path.read_bytes()
+            with AuditedMemoryStore(path, read_only=True) as frozen:
+                self.assertTrue(frozen.verify_chain())
+                self.assertEqual(frozen.head_hash(), expected_head)
+                self.assertEqual(
+                    len(frozen.retrieve("pricing", as_of=T2).records),
+                    1,
+                )
+                with self.assertRaisesRegex(PermissionError, "read-only"):
+                    frozen.append_event(
+                        "event-002",
+                        "observed_outcome",
+                        {"topic": "delivery"},
+                        occurred_at=T2,
+                    )
+            self.assertEqual(path.read_bytes(), before)
+
 
 if __name__ == "__main__":
     unittest.main()

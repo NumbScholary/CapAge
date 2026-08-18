@@ -148,13 +148,26 @@ class AuditedMemoryStore:
         path: str | Path,
         *,
         policy: MemoryPolicy | None = None,
+        read_only: bool = False,
     ) -> None:
         self.path = Path(path)
-        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.read_only = read_only
         self.policy = policy or MemoryPolicy()
-        self._connection = sqlite3.connect(str(self.path))
+        if read_only:
+            if not self.path.is_file():
+                raise FileNotFoundError(self.path)
+            self._connection = sqlite3.connect(
+                f"{self.path.resolve().as_uri()}?mode=ro",
+                uri=True,
+            )
+        else:
+            self.path.parent.mkdir(parents=True, exist_ok=True)
+            self._connection = sqlite3.connect(str(self.path))
         self._connection.row_factory = sqlite3.Row
-        self._initialize()
+        if read_only:
+            self._require_schema()
+        else:
+            self._initialize()
 
     def __enter__(self) -> "AuditedMemoryStore":
         return self
@@ -197,6 +210,18 @@ class AuditedMemoryStore:
         )
         self._connection.commit()
 
+    def _require_schema(self) -> None:
+        row = self._connection.execute(
+            "SELECT 1 FROM sqlite_master WHERE type = 'table' "
+            "AND name = 'memory_audit_records'"
+        ).fetchone()
+        if row is None:
+            raise ValueError("memory database is missing the audit schema")
+
+    def _require_writable(self) -> None:
+        if self.read_only:
+            raise PermissionError("memory store was opened read-only")
+
     def append_event(
         self,
         event_id: str,
@@ -205,6 +230,7 @@ class AuditedMemoryStore:
         *,
         occurred_at: str | datetime,
     ) -> MemoryEvent:
+        self._require_writable()
         event_id = _identifier(event_id, "event_id")
         event_type = _identifier(event_type, "event_type")
         occurred = _timestamp(occurred_at)
@@ -242,6 +268,7 @@ class AuditedMemoryStore:
         occurred_at: str | datetime,
         valid_until: str | datetime | None = None,
     ) -> MemoryItem:
+        self._require_writable()
         memory_id = _identifier(memory_id, "memory_id")
         category = str(category).strip().lower()
         if category not in self.policy.allowed_categories:
@@ -303,6 +330,7 @@ class AuditedMemoryStore:
         evidence_event_ids: Iterable[str],
         occurred_at: str | datetime,
     ) -> int:
+        self._require_writable()
         memory_id = _identifier(memory_id, "memory_id")
         normalized_reason = str(reason).strip()
         if not normalized_reason:

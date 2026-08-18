@@ -19,6 +19,12 @@ from capage.sandbox_runner import LiveSandboxRunner, ModelClient, SandboxRunConf
 
 _COST_UNITS_PER_CENT = 1_000_000
 _ARMS = ("control", "memory")
+_IMPLEMENTATION_PATHS = (
+    "capage/sandbox.py",
+    "capage/sandbox_runner.py",
+    "capage/memory.py",
+    "capage/longitudinal.py",
+)
 
 
 def _canonical_json(value: Any) -> str:
@@ -27,6 +33,16 @@ def _canonical_json(value: Any) -> str:
 
 def _continuity_hash(value: dict[str, Any]) -> str:
     return sha256(_canonical_json(value).encode("utf-8")).hexdigest()
+
+
+def current_longitudinal_implementation_commitments() -> dict[str, str]:
+    """Hash the exact host modules used by a longitudinal checkpoint."""
+
+    repository_root = Path(__file__).resolve().parents[1]
+    return {
+        relative: sha256((repository_root / relative).read_bytes()).hexdigest()
+        for relative in _IMPLEMENTATION_PATHS
+    }
 
 
 def _atomic_json(path: Path, payload: dict[str, Any]) -> None:
@@ -209,6 +225,10 @@ class LongitudinalRunner:
             return self.state
         if self.state["status"] == "stopped":
             return self.state
+        if self.config.tariff_valid_through and datetime.now(
+            timezone.utc
+        ).date() > date.fromisoformat(self.config.tariff_valid_through):
+            return self._stop("frozen_tariff_expired")
 
         attempted_now = 0
         self.state["status"] = "running"
@@ -560,6 +580,10 @@ class LongitudinalRunner:
                 raise ValueError("unsupported longitudinal checkpoint schema")
             if state.get("config_commitment") != commitment:
                 raise ValueError("checkpoint does not match the frozen configuration")
+            if state.get("implementation_commitments") != (
+                current_longitudinal_implementation_commitments()
+            ):
+                raise ValueError("checkpoint host implementation mismatch")
             checkpoint_cells: set[str] = set()
             total_units = 0
             for arm in _ARMS:
@@ -599,6 +623,9 @@ class LongitudinalRunner:
             "schema_version": "capage-longitudinal-checkpoint-v3",
             "experiment_name": self.config.experiment_name,
             "config_commitment": commitment,
+            "implementation_commitments": (
+                current_longitudinal_implementation_commitments()
+            ),
             "status": "ready",
             "stop_reason": None,
             "model_cost_units": 0,
