@@ -36,27 +36,27 @@ jobs:
           test "$GITHUB_REF_NAME" = "agent/homeostasis-active-v1-launch"
           test "$GITHUB_RUN_ATTEMPT" = "1"
           test -n "$ANTHROPIC_API_KEY"
-          grep -Fxq "$EXPECTED_CONFIRMATION" +            experiments/sandbox/HOMEOSTASIS_ACTIVE_V1_AUTHORIZATION.md
-          grep -Fxq "$EXPECTED_CONFIRMATION" +            experiments/sandbox/HOMEOSTASIS_ACTIVE_V1_LAUNCH.md
+          grep -Fxq "$EXPECTED_CONFIRMATION" experiments/sandbox/HOMEOSTASIS_ACTIVE_V1_AUTHORIZATION.md
+          grep -Fxq "$EXPECTED_CONFIRMATION" experiments/sandbox/HOMEOSTASIS_ACTIVE_V1_LAUNCH.md
 
       - name: Run unpaid verification
         run: |
           set -eu
           python -m unittest discover -s tests -v
           python -m py_compile capage/*.py tests/*.py
-          python -m capage.homeostasis_active_runner +            experiments/sandbox/economic_homeostasis_active_plan_v1.json +            --checkpoint /tmp/homeostasis-active-validation-checkpoint.json +            --artifact-dir /tmp/homeostasis-active-validation-cells +            --validate-only
+          python -m capage.homeostasis_active_runner experiments/sandbox/economic_homeostasis_active_plan_v1.json --checkpoint /tmp/homeostasis-active-validation-checkpoint.json --artifact-dir /tmp/homeostasis-active-validation-cells --validate-only
 
       - name: Record execution provenance
         run: |
           set -eu
           mkdir -p "$ARTIFACT_ROOT/cells"
           git rev-parse HEAD > "$ARTIFACT_ROOT/execution-commit.txt"
-          sha256sum +            experiments/sandbox/economic_homeostasis_active_plan_v1.json +            experiments/sandbox/HOMEOSTASIS_ACTIVE_V1_AUTHORIZATION.md +            experiments/sandbox/HOMEOSTASIS_ACTIVE_V1_LAUNCH.md +            capage/sandbox.py +            capage/sandbox_runner.py +            capage/homeostasis.py +            capage/homeostasis_shadow.py +            capage/homeostasis_experiment.py +            capage/homeostasis_active_runner.py +            > "$ARTIFACT_ROOT/execution-sha256.txt"
+          sha256sum experiments/sandbox/economic_homeostasis_active_plan_v1.json experiments/sandbox/HOMEOSTASIS_ACTIVE_V1_AUTHORIZATION.md experiments/sandbox/HOMEOSTASIS_ACTIVE_V1_LAUNCH.md capage/sandbox.py capage/sandbox_runner.py capage/homeostasis.py capage/homeostasis_shadow.py capage/homeostasis_experiment.py capage/homeostasis_active_runner.py > "$ARTIFACT_ROOT/execution-sha256.txt"
 
       - name: Execute all twelve bounded matched cells
         run: |
           set -eu
-          python -m capage.homeostasis_active_runner +            experiments/sandbox/economic_homeostasis_active_plan_v1.json +            --checkpoint "$ARTIFACT_ROOT/checkpoint.json" +            --artifact-dir "$ARTIFACT_ROOT/cells" +            --max-cells 12 +            --confirm "$EXPECTED_CONFIRMATION"
+          python -m capage.homeostasis_active_runner experiments/sandbox/economic_homeostasis_active_plan_v1.json --checkpoint "$ARTIFACT_ROOT/checkpoint.json" --artifact-dir "$ARTIFACT_ROOT/cells" --max-cells 12 --confirm "$EXPECTED_CONFIRMATION"
 
       - name: Upload restricted evidence
         if: always()
@@ -66,4 +66,3 @@ jobs:
           path: artifacts/homeostasis-active-v1/
           if-no-files-found: warn
           retention-days: 30
-
