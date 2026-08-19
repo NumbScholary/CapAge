@@ -10,6 +10,7 @@ import json
 from pathlib import Path
 from typing import Any, Callable
 
+from capage.homeostasis_shadow import SandboxResultProjector
 from capage.homeostasis_v2_experiment import (
     ARMS,
     completed_signal_for_arm,
@@ -22,6 +23,10 @@ from capage.homeostasis_v2_experiment import (
 
 CHECKPOINT_SCHEMA = "capage-homeostasis-v2-three-arm-checkpoint-v1"
 CONFIRMATION = "RUN_MATCHED_HOMEOSTASIS_V2_THREE_ARM_MAX_1350_CENTS"
+ABORTED_RUN_MODEL_COST_UNITS = 28_915_600
+ABORTED_RUN_COST_REFERENCE = (
+    "github-actions-run:32292164227/artifact:9379919939"
+)
 _COST_UNITS_PER_CENT = 1_000_000
 _CELL_COUNT = 18
 _IMPLEMENTATION_PATHS = (
@@ -143,34 +148,24 @@ class ThreeArmHomeostasisRunner:
         runner_factories: dict[str, RunnerFactory],
         run_config_factory: RunConfigFactory,
         empty_continuity_factory: Callable[[], dict[str, Any]],
-        prior_model_cost_units: int = 0,
-        prior_cost_reference: str = "",
     ) -> None:
         if set(runner_factories) != set(ARMS):
             raise ValueError("runner_factories must contain control, v1, and v2")
-        if (
-            isinstance(prior_model_cost_units, bool)
-            or not isinstance(prior_model_cost_units, int)
-            or prior_model_cost_units < 0
-        ):
-            raise ValueError("prior_model_cost_units must be a nonnegative integer")
-        if prior_model_cost_units and not prior_cost_reference.strip():
-            raise ValueError("prior paid cost requires an evidence reference")
-        if not prior_model_cost_units and prior_cost_reference:
-            raise ValueError("a prior cost reference requires nonzero paid cost")
         self.plan = json.loads(_canonical_json(plan))
         self.config = ActiveConfig.from_plan(self.plan)
         ceiling = self.config.aggregate_cost_cap_cents * _COST_UNITS_PER_CENT
-        if prior_model_cost_units > ceiling:
-            raise ValueError("prior paid cost exceeds the aggregate cost cap")
+        if not 0 < ABORTED_RUN_MODEL_COST_UNITS < ceiling:
+            raise ValueError("required aborted-run debit is outside the aggregate cap")
+        if not ABORTED_RUN_COST_REFERENCE.strip():
+            raise ValueError("required aborted-run evidence reference is missing")
         self.client = client
         self.checkpoint_path = Path(checkpoint_path)
         self.artifact_dir = Path(artifact_dir)
         self.runner_factories = dict(runner_factories)
         self.run_config_factory = run_config_factory
         self.empty_continuity_factory = empty_continuity_factory
-        self.prior_model_cost_units = prior_model_cost_units
-        self.prior_cost_reference = prior_cost_reference
+        self.prior_model_cost_units = ABORTED_RUN_MODEL_COST_UNITS
+        self.prior_cost_reference = ABORTED_RUN_COST_REFERENCE
         self.state = self._load_or_initialize()
 
     def _initial_state(self) -> dict[str, Any]:
@@ -418,11 +413,63 @@ class ThreeArmHomeostasisRunner:
         result_config = result.get("config")
         if (
             not isinstance(result_config, dict)
-            or result_config.get("run_name") != run_config.run_name
+            or any(
+                result_config.get(field) != getattr(run_config, field)
+                for field in (
+                    "run_name",
+                    "seed",
+                    "model",
+                    "effort",
+                    "max_output_tokens",
+                    "max_decisions",
+                    "max_run_cost_cents",
+                    "horizon_days",
+                    "starting_capital_cents",
+                    "customer_population_seed",
+                    "customer_namespace",
+                    "market_profile",
+                    "assessor_version",
+                    "tariff_valid_through",
+                )
+            )
         ):
-            raise ValueError("cell serialized config does not match its run label")
+            raise ValueError("cell serialized config does not match its run config")
+        serialized_tariff = result_config.get("tariff")
+        expected_tariff = run_config.tariff
+        if not isinstance(serialized_tariff, dict) or any(
+            serialized_tariff.get(field) != getattr(expected_tariff, field)
+            for field in (
+                "name",
+                "input_cents_per_million_tokens",
+                "output_cents_per_million_tokens",
+            )
+        ):
+            raise ValueError("cell serialized tariff does not match its run config")
+
+        token_values = {
+            "model_input_tokens": outcome.get("model_input_tokens"),
+            "model_output_tokens": outcome.get("model_output_tokens"),
+        }
+        if any(
+            isinstance(value, bool) or not isinstance(value, int) or value < 0
+            for value in token_values.values()
+        ):
+            raise ValueError("cell outcome omitted valid model token totals")
+        expected_units = expected_tariff.cost_units(
+            token_values["model_input_tokens"],
+            token_values["model_output_tokens"],
+        )
+        if expected_units != units or outcome.get("model_api_cost_units") != units:
+            raise ValueError("cell model token totals do not match cost units")
+        billed_cents = (units + _COST_UNITS_PER_CENT - 1) // _COST_UNITS_PER_CENT
+        if (
+            result.get("actual_model_cost_cents_billed") != billed_cents
+            or outcome.get("model_api_cost_cents") != billed_cents
+        ):
+            raise ValueError("cell billed model cost does not match cost units")
         if not isinstance(result.get("business_continuity"), dict):
             raise ValueError("cell omitted business continuity")
+        SandboxResultProjector.project(result)
 
     def run(self, *, max_cells: int | None = None) -> dict[str, Any]:
         if max_cells is not None and not 1 <= max_cells <= _CELL_COUNT:
@@ -627,8 +674,6 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--artifact-dir", required=True)
     parser.add_argument("--max-cells", type=int)
     parser.add_argument("--confirm", default="")
-    parser.add_argument("--prior-model-cost-units", type=int, default=0)
-    parser.add_argument("--prior-cost-reference", default="")
     parser.add_argument("--validate-only", action="store_true")
     args = parser.parse_args(argv)
     plan = json.loads(Path(args.plan).read_text(encoding="utf-8"))
@@ -655,8 +700,6 @@ def main(argv: list[str] | None = None) -> int:
         runner_factories=runners,
         run_config_factory=config_factory,
         empty_continuity_factory=continuity,
-        prior_model_cost_units=args.prior_model_cost_units,
-        prior_cost_reference=args.prior_cost_reference,
     )
     result = runner.run(max_cells=args.max_cells)
     print(
