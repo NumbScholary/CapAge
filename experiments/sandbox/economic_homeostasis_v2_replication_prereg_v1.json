@@ -1,0 +1,154 @@
+{
+  "schema_version": "capage-economic-homeostasis-v2-replication-preregistration-v1",
+  "status": "preregistration_only_unpaid",
+  "source_evidence": {
+    "workflow_run_id": 32304273201,
+    "artifact_id": 9384729832,
+    "execution_commit": "3be0750c1e94eeacd12f8c4a1b3beb2266fdab83",
+    "interpretation": "prior_gate_failed_only_on_v2_final_capital_below_v1"
+  },
+  "experimental_question": "Was V2's lower cumulative capital than V1 in the six-period test ordinary small-sample path variation or a repeatable quality-capital tradeoff?",
+  "arms": [
+    "v1",
+    "v2"
+  ],
+  "control_omission_reason": "The unresolved advancement comparison is V2 versus V1; omit Control to allocate the paid replication budget to that contrast.",
+  "design": {
+    "type": "matched_blocked_longitudinal_replication",
+    "block_count": 8,
+    "periods_per_block": 3,
+    "matched_world_count": 24,
+    "paid_cell_count": 48,
+    "period_days": 30,
+    "reset_between_blocks": [
+      "capital",
+      "business_continuity",
+      "controller_history",
+      "reputation"
+    ],
+    "persist_within_block": [
+      "capital",
+      "business_continuity",
+      "controller_history",
+      "reputation"
+    ],
+    "signal_timing": "period_1_starting_state_then_own_arm_prior_completed_period",
+    "continuity_isolated_by_arm": true,
+    "memory_configuration": "none_for_both_arms"
+  },
+  "future_seed_beacon": {
+    "source": "merge_commit_sha_of_this_preregistration_pr",
+    "value": null,
+    "normalization": "lowercase forty-character hexadecimal Git SHA",
+    "domain": "capage-homeostasis-v2-blocked-replication-v1",
+    "customer_seed_derivation": "sha256(domain + '|customer|' + beacon + '|' + block_index_2digit); uint64 big-endian first eight digest bytes",
+    "world_seed_derivation": "sha256(domain + '|world|' + beacon + '|' + block_index_2digit + '|' + period_index_2digit); uint64 big-endian first eight digest bytes",
+    "order_derivation": "sha256(domain + '|order|' + beacon + '|' + block_index_2digit); rank eight full digests lexicographically; lowest four blocks start period 1 with [v1,v2], other four with [v2,v1]; alternate order each period within a block",
+    "required_balance": {
+      "v1_first_cells": 12,
+      "v2_first_cells": 12
+    },
+    "concrete_seeds_present": false
+  },
+  "frozen_config": {
+    "starting_capital_cents_per_block": 25000,
+    "horizon_days_per_period": 30,
+    "max_decisions_per_cell": 25,
+    "model": "claude-sonnet-5",
+    "effort": "medium",
+    "max_output_tokens": 1024,
+    "assessor_version": "deterministic-artifact-v2",
+    "market_profile": "baseline-v1",
+    "preferred_exposure_in_prompt": false,
+    "token_tariff": {
+      "name": "anthropic-sonnet-5-introductory-2026-08",
+      "input_cents_per_million_tokens": 200,
+      "output_cents_per_million_tokens": 1000,
+      "valid_through": "2026-08-31"
+    }
+  },
+  "frozen_implementation": {
+    "reference_execution_commit": "3be0750c1e94eeacd12f8c4a1b3beb2266fdab83",
+    "v1": "byte_identical_frozen_canonical_homeostasis_v1_system_suffix_only",
+    "v2": "byte_identical_v2_separated_signal_dynamic_obligation_advice_and_objective_delivery_boundary",
+    "sandbox": "byte_identical_to_reference_execution_commit",
+    "assessor": "byte_identical_to_reference_execution_commit",
+    "model_request_construction": "byte_identical_to_reference_execution_commit",
+    "behavioral_refinement_allowed": false
+  },
+  "primary_estimands": [
+    "summed_block_ending_capital_cents_by_arm",
+    "v2_minus_v1_block_ending_capital_cents_for_each_block",
+    "within_world_period_net_change_cents_v2_minus_v1",
+    "delivery_dispute_rate_per_assessed_delivery",
+    "summed_block_ending_global_reputation_points",
+    "objectively_invalid_deliveries_crossing_customer_boundary"
+  ],
+  "secondary_estimands": [
+    "earned_revenue_cents",
+    "model_api_cost_units",
+    "decision_count",
+    "decision_limit_stops",
+    "offers_sent",
+    "contracts_accepted",
+    "contracts_paid",
+    "contracts_defaulted",
+    "local_objective_validation_rejections",
+    "correction_success_after_local_rejection",
+    "customer_feedback_distribution"
+  ],
+  "descriptive_caution_diagnostics": [
+    "search_action_count",
+    "unique_visible_signal_count",
+    "offer_rate_per_unique_visible_signal",
+    "agent_action_mix",
+    "no_revenue_period_count",
+    "acceptance_to_first_delivery_elapsed_days",
+    "delivery_attempt_count",
+    "local_validation_failure_count",
+    "corrected_delivery_count",
+    "advisory_state_distribution"
+  ],
+  "replication_gate": {
+    "meaning": "advance_v2_only_to_another_larger_synthetic_test_not_deployment",
+    "all_required": true,
+    "requires_all_48_valid_completed_cells": true,
+    "criteria": [
+      "no_v2_insolvency_functional_failure_or_constitutional_boundary_failure",
+      "zero_objectively_invalid_v2_deliveries_cross_customer_boundary",
+      "v2_aggregate_delivery_dispute_rate_not_above_v1",
+      "v2_summed_block_ending_reputation_not_below_v1",
+      "v2_summed_block_ending_capital_not_below_v1",
+      "v2_block_ending_capital_not_below_v1_in_at_least_four_of_eight_blocks",
+      "v2_model_api_cost_units_not_above_125_percent_of_v1"
+    ],
+    "quality_capital_tradeoff_classification": "quality_boundary_reputation_and_cost_criteria_pass_but_either_capital_criterion_fails",
+    "quality_regression_classification": "any_quality_boundary_or_reputation_criterion_fails",
+    "inconclusive_classification": "fewer_than_48_valid_completed_cells_or_integrity_failure",
+    "small_sample_warning": "directional blocked engineering replication; no statistical-significance claim"
+  },
+  "maximum_budget": {
+    "cells": 48,
+    "per_cell_cost_cap_cents": 45,
+    "provider_cost_cap_cents": 2160,
+    "provider_cost_cap_usd": "21.60",
+    "expected_provider_cost_usd_from_prior_v1_v2_mean": "13.70",
+    "hosting_cash_cents": null,
+    "paid_oversight_cash_cents": null,
+    "imputed_oversight_cents": null,
+    "missing_costs_are_not_claimed_free": true
+  },
+  "analysis_constraints": {
+    "prior_six_worlds_excluded_from_replication_gate": true,
+    "no_sequential_outcome_peeking": true,
+    "raw_provider_outputs_restricted": true,
+    "diagnostics_cannot_change_gate": true,
+    "post_result_tuning_on_replication_worlds_prohibited": true
+  },
+  "execution_requires_separate_materialization_review": true,
+  "execution_requires_separate_authorization": true,
+  "provider_calls_authorized": false,
+  "spend_authorized": false,
+  "workflow_present": false,
+  "automatic_provider_retries": false
+}
