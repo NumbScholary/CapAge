@@ -1,0 +1,126 @@
+name: CapAge Sonnet longitudinal v3 cell 011
+
+on:
+  push:
+    branches:
+      - agent/longitudinal-v3-cell-011-launch
+    paths:
+      - experiments/sandbox/LONGITUDINAL_V3_CELL_011_AUTHORIZATION.md
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: capage-sonnet-longitudinal-v3-cell-011-once
+  cancel-in-progress: false
+
+jobs:
+  cell:
+    if: github.run_attempt == 1
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Enforce one-shot continuation boundary
+        env:
+          EXPECTED_EVENT: push
+          EXPECTED_REF: agent/longitudinal-v3-cell-011-launch
+          EXPECTED_AUTHORIZATION: CAPAGE_LONGITUDINAL_V3_CELL_011_MAX_75_CENTS
+        run: |
+          set -eu
+          test "$GITHUB_EVENT_NAME" = "$EXPECTED_EVENT"
+          test "$GITHUB_REF_NAME" = "$EXPECTED_REF"
+          test "$GITHUB_RUN_ATTEMPT" = "1"
+          test -n "$ANTHROPIC_API_KEY"
+          grep -Fxq "$EXPECTED_AUTHORIZATION" experiments/sandbox/LONGITUDINAL_V3_CELL_011_AUTHORIZATION.md
+
+      - name: Verify frozen implementation and manifest
+        run: |
+          set -eu
+          test "$(sha256sum experiments/sandbox/longitudinal_manifest_v3.json | cut -d ' ' -f1)" = "66bd51f8ddab222b6e36148f2ac88c0896744c087946eefd66b52b45320e34ce"
+          test "$(sha256sum capage/sandbox.py | cut -d ' ' -f1)" = "35b4eec2eb80a9184ca5511fdfd72c51a0d26194b7c1b211abe3ffd8e5b0a5d3"
+          test "$(sha256sum capage/sandbox_runner.py | cut -d ' ' -f1)" = "9712f321b898b66a7e129d78fc8218eed8639344b3a5d0486b0e9c70778f98cb"
+          test "$(sha256sum capage/memory.py | cut -d ' ' -f1)" = "6a1348a6230b7431d12853ada5ba66f2cea9bad93ff1ba2d4e0e77986c22fcee"
+          test "$(sha256sum capage/longitudinal.py | cut -d ' ' -f1)" = "7a8e0cb895807869afe10ac1d9f7e9d6b503b15750d546d0434601e97fb965ab"
+          test "$(sha256sum capage/longitudinal_v3.py | cut -d ' ' -f1)" = "670bd56b2df67a24e618e358837af9838503bff57f94cba9b205d29a58034b2d"
+          python -c 'import sys; assert sys.version_info[:2] == (3, 12)'
+
+      - name: Run unpaid quality and launch validation
+        run: |
+          set -eu
+          python -m unittest discover -s tests -v
+          python -m py_compile capage/*.py tests/*.py
+          python -m capage.longitudinal_v3 experiments/sandbox/longitudinal_manifest_v3.json \
+            --checkpoint /tmp/capage-v3-validation-checkpoint.json \
+            --artifact-dir /tmp/capage-v3-validation-months \
+            --memory /tmp/capage-v3-validation-memory.sqlite3 \
+            --validate-only
+
+      - name: Restore verified cell 010 checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: sonnet-longitudinal-v3-cell-010-restricted
+          path: artifacts/longitudinal-v3
+          github-token: ${{ github.token }}
+          repository: Numbscholar/CapAge
+          run-id: 32211497221
+
+      - name: Verify restored evidence and resume state
+        run: |
+          set -eu
+          cd artifacts/longitudinal-v3
+          test "$(find . -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | cut -d ' ' -f1)" = "9d7e8ca12f2dad7904f67de68d97d75296c93f7c3515b67c366b8476d15e2a89"
+          test "$(sha256sum checkpoint.json | cut -d ' ' -f1)" = "c4c526acdd120de7f825255d25570e37d012eed63c90d4019e158e7c12e85ac1"
+          test "$(sha256sum memory.sqlite3 | cut -d ' ' -f1)" = "68845aaad4a5c5550bd3d42fa3e13265525780d127ab6c650890f6b0bc21c2ab"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          checkpoint=json.loads(Path("checkpoint.json").read_text())
+          assert checkpoint["schema_version"]=="capage-longitudinal-checkpoint-v4"
+          assert checkpoint["config_commitment"]=="b09b59bf7f7b39c83d96c55eae80b8322c0735baeda9fa21d26fc1d793cc5e47"
+          assert checkpoint["memory_projection_version"]=="outcome-complete-v3"
+          assert checkpoint["memory_head_hash"]=="c69e95850d99d4358cf09257e4e54fbd395ce9359b3da85090575a244fc77697"
+          assert checkpoint["status"]=="paused"
+          assert checkpoint["stop_reason"]=="operator_checkpoint"
+          assert set(checkpoint["completed_cells"])=={
+              "month-001:control","month-001:memory",
+              "month-002:memory","month-002:control",
+              "month-003:control","month-003:memory",
+              "month-004:memory","month-004:control",
+              "month-005:control","month-005:memory"
+          }
+          assert checkpoint["errors"]==[]
+          PY
+          cd ../..
+
+      - name: Record continuation provenance
+        run: |
+          set -eu
+          git rev-parse HEAD > artifacts/longitudinal-v3/resume-commit-cell-011.txt
+          printf '%s\n' '32211497221' > artifacts/longitudinal-v3/resume-source-run-cell-010.txt
+
+      - name: Execute exactly one bounded paid cell
+        run: |
+          set -eu
+          python -m capage.longitudinal_v3 experiments/sandbox/longitudinal_manifest_v3.json \
+            --checkpoint artifacts/longitudinal-v3/checkpoint.json \
+            --artifact-dir artifacts/longitudinal-v3/months \
+            --memory artifacts/longitudinal-v3/memory.sqlite3 \
+            --max-cells 1 \
+            --confirm RUN_MATCHED_LONGITUDINAL_V3
+
+      - name: Upload restricted evidence and resume state
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sonnet-longitudinal-v3-cell-011-restricted
+          path: artifacts/longitudinal-v3/
+          if-no-files-found: warn
+          retention-days: 30
