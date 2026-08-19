@@ -103,7 +103,7 @@ jobs:
         run: |
           set -eu
           git rev-parse HEAD > artifacts/longitudinal-v3/resume-commit-cell-009.txt
-          printf '%s\\n' '32193557856' > artifacts/longitudinal-v3/resume-source-run-cell-008.txt
+          printf '%s\n' '32193557856' > artifacts/longitudinal-v3/resume-source-run-cell-008.txt
 
       - name: Execute exactly one bounded paid cell
         run: |
