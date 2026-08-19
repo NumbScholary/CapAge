@@ -1,0 +1,83 @@
+{
+  "schema_version": "capage-economic-homeostasis-active-plan-v1",
+  "status": "implementation_only_unpaid",
+  "preregistration_pr": 25,
+  "preregistration_merge_sha": "9641fcab2742b1242a1592ae7f7ce98c5c045851",
+  "seed_domain": "capage-homeostasis-active-v1|world|",
+  "pairs": [
+    {
+      "pair_index": 1,
+      "digest_sha256": "7bf4355ddd0b21143685314081009c41f697b0f4ea744b0a8e29da8e616349c4",
+      "world_seed": 8931822638239260948,
+      "execution_order": ["control", "treatment"]
+    },
+    {
+      "pair_index": 2,
+      "digest_sha256": "471a7ea1bf0f1b1f3231d9d2105fd0ea046e9152f05ac770070c5d2e1a19af33",
+      "world_seed": 5123546759247633183,
+      "execution_order": ["control", "treatment"]
+    },
+    {
+      "pair_index": 3,
+      "digest_sha256": "0d6a569f1ce24411c88be56906d1a116ecd20659403d7f75594edfe039adc1cc",
+      "world_seed": 966680311408772113,
+      "execution_order": ["control", "treatment"]
+    },
+    {
+      "pair_index": 4,
+      "digest_sha256": "a88b11148324c2d6e58a4a2f684158a4575a4970a8b5d6034cd91ccda2e81b6d",
+      "world_seed": 12144819599931917014,
+      "execution_order": ["treatment", "control"]
+    },
+    {
+      "pair_index": 5,
+      "digest_sha256": "fa4dd91c114b468634debb60afabc6869cb21dfbc308138962713b378f61cbfc",
+      "world_seed": 18036310797261162118,
+      "execution_order": ["control", "treatment"]
+    },
+    {
+      "pair_index": 6,
+      "digest_sha256": "5420ef30508c4cbd5c8520038f881826a91128cc518a3953c05621a71a3e9fd0",
+      "world_seed": 6062108089229528253,
+      "execution_order": ["control", "treatment"]
+    }
+  ],
+  "frozen_config": {
+    "starting_capital_cents": 25000,
+    "horizon_days": 30,
+    "max_decisions_per_cell": 25,
+    "customer_population_seed": 408451,
+    "memory_configuration": "none_for_both_arms",
+    "model": "claude-sonnet-5",
+    "effort": "medium",
+    "max_output_tokens": 1024,
+    "assessor_version": "deterministic-artifact-v2",
+    "token_tariff": {
+      "name": "anthropic-sonnet-5-introductory-2026-08",
+      "input_cents_per_million_tokens": 200,
+      "output_cents_per_million_tokens": 1000,
+      "valid_through": "2026-08-31"
+    },
+    "starting_native_forecast_cents": 33,
+    "signal_timing": "period_1_starting_state_then_own_prior_completed_period",
+    "intraperiod_feedback": false,
+    "preferred_exposure_in_prompt": false
+  },
+  "maximum_budget": {
+    "cells": 12,
+    "per_cell_cost_cap_cents": 75,
+    "provider_cost_cap_cents": 900,
+    "provider_cost_cap_usd": "9.00",
+    "hosting_cash_cents": null,
+    "paid_oversight_cash_cents": null,
+    "imputed_oversight_cents": null,
+    "missing_costs_are_not_claimed_free": true
+  },
+  "control_prompt": "byte_identical_current_baseline",
+  "treatment_prompt_difference": "canonical_homeostasis_system_suffix_only",
+  "execution_requires_separate_authorization": true,
+  "provider_calls_authorized": false,
+  "spend_authorized": false,
+  "workflow_present": false
+}
+
