@@ -41,6 +41,7 @@ class FakeCellRunner:
                 "arm": self.arm,
                 "run_name": self.config.run_name,
                 "starting_capital_cents": self.config.starting_capital_cents,
+                "max_run_cost_cents": self.config.max_run_cost_cents,
                 "continuity_state": deepcopy(self.continuity_state),
                 "homeostasis_signal": self.homeostasis_signal,
             }
@@ -87,9 +88,10 @@ class FakeCellRunner:
             "status": "completed",
             "stop_reason": "horizon_reached",
             "actual_model_cost_units": 1_000_000,
+            "config": {"run_name": self.config.run_name},
             "transcript": [],
             "outcome": {
-                "run_id": self.config.run_name,
+                "run_id": f"world-{self.config.run_name}",
                 "day": 30,
                 "balance_cents": balance,
                 "earned_revenue_cents": 0,
@@ -145,7 +147,13 @@ class ThreeArmActiveRunnerGateTests(unittest.TestCase):
         FakeCellRunner.calls = []
         FakeCellRunner.fail_arms = set()
 
-    def runner(self, directory):
+    def runner(
+        self,
+        directory,
+        *,
+        prior_model_cost_units=0,
+        prior_cost_reference="",
+    ):
         return ThreeArmHomeostasisRunner(
             self.plan,
             object(),
@@ -154,6 +162,8 @@ class ThreeArmActiveRunnerGateTests(unittest.TestCase):
             runner_factories=fake_factories(),
             run_config_factory=fake_config_factory,
             empty_continuity_factory=lambda: {"history": []},
+            prior_model_cost_units=prior_model_cost_units,
+            prior_cost_reference=prior_cost_reference,
         )
 
     def test_confirmation_and_budget_are_exact(self):
@@ -216,6 +226,49 @@ class ThreeArmActiveRunnerGateTests(unittest.TestCase):
         self.assertEqual(len(resumed["completed_cells"]), 18)
         self.assertEqual(len(FakeCellRunner.calls), 18)
         self.assertEqual(len({row["run_name"] for row in FakeCellRunner.calls}), 18)
+
+    def test_prior_failed_attempt_cost_is_debited_from_aggregate_cap(self):
+        prior = 28_915_600
+        reference = "github-actions-run:32292164227"
+        with tempfile.TemporaryDirectory() as directory, patch(
+            "capage.homeostasis_v2_active_runner.implementation_commitments",
+            return_value={"test": "frozen"},
+        ):
+            result = self.runner(
+                directory,
+                prior_model_cost_units=prior,
+                prior_cost_reference=reference,
+            ).run(max_cells=18)
+            with self.assertRaisesRegex(ValueError, "prior model cost mismatch"):
+                self.runner(
+                    directory,
+                    prior_model_cost_units=prior + 1,
+                    prior_cost_reference=reference,
+                )
+
+        self.assertEqual(result["status"], "completed")
+        self.assertEqual(result["prior_model_cost_units"], prior)
+        self.assertEqual(result["prior_cost_reference"], reference)
+        self.assertEqual(result["model_cost_units"], prior + 18_000_000)
+
+    def test_prior_cost_can_reduce_a_cell_cap_and_prevent_overspend(self):
+        prior = 1_349_000_000
+        with tempfile.TemporaryDirectory() as directory, patch(
+            "capage.homeostasis_v2_active_runner.implementation_commitments",
+            return_value={"test": "frozen"},
+        ):
+            result = self.runner(
+                directory,
+                prior_model_cost_units=prior,
+                prior_cost_reference="test-near-ceiling",
+            ).run(max_cells=18)
+
+        self.assertEqual(result["status"], "stopped")
+        self.assertEqual(result["stop_reason"], "aggregate_model_cost_cap_reached")
+        self.assertEqual(result["model_cost_units"], 1_350_000_000)
+        self.assertEqual(len(result["completed_cells"]), 1)
+        self.assertEqual(FakeCellRunner.calls[0]["starting_capital_cents"], 25_000)
+        self.assertEqual(FakeCellRunner.calls[0]["max_run_cost_cents"], 1)
 
     def test_interrupted_attempt_is_not_automatically_retried(self):
         FakeCellRunner.fail_arms = {"v2"}
