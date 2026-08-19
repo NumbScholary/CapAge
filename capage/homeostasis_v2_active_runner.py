@@ -10,6 +10,7 @@ import json
 from pathlib import Path
 from typing import Any, Callable
 
+from capage.homeostasis_shadow import SandboxResultProjector
 from capage.homeostasis_v2_experiment import (
     ARMS,
     completed_signal_for_arm,
@@ -22,6 +23,10 @@ from capage.homeostasis_v2_experiment import (
 
 CHECKPOINT_SCHEMA = "capage-homeostasis-v2-three-arm-checkpoint-v1"
 CONFIRMATION = "RUN_MATCHED_HOMEOSTASIS_V2_THREE_ARM_MAX_1350_CENTS"
+ABORTED_RUN_MODEL_COST_UNITS = 28_915_600
+ABORTED_RUN_COST_REFERENCE = (
+    "github-actions-run:32292164227/artifact:9379919939"
+)
 _COST_UNITS_PER_CENT = 1_000_000
 _CELL_COUNT = 18
 _IMPLEMENTATION_PATHS = (
@@ -148,12 +153,19 @@ class ThreeArmHomeostasisRunner:
             raise ValueError("runner_factories must contain control, v1, and v2")
         self.plan = json.loads(_canonical_json(plan))
         self.config = ActiveConfig.from_plan(self.plan)
+        ceiling = self.config.aggregate_cost_cap_cents * _COST_UNITS_PER_CENT
+        if not 0 < ABORTED_RUN_MODEL_COST_UNITS < ceiling:
+            raise ValueError("required aborted-run debit is outside the aggregate cap")
+        if not ABORTED_RUN_COST_REFERENCE.strip():
+            raise ValueError("required aborted-run evidence reference is missing")
         self.client = client
         self.checkpoint_path = Path(checkpoint_path)
         self.artifact_dir = Path(artifact_dir)
         self.runner_factories = dict(runner_factories)
         self.run_config_factory = run_config_factory
         self.empty_continuity_factory = empty_continuity_factory
+        self.prior_model_cost_units = ABORTED_RUN_MODEL_COST_UNITS
+        self.prior_cost_reference = ABORTED_RUN_COST_REFERENCE
         self.state = self._load_or_initialize()
 
     def _initial_state(self) -> dict[str, Any]:
@@ -172,7 +184,9 @@ class ThreeArmHomeostasisRunner:
             "config_commitment": self.config.commitment(),
             "plan_sha256": self.config.plan_sha256,
             "implementation_commitments": implementation_commitments(),
-            "model_cost_units": 0,
+            "prior_model_cost_units": self.prior_model_cost_units,
+            "prior_cost_reference": self.prior_cost_reference,
+            "model_cost_units": self.prior_model_cost_units,
             "completed_cells": {},
             "arms": arms,
             "errors": [],
@@ -190,6 +204,10 @@ class ThreeArmHomeostasisRunner:
             raise ValueError("checkpoint plan mismatch")
         if payload.get("implementation_commitments") != implementation_commitments():
             raise ValueError("checkpoint implementation mismatch")
+        if payload.get("prior_model_cost_units") != self.prior_model_cost_units:
+            raise ValueError("checkpoint prior model cost mismatch")
+        if payload.get("prior_cost_reference") != self.prior_cost_reference:
+            raise ValueError("checkpoint prior cost reference mismatch")
         if set(payload.get("arms", {})) != set(ARMS):
             raise ValueError("checkpoint arm mismatch")
         self._validate_checkpoint_state(payload)
@@ -212,7 +230,7 @@ class ThreeArmHomeostasisRunner:
         if set(completed) != expected_prefix:
             raise ValueError("checkpoint completed cells are not the frozen prefix")
 
-        aggregate_units = 0
+        aggregate_units = self.prior_model_cost_units
         arm_units = {arm: 0 for arm in ARMS}
         arm_balances = {
             arm: self.config.starting_capital_cents for arm in ARMS
@@ -247,11 +265,22 @@ class ThreeArmHomeostasisRunner:
             result = json.loads(result_path.read_text(encoding="utf-8"))
             if record.get("result_sha256") != _digest(result):
                 raise ValueError(f"checkpoint result artifact mismatch for {cell_id}")
+            remaining_units = (
+                self.config.aggregate_cost_cap_cents * _COST_UNITS_PER_CENT
+                - aggregate_units
+            )
+            historical_cell_cap_cents = min(
+                self.config.per_cell_cost_cap_cents,
+                remaining_units // _COST_UNITS_PER_CENT,
+            )
+            if historical_cell_cap_cents < 1:
+                raise ValueError("checkpoint contains a cell beyond the aggregate cap")
             run_config = self._run_config(
                 triplet.pair_index,
                 arm,
                 triplet.world_seed,
                 arm_balances[arm],
+                historical_cell_cap_cents,
             )
             self._validate_result(result, run_config)
             units = int(result["actual_model_cost_units"])
@@ -333,7 +362,14 @@ class ThreeArmHomeostasisRunner:
             history = signal.next_history
         return signal
 
-    def _run_config(self, pair_index: int, arm: str, seed: int, starting: int):
+    def _run_config(
+        self,
+        pair_index: int,
+        arm: str,
+        seed: int,
+        starting: int,
+        max_run_cost_cents: int,
+    ):
         return self.run_config_factory(
             run_name=f"homeostasis-v2-pair-{pair_index:02d}-{arm}",
             seed=seed,
@@ -341,7 +377,7 @@ class ThreeArmHomeostasisRunner:
             effort=self.config.effort,
             max_output_tokens=self.config.max_output_tokens,
             max_decisions=self.config.max_decisions,
-            max_run_cost_cents=self.config.per_cell_cost_cap_cents,
+            max_run_cost_cents=max_run_cost_cents,
             horizon_days=self.config.horizon_days,
             starting_capital_cents=starting,
             tariff_name=self.config.tariff_name,
@@ -371,10 +407,69 @@ class ThreeArmHomeostasisRunner:
         balance = outcome.get("balance_cents") if isinstance(outcome, dict) else None
         if isinstance(balance, bool) or not isinstance(balance, int):
             raise ValueError("cell omitted a valid outcome balance")
-        if outcome.get("run_id") != run_config.run_name:
-            raise ValueError("cell outcome run_id does not match its config")
+        run_id = outcome.get("run_id")
+        if not isinstance(run_id, str) or not run_id:
+            raise ValueError("cell outcome omitted its sandbox run_id")
+        result_config = result.get("config")
+        if (
+            not isinstance(result_config, dict)
+            or any(
+                result_config.get(field) != getattr(run_config, field)
+                for field in (
+                    "run_name",
+                    "seed",
+                    "model",
+                    "effort",
+                    "max_output_tokens",
+                    "max_decisions",
+                    "max_run_cost_cents",
+                    "horizon_days",
+                    "starting_capital_cents",
+                    "customer_population_seed",
+                    "customer_namespace",
+                    "market_profile",
+                    "assessor_version",
+                    "tariff_valid_through",
+                )
+            )
+        ):
+            raise ValueError("cell serialized config does not match its run config")
+        serialized_tariff = result_config.get("tariff")
+        expected_tariff = run_config.tariff
+        if not isinstance(serialized_tariff, dict) or any(
+            serialized_tariff.get(field) != getattr(expected_tariff, field)
+            for field in (
+                "name",
+                "input_cents_per_million_tokens",
+                "output_cents_per_million_tokens",
+            )
+        ):
+            raise ValueError("cell serialized tariff does not match its run config")
+
+        token_values = {
+            "model_input_tokens": outcome.get("model_input_tokens"),
+            "model_output_tokens": outcome.get("model_output_tokens"),
+        }
+        if any(
+            isinstance(value, bool) or not isinstance(value, int) or value < 0
+            for value in token_values.values()
+        ):
+            raise ValueError("cell outcome omitted valid model token totals")
+        expected_units = expected_tariff.cost_units(
+            token_values["model_input_tokens"],
+            token_values["model_output_tokens"],
+        )
+        if expected_units != units or outcome.get("model_api_cost_units") != units:
+            raise ValueError("cell model token totals do not match cost units")
+        billed_cents = (units + _COST_UNITS_PER_CENT - 1) // _COST_UNITS_PER_CENT
+        if (
+            result.get("actual_model_cost_cents_billed") != billed_cents
+            or outcome.get("model_api_cost_cents") != billed_cents
+        ):
+            raise ValueError("cell billed model cost does not match cost units")
         if not isinstance(result.get("business_continuity"), dict):
             raise ValueError("cell omitted business continuity")
+        SandboxResultProjector.project(result)
 
     def run(self, *, max_cells: int | None = None) -> dict[str, Any]:
         if max_cells is not None and not 1 <= max_cells <= _CELL_COUNT:
@@ -419,6 +514,10 @@ class ThreeArmHomeostasisRunner:
                     arm,
                     triplet.world_seed,
                     int(arm_state["balance_cents"]),
+                    min(
+                        self.config.per_cell_cost_cap_cents,
+                        remaining // _COST_UNITS_PER_CENT,
+                    ),
                 )
                 stem = run_config.run_name
                 result_path = self.artifact_dir / f"{stem}.json"
@@ -611,6 +710,9 @@ def main(argv: list[str] | None = None) -> int:
                 "completed_cells": len(result["completed_cells"]),
                 "model_cost_cents_unrounded": (
                     result["model_cost_units"] / _COST_UNITS_PER_CENT
+                ),
+                "prior_model_cost_cents_unrounded": (
+                    result["prior_model_cost_units"] / _COST_UNITS_PER_CENT
                 ),
             },
             sort_keys=True,

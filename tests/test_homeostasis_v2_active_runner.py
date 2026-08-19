@@ -9,11 +9,14 @@ from unittest.mock import patch
 from capage.homeostasis import HomeostasisSignal
 from capage.homeostasis_v2 import HomeostasisSignalV2
 from capage.homeostasis_v2_active_runner import (
+    ABORTED_RUN_COST_REFERENCE,
+    ABORTED_RUN_MODEL_COST_UNITS,
     ActiveConfig,
     CONFIRMATION,
     ThreeArmHomeostasisRunner,
     main,
 )
+from capage.sandbox import TokenTariff
 
 
 class FakeCellRunner:
@@ -41,6 +44,7 @@ class FakeCellRunner:
                 "arm": self.arm,
                 "run_name": self.config.run_name,
                 "starting_capital_cents": self.config.starting_capital_cents,
+                "max_run_cost_cents": self.config.max_run_cost_cents,
                 "continuity_state": deepcopy(self.continuity_state),
                 "homeostasis_signal": self.homeostasis_signal,
             }
@@ -82,18 +86,53 @@ class FakeCellRunner:
                 },
             },
         ]
+        config_fields = (
+            "run_name",
+            "seed",
+            "model",
+            "effort",
+            "max_output_tokens",
+            "max_decisions",
+            "max_run_cost_cents",
+            "horizon_days",
+            "starting_capital_cents",
+            "customer_population_seed",
+            "customer_namespace",
+            "market_profile",
+            "assessor_version",
+            "tariff_valid_through",
+        )
+        serialized_config = {
+            field: getattr(self.config, field) for field in config_fields
+        }
+        serialized_config["tariff"] = {
+            "name": self.config.tariff.name,
+            "input_cents_per_million_tokens": (
+                self.config.tariff.input_cents_per_million_tokens
+            ),
+            "output_cents_per_million_tokens": (
+                self.config.tariff.output_cents_per_million_tokens
+            ),
+        }
         return {
             "schema_version": "capage-live-sandbox-result-v1",
             "status": "completed",
             "stop_reason": "horizon_reached",
             "actual_model_cost_units": 1_000_000,
+            "actual_model_cost_cents_unrounded": 1.0,
+            "actual_model_cost_cents_billed": 1,
+            "config": serialized_config,
             "transcript": [],
             "outcome": {
-                "run_id": self.config.run_name,
+                "run_id": f"world-{self.config.run_name}",
                 "day": 30,
                 "balance_cents": balance,
                 "earned_revenue_cents": 0,
                 "expense_cents": 1,
+                "model_api_cost_cents": 1,
+                "model_api_cost_units": 1_000_000,
+                "model_input_tokens": 5_000,
+                "model_output_tokens": 0,
                 "open_obligations": 0,
                 "contracts_disputed": 0,
             },
@@ -115,9 +154,12 @@ class FakeV2Runner(FakeCellRunner):
 
 
 def fake_config_factory(**kwargs):
-    kwargs.pop("tariff_name")
-    kwargs.pop("input_cents_per_million_tokens")
-    kwargs.pop("output_cents_per_million_tokens")
+    tariff_name = kwargs.pop("tariff_name")
+    input_rate = kwargs.pop("input_cents_per_million_tokens")
+    output_rate = kwargs.pop("output_cents_per_million_tokens")
+    kwargs.setdefault("customer_namespace", "")
+    kwargs.setdefault("market_profile", "baseline-v1")
+    kwargs["tariff"] = TokenTariff(tariff_name, input_rate, output_rate)
     return SimpleNamespace(**kwargs)
 
 
@@ -167,6 +209,20 @@ class ThreeArmActiveRunnerGateTests(unittest.TestCase):
         config = ActiveConfig.from_plan(self.plan)
         self.assertEqual(config.aggregate_cost_cap_cents, 1_350)
         self.assertEqual(config.per_cell_cost_cap_cents, 75)
+        aborted_record = (
+            self.root
+            / "experiments"
+            / "sandbox"
+            / "HOMEOSTASIS_V2_ABORTED_RUN_32292164227.md"
+        ).read_text(encoding="utf-8")
+        self.assertIn("28,915,600 cost units", aborted_record)
+        self.assertIn("9379919939", aborted_record)
+        tariff = self.plan["frozen_config"]["token_tariff"]
+        self.assertEqual(
+            ABORTED_RUN_MODEL_COST_UNITS,
+            126_468 * tariff["input_cents_per_million_tokens"]
+            + 3_622 * tariff["output_cents_per_million_tokens"],
+        )
 
     def test_plan_still_denies_provider_spend_and_workflow_authority(self):
         self.assertFalse(self.plan["provider_calls_authorized"])
@@ -183,7 +239,10 @@ class ThreeArmActiveRunnerGateTests(unittest.TestCase):
         self.assertEqual(result["status"], "completed")
         self.assertEqual(result["stop_reason"], "all_cells_completed")
         self.assertEqual(len(result["completed_cells"]), 18)
-        self.assertEqual(result["model_cost_units"], 18_000_000)
+        self.assertEqual(
+            result["model_cost_units"],
+            ABORTED_RUN_MODEL_COST_UNITS + 18_000_000,
+        )
         self.assertEqual({row["arm"] for row in FakeCellRunner.calls}, {"control", "v1", "v2"})
         for arm in ("control", "v1", "v2"):
             calls = [row for row in FakeCellRunner.calls if row["arm"] == arm]
@@ -216,6 +275,50 @@ class ThreeArmActiveRunnerGateTests(unittest.TestCase):
         self.assertEqual(len(resumed["completed_cells"]), 18)
         self.assertEqual(len(FakeCellRunner.calls), 18)
         self.assertEqual(len({row["run_name"] for row in FakeCellRunner.calls}), 18)
+
+    def test_prior_failed_attempt_cost_is_debited_from_aggregate_cap(self):
+        with tempfile.TemporaryDirectory() as directory, patch(
+            "capage.homeostasis_v2_active_runner.implementation_commitments",
+            return_value={"test": "frozen"},
+        ):
+            result = self.runner(directory).run(max_cells=18)
+            with patch(
+                "capage.homeostasis_v2_active_runner.ABORTED_RUN_MODEL_COST_UNITS",
+                ABORTED_RUN_MODEL_COST_UNITS + 1,
+            ):
+                with self.assertRaisesRegex(ValueError, "prior model cost mismatch"):
+                    self.runner(directory)
+
+        self.assertEqual(result["status"], "completed")
+        self.assertEqual(
+            result["prior_model_cost_units"], ABORTED_RUN_MODEL_COST_UNITS
+        )
+        self.assertEqual(result["prior_cost_reference"], ABORTED_RUN_COST_REFERENCE)
+        self.assertEqual(
+            result["model_cost_units"],
+            ABORTED_RUN_MODEL_COST_UNITS + 18_000_000,
+        )
+
+    def test_prior_cost_can_reduce_a_cell_cap_and_prevent_overspend(self):
+        prior = 1_349_000_000
+        with tempfile.TemporaryDirectory() as directory, patch(
+            "capage.homeostasis_v2_active_runner.implementation_commitments",
+            return_value={"test": "frozen"},
+        ), patch(
+            "capage.homeostasis_v2_active_runner.ABORTED_RUN_MODEL_COST_UNITS",
+            prior,
+        ), patch(
+            "capage.homeostasis_v2_active_runner.ABORTED_RUN_COST_REFERENCE",
+            "test-near-ceiling",
+        ):
+            result = self.runner(directory).run(max_cells=18)
+
+        self.assertEqual(result["status"], "stopped")
+        self.assertEqual(result["stop_reason"], "aggregate_model_cost_cap_reached")
+        self.assertEqual(result["model_cost_units"], 1_350_000_000)
+        self.assertEqual(len(result["completed_cells"]), 1)
+        self.assertEqual(FakeCellRunner.calls[0]["starting_capital_cents"], 25_000)
+        self.assertEqual(FakeCellRunner.calls[0]["max_run_cost_cents"], 1)
 
     def test_interrupted_attempt_is_not_automatically_retried(self):
         FakeCellRunner.fail_arms = {"v2"}
@@ -298,6 +401,43 @@ class ThreeArmActiveRunnerGateTests(unittest.TestCase):
                     run_config_factory=fake_config_factory,
                     empty_continuity_factory=lambda: {"history": []},
                 )
+
+    def test_result_binds_full_config_not_internal_world_id(self):
+        with tempfile.TemporaryDirectory() as directory, patch(
+            "capage.homeostasis_v2_active_runner.implementation_commitments",
+            return_value={"test": "frozen"},
+        ):
+            runner = self.runner(directory)
+            config = runner._run_config(1, "v2", 123, 25_000, 75)
+            result = FakeV2Runner(
+                config,
+                object(),
+                audit_path=Path(directory) / "audit.jsonl",
+                continuity_state={"history": []},
+            ).run()
+            self.assertNotEqual(result["outcome"]["run_id"], config.run_name)
+            runner._validate_result(result, config)
+
+            result["config"]["seed"] += 1
+            with self.assertRaisesRegex(ValueError, "serialized config"):
+                runner._validate_result(result, config)
+
+    def test_result_rejects_token_cost_accounting_mismatch(self):
+        with tempfile.TemporaryDirectory() as directory, patch(
+            "capage.homeostasis_v2_active_runner.implementation_commitments",
+            return_value={"test": "frozen"},
+        ):
+            runner = self.runner(directory)
+            config = runner._run_config(1, "v2", 123, 25_000, 75)
+            result = FakeV2Runner(
+                config,
+                object(),
+                audit_path=Path(directory) / "audit.jsonl",
+                continuity_state={"history": []},
+            ).run()
+            result["outcome"]["model_input_tokens"] += 1
+            with self.assertRaisesRegex(ValueError, "token totals"):
+                runner._validate_result(result, config)
 
     def test_cli_rejects_before_loading_provider_factories(self):
         with tempfile.TemporaryDirectory() as directory, patch(
