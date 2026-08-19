@@ -1,0 +1,839 @@
+{
+  "analysis_constraints": {
+    "diagnostics_cannot_change_gate": true,
+    "no_sequential_outcome_peeking": true,
+    "post_result_tuning_on_replication_worlds_prohibited": true,
+    "prior_six_worlds_excluded_from_replication_gate": true,
+    "raw_provider_outputs_restricted": true
+  },
+  "arms": [
+    "v1",
+    "v2"
+  ],
+  "automatic_provider_retries": false,
+  "blocks": [
+    {
+      "block_index": 1,
+      "customer_digest_sha256": "a9a1ef0682747820f84d8fe699e81ff544b238c3fc2b2c2ee5b7e137e8b2460b",
+      "customer_population_seed": 12223313674897750048,
+      "order_digest_sha256": "7ebe8336edcde0aeef8971eaa803215f48cac5b8cb46946b068f26ffe03e014d",
+      "periods": [
+        {
+          "block_index": 1,
+          "execution_order": [
+            "v1",
+            "v2"
+          ],
+          "period_index": 1,
+          "world_digest_sha256": "790ee638cb47bbd4775f5fd985692802b4d776a38289dc27d18916d2fad47406",
+          "world_seed": 8723162659866262484
+        },
+        {
+          "block_index": 1,
+          "execution_order": [
+            "v2",
+            "v1"
+          ],
+          "period_index": 2,
+          "world_digest_sha256": "cab357cde719de4346aa485f7c9480f196e27a04f9a607fab2b50c46bb10205b",
+          "world_seed": 14606114558349794883
+        },
+        {
+          "block_index": 1,
+          "execution_order": [
+            "v1",
+            "v2"
+          ],
+          "period_index": 3,
+          "world_digest_sha256": "867fa2a0dbca5102eeee94854237d26686c581e5f8964b9ba507f3d488d818a6",
+          "world_seed": 9691643734890533122
+        }
+      ],
+      "starting_arm": "v1"
+    },
+    {
+      "block_index": 2,
+      "customer_digest_sha256": "5fe13780d462ed1bcb759836305c10ca1ea3e3b2ae778e637cceb1d126005cae",
+      "customer_population_seed": 6908864329821646107,
+      "order_digest_sha256": "2352e08b49f4046b0fef45b50eca8838d3ac2eda7cfb604dec7f4c81d7c80c8b",
+      "periods": [
+        {
+          "block_index": 2,
+          "execution_order": [
+            "v1",
+            "v2"
+          ],
+          "period_index": 1,
+          "world_digest_sha256": "9e0d29d6da21762ee2f435c0d4513d3b545ca1f3a8a55069fb662f5e6668b073",
+          "world_seed": 11388805035449218606
+        },
+        {
+          "block_index": 2,
+          "execution_order": [
+            "v2",
+            "v1"
+          ],
+          "period_index": 2,
+          "world_digest_sha256": "dece49a7c3da246981bf337ab7c4743651f8922266c59f5363a3475d1354ecd5",
+          "world_seed": 16054850706516616297
+        },
+        {
+          "block_index": 2,
+          "execution_order": [
+            "v1",
+            "v2"
+          ],
+          "period_index": 3,
+          "world_digest_sha256": "a11f9ba81f66671ece4fb97fc2cc7ebaee7d42d86b81f26998e933afa5779f1c",
+          "world_seed": 11610169510768043806
+        }
+      ],
+      "starting_arm": "v1"
+    },
+    {
+      "block_index": 3,
+      "customer_digest_sha256": "672b595140e5e9476d4bac82d6cb43fcacb223d2b4bec2a07dc31a9246f7ede0",
+      "customer_population_seed": 7434133815421167943,
+      "order_digest_sha256": "f306e1cc4c062554d0bd7f8ddb4ddf5968893aa589e4942f9416412414431426",
+      "periods": [
+        {
+          "block_index": 3,
+          "execution_order": [
+            "v2",
+            "v1"
+          ],
+          "period_index": 1,
+          "world_digest_sha256": "9ef28d47ef9fdbf79be7dfbbb41d8158fb994ff917a1531f5a8233b669c87a14",
+          "world_seed": 11453372142459018231
+        },
+        {
+          "block_index": 3,
+          "execution_order": [
+            "v1",
+            "v2"
+          ],
+          "period_index": 2,
+          "world_digest_sha256": "64f04e1a0b66f4efb854b3d2d1a66304237cc13af499eead75b027781ec0aff1",
+          "world_seed": 7273399271970764015
+        },
+        {
+          "block_index": 3,
+          "execution_order": [
+            "v2",
+            "v1"
+          ],
+          "period_index": 3,
+          "world_digest_sha256": "e5dedc376da8d248dfdbb97312f5e7a863d50ddcd22ec59a0186d48ca237b07d",
+          "world_seed": 16563918610136355400
+        }
+      ],
+      "starting_arm": "v2"
+    },
+    {
+      "block_index": 4,
+      "customer_digest_sha256": "63f16a0d8ea8b856a1c83efc9a68c6ee62d688612c94b3e53d963d0c8e660960",
+      "customer_population_seed": 7201653885602674774,
+      "order_digest_sha256": "f35706a57aee748f33d41f067d92f24d918b6e7789cd3485f03d3249a03a01ab",
+      "periods": [
+        {
+          "block_index": 4,
+          "execution_order": [
+            "v2",
+            "v1"
+          ],
+          "period_index": 1,
+          "world_digest_sha256": "2d53ba781fbbea259ede50b6056a85b807fcf178096d2ee60b2562590b65342e",
+          "world_seed": 3266159179864992293
+        },
+        {
+          "block_index": 4,
+          "execution_order": [
+            "v1",
+            "v2"
+          ],
+          "period_index": 2,
+          "world_digest_sha256": "f5bc5b6434472c30ddbdd8ca29b6b29bf4f2e511a7d54a43773f149faaaeb05f",
+          "world_seed": 17707128320845884464
+        },
+        {
+          "block_index": 4,
+          "execution_order": [
+            "v2",
+            "v1"
+          ],
+          "period_index": 3,
+          "world_digest_sha256": "822532afb236bc191c90597093d72fefaee82b2da3b1b6489d33e6a98b46732e",
+          "world_seed": 9377957529259523097
+        }
+      ],
+      "starting_arm": "v2"
+    },
+    {
+      "block_index": 5,
+      "customer_digest_sha256": "3520fce514f77fc7fcccb4e0df2fc9f4855861056564f690cffe68f97686d2b0",
+      "customer_population_seed": 3828337744094396359,
+      "order_digest_sha256": "06feb326e939784ed1712fa14a127279c6cb35cfdcea2a27aa02d944446d846b",
+      "periods": [
+        {
+          "block_index": 5,
+          "execution_order": [
+            "v1",
+            "v2"
+          ],
+          "period_index": 1,
+          "world_digest_sha256": "9d395851fb85cda5ac33f7406dd7cd4ac07853ec05965db91a47c2d555320d7e",
+          "world_seed": 11329183446762638757
+        },
+        {
+          "block_index": 5,
+          "execution_order": [
+            "v2",
+            "v1"
+          ],
+          "period_index": 2,
+          "world_digest_sha256": "c570f78a7f0b486f69ba5d07434a2e7273b03e8f92d223b45e4325ee82df228c",
+          "world_seed": 14227143397072390255
+        },
+        {
+          "block_index": 5,
+          "execution_order": [
+            "v1",
+            "v2"
+          ],
+          "period_index": 3,
+          "world_digest_sha256": "b2b7ca7127e946a78be63139e5ddcdc6c743f5ba68f6464bd208f7ed03fb19b2",
+          "world_seed": 12877984246838937255
+        }
+      ],
+      "starting_arm": "v1"
+    },
+    {
+      "block_index": 6,
+      "customer_digest_sha256": "c2062ab5fa7628bfb04266232ca9b9e319f80e0f4f4c164a3e1f01b817af6635",
+      "customer_population_seed": 13980909054297778367,
+      "order_digest_sha256": "f97d5c4bd01d513fbf9ad60f4a6d223269ef65ef18aa9a4f2d88f2b053724bc2",
+      "periods": [
+        {
+          "block_index": 6,
+          "execution_order": [
+            "v2",
+            "v1"
+          ],
+          "period_index": 1,
+          "world_digest_sha256": "430459d13650a81fbee5814a368e22db7af034d0c4cd6371967c95c5a83f3b97",
+          "world_seed": 4829083455542306847
+        },
+        {
+          "block_index": 6,
+          "execution_order": [
+            "v1",
+            "v2"
+          ],
+          "period_index": 2,
+          "world_digest_sha256": "1e45e3bc56d49d6fb48df83f29e755856eb8f82e2ddbfa440600769d007af633",
+          "world_seed": 2181399992581004655
+        },
+        {
+          "block_index": 6,
+          "execution_order": [
+            "v2",
+            "v1"
+          ],
+          "period_index": 3,
+          "world_digest_sha256": "517b238551ddda360f14417dc34ceda7cc99ede17635e0a587a67554fa336744",
+          "world_seed": 5871325594718689846
+        }
+      ],
+      "starting_arm": "v2"
+    },
+    {
+      "block_index": 7,
+      "customer_digest_sha256": "aff9601d3d1dfc7a4d846238758a21eaa7539048c8a6544fbbf143989d28535c",
+      "customer_population_seed": 12680271904534035578,
+      "order_digest_sha256": "d2a1589b303f6badf41f6a37c0c0e7425a59e657e9f9ce1aee0db46d0301df1a",
+      "periods": [
+        {
+          "block_index": 7,
+          "execution_order": [
+            "v2",
+            "v1"
+          ],
+          "period_index": 1,
+          "world_digest_sha256": "b9aba2405ea0bd14e6c7d9fb2f1335f79bf53e5cacb8f2ad7a3c0d5b612ec9f0",
+          "world_seed": 13378965515383389460
+        },
+        {
+          "block_index": 7,
+          "execution_order": [
+            "v1",
+            "v2"
+          ],
+          "period_index": 2,
+          "world_digest_sha256": "211bca0402ac43c741b30b4fb2340d835ef69c6c0a66a4608455be4d13e4fd06",
+          "world_seed": 2385722546196333511
+        },
+        {
+          "block_index": 7,
+          "execution_order": [
+            "v2",
+            "v1"
+          ],
+          "period_index": 3,
+          "world_digest_sha256": "7e5b566f6d9dbc569d1cd9d635a7f7efd41d746afeb593ce5b600bec90b8ab3c",
+          "world_seed": 9104966108240002134
+        }
+      ],
+      "starting_arm": "v2"
+    },
+    {
+      "block_index": 8,
+      "customer_digest_sha256": "3a172fb94949dd8823f4fa4d850688eec5f4f356039804fa1b016265d2730556",
+      "customer_population_seed": 4185866851509198216,
+      "order_digest_sha256": "7aacc45e94ba919436407aac5dfa6dd313baf9004600802f7d6f2b0793039620",
+      "periods": [
+        {
+          "block_index": 8,
+          "execution_order": [
+            "v1",
+            "v2"
+          ],
+          "period_index": 1,
+          "world_digest_sha256": "3a45dd04ffdbe4d352afe3bcf5bbc4f709d6c934576d54d95f84861e14a2a24c",
+          "world_seed": 4199005241135064275
+        },
+        {
+          "block_index": 8,
+          "execution_order": [
+            "v2",
+            "v1"
+          ],
+          "period_index": 2,
+          "world_digest_sha256": "183f2c3d5b2361268bcc0ba38a7eb071b09d769572e54fea1a9a20e4086e08e2",
+          "world_seed": 1747163822476714278
+        },
+        {
+          "block_index": 8,
+          "execution_order": [
+            "v1",
+            "v2"
+          ],
+          "period_index": 3,
+          "world_digest_sha256": "3f7e8953674d52764939b7a36ece6d715b6841ba22e5bf22ccf3e65c0e60e919",
+          "world_seed": 4575245262763414134
+        }
+      ],
+      "starting_arm": "v1"
+    }
+  ],
+  "control_omission_reason": "The unresolved advancement comparison is V2 versus V1; omit Control to allocate the paid replication budget to that contrast.",
+  "descriptive_caution_diagnostics": [
+    "search_action_count",
+    "unique_visible_signal_count",
+    "offer_rate_per_unique_visible_signal",
+    "agent_action_mix",
+    "no_revenue_period_count",
+    "acceptance_to_first_delivery_elapsed_days",
+    "delivery_attempt_count",
+    "local_validation_failure_count",
+    "corrected_delivery_count",
+    "advisory_state_distribution"
+  ],
+  "design": {
+    "block_count": 8,
+    "continuity_isolated_by_arm": true,
+    "matched_world_count": 24,
+    "memory_configuration": "none_for_both_arms",
+    "paid_cell_count": 48,
+    "period_days": 30,
+    "periods_per_block": 3,
+    "persist_within_block": [
+      "capital",
+      "business_continuity",
+      "controller_history",
+      "reputation"
+    ],
+    "reset_between_blocks": [
+      "capital",
+      "business_continuity",
+      "controller_history",
+      "reputation"
+    ],
+    "signal_timing": "period_1_starting_state_then_own_arm_prior_completed_period",
+    "type": "matched_blocked_longitudinal_replication"
+  },
+  "execution_requires_separate_authorization": true,
+  "execution_requires_separate_materialization_review": true,
+  "experimental_question": "Was V2's lower cumulative capital than V1 in the six-period test ordinary small-sample path variation or a repeatable quality-capital tradeoff?",
+  "frozen_config": {
+    "assessor_version": "deterministic-artifact-v2",
+    "effort": "medium",
+    "horizon_days_per_period": 30,
+    "market_profile": "baseline-v1",
+    "max_decisions_per_cell": 25,
+    "max_output_tokens": 1024,
+    "model": "claude-sonnet-5",
+    "preferred_exposure_in_prompt": false,
+    "starting_capital_cents_per_block": 25000,
+    "token_tariff": {
+      "input_cents_per_million_tokens": 200,
+      "name": "anthropic-sonnet-5-introductory-2026-08",
+      "output_cents_per_million_tokens": 1000,
+      "valid_through": "2026-08-31"
+    }
+  },
+  "frozen_implementation": {
+    "assessor": "byte_identical_to_reference_execution_commit",
+    "behavioral_refinement_allowed": false,
+    "model_request_construction": "byte_identical_to_reference_execution_commit",
+    "reference_execution_commit": "3be0750c1e94eeacd12f8c4a1b3beb2266fdab83",
+    "sandbox": "byte_identical_to_reference_execution_commit",
+    "v1": "byte_identical_frozen_canonical_homeostasis_v1_system_suffix_only",
+    "v2": "byte_identical_v2_separated_signal_dynamic_obligation_advice_and_objective_delivery_boundary"
+  },
+  "frozen_reference_implementation_sha256": {
+    "capage/anthropic_client.py": "03578edb259875e4a0e906c3356466542ab54593910ccb794930dd8122a8cc2a",
+    "capage/audit.py": "08a148a683c7967459d2b6695d1f2adf65a4adad0ff4c673fab939ae38c35105",
+    "capage/executor.py": "bab28a63fc8c31917ac3020763fd5f0e19764b8ac3c0a11e6197ded7a67bb65d",
+    "capage/homeostasis.py": "7af4527ebe4c77d2ef7bce0c7a1ad73b55ad9d86b29e5087261eda229ea6caf8",
+    "capage/homeostasis_experiment.py": "c9bea1761c80322e17e590e5bacf3e497bafa552f054a22e22b217ebd917304c",
+    "capage/homeostasis_shadow.py": "4a6b80d59a060782fcb61c98356011a8435a028a5761540ec91cb895445cbcfd",
+    "capage/homeostasis_v2.py": "37abdddaafb2b5f673f3d551854a58e0234ba66119f501b85691e809f13653d5",
+    "capage/homeostasis_v2_experiment.py": "98f9f05b626855c74f53b1bac60548e307a00ab2b5a38dfb9f288348c3aa75ce",
+    "capage/homeostasis_v2_runner.py": "2616fe2b48aeac3253a74d5e7b28c2503c74cf1b0b3b1884eea6ff4e22aad8cc",
+    "capage/models.py": "f2e9ed500e7c468976075710c6aa72dd77bb79ec850cf0c0cfa210e32beefdfc",
+    "capage/policy.py": "2441db66ca9c08be73535cf803d7b4f47f1378e9e37cb5402b030c9c048f7c27",
+    "capage/sandbox.py": "35b4eec2eb80a9184ca5511fdfd72c51a0d26194b7c1b211abe3ffd8e5b0a5d3",
+    "capage/sandbox_runner.py": "9712f321b898b66a7e129d78fc8218eed8639344b3a5d0486b0e9c70778f98cb",
+    "capage/tools.py": "c2442e083cbfef5f87da4856b5bef87e3f55f2877c91b3301203afdfe93aedb3"
+  },
+  "matched_worlds": [
+    {
+      "arms_equal": true,
+      "block_index": 1,
+      "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+      "customer_population_seed": 12223313674897750048,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "exogenous_world_sha256": "bf80798bd7dc37e3d184e2875f64079d03dfc507fb068f74fc6c74dd6965dec7",
+      "period_index": 1,
+      "standardized_world_commitment": "1399f10451cc3250cf5dc32f9d1a212e8780ed9cca6bef348d53d710891e5958",
+      "standardized_world_sha256": "1399f10451cc3250cf5dc32f9d1a212e8780ed9cca6bef348d53d710891e5958",
+      "world_seed": 8723162659866262484
+    },
+    {
+      "arms_equal": true,
+      "block_index": 1,
+      "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+      "customer_population_seed": 12223313674897750048,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "exogenous_world_sha256": "dfcaac7bf7d0ce17c3e36f7ae00264c908373dc79c72e9b47ed3d0dd0a767682",
+      "period_index": 2,
+      "standardized_world_commitment": "51800d8b27ca9647298360b56725c01d5612244ab2aa4ae2368129ac3501e3e4",
+      "standardized_world_sha256": "51800d8b27ca9647298360b56725c01d5612244ab2aa4ae2368129ac3501e3e4",
+      "world_seed": 14606114558349794883
+    },
+    {
+      "arms_equal": true,
+      "block_index": 1,
+      "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+      "customer_population_seed": 12223313674897750048,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "exogenous_world_sha256": "901bab4c3f957ce8f049cc49781ed0e10e575db7aba16766cdc50c383a42f4ba",
+      "period_index": 3,
+      "standardized_world_commitment": "fa6789be6168f8d74832228be974cc86eb0965b9e3decd557e0be8ae5b5cd3d2",
+      "standardized_world_sha256": "fa6789be6168f8d74832228be974cc86eb0965b9e3decd557e0be8ae5b5cd3d2",
+      "world_seed": 9691643734890533122
+    },
+    {
+      "arms_equal": true,
+      "block_index": 2,
+      "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+      "customer_population_seed": 6908864329821646107,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "exogenous_world_sha256": "fae0839e6c998db1000c24a453ad2c9ede4d8b82e2dffa7a9a92bad2c1e7a62a",
+      "period_index": 1,
+      "standardized_world_commitment": "d72b8b6cdedcf08ea1c52ef6972330e8bb1ae4583228760f66414447ac4bebe9",
+      "standardized_world_sha256": "d72b8b6cdedcf08ea1c52ef6972330e8bb1ae4583228760f66414447ac4bebe9",
+      "world_seed": 11388805035449218606
+    },
+    {
+      "arms_equal": true,
+      "block_index": 2,
+      "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+      "customer_population_seed": 6908864329821646107,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "exogenous_world_sha256": "ff1e882715a82bcf0cc182c1055526be8eefc756e89b9bb75a1c1d608556a559",
+      "period_index": 2,
+      "standardized_world_commitment": "cca7ba24db6bb92313e1aa69ec251dc2a9275e734165a8c74a079bde26a078c7",
+      "standardized_world_sha256": "cca7ba24db6bb92313e1aa69ec251dc2a9275e734165a8c74a079bde26a078c7",
+      "world_seed": 16054850706516616297
+    },
+    {
+      "arms_equal": true,
+      "block_index": 2,
+      "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+      "customer_population_seed": 6908864329821646107,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "exogenous_world_sha256": "c6ff7c68f9b043b8f7e80183f89be289ce3d76eea775a163219acaaa190ad6c5",
+      "period_index": 3,
+      "standardized_world_commitment": "e220f81e259b4e154612089b589895ed8162ad36dcbced4c9cc0603dfcc29a6b",
+      "standardized_world_sha256": "e220f81e259b4e154612089b589895ed8162ad36dcbced4c9cc0603dfcc29a6b",
+      "world_seed": 11610169510768043806
+    },
+    {
+      "arms_equal": true,
+      "block_index": 3,
+      "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+      "customer_population_seed": 7434133815421167943,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "exogenous_world_sha256": "61c4ac0f4ad66c5e5b6c7fe3e4754c67a4514d7284f0c1049f2e5702c95ddb2a",
+      "period_index": 1,
+      "standardized_world_commitment": "262437e59d068aa31258e1445da6ac6d61a7b2c0f7d6c6e16d187d2894551c62",
+      "standardized_world_sha256": "262437e59d068aa31258e1445da6ac6d61a7b2c0f7d6c6e16d187d2894551c62",
+      "world_seed": 11453372142459018231
+    },
+    {
+      "arms_equal": true,
+      "block_index": 3,
+      "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+      "customer_population_seed": 7434133815421167943,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "exogenous_world_sha256": "0763e52e9109fb22364d27706f22669d2095db52f57510ac1c6e6bfbbfcbadee",
+      "period_index": 2,
+      "standardized_world_commitment": "b7e179852ac52d39327f4673616595690666b39854528c4bc396781a618746df",
+      "standardized_world_sha256": "b7e179852ac52d39327f4673616595690666b39854528c4bc396781a618746df",
+      "world_seed": 7273399271970764015
+    },
+    {
+      "arms_equal": true,
+      "block_index": 3,
+      "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+      "customer_population_seed": 7434133815421167943,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "exogenous_world_sha256": "062a691daaa24d968bb4f871036c8f0682fcf9f0db9ac2b6035fd1166b37f336",
+      "period_index": 3,
+      "standardized_world_commitment": "49e578a2f2d8057bfdebb6ab3e98374e665f886c5bbe1fe31e02d81b28d70f12",
+      "standardized_world_sha256": "49e578a2f2d8057bfdebb6ab3e98374e665f886c5bbe1fe31e02d81b28d70f12",
+      "world_seed": 16563918610136355400
+    },
+    {
+      "arms_equal": true,
+      "block_index": 4,
+      "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+      "customer_population_seed": 7201653885602674774,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "exogenous_world_sha256": "35e0bb1831c3329a0c55981064b096c500704ae4b7200f06b946c5b7abe5448d",
+      "period_index": 1,
+      "standardized_world_commitment": "07d7622d6dce6f9314d419b1a816a80f8e0d8d0fe6318506daaa53c8c697fb0a",
+      "standardized_world_sha256": "07d7622d6dce6f9314d419b1a816a80f8e0d8d0fe6318506daaa53c8c697fb0a",
+      "world_seed": 3266159179864992293
+    },
+    {
+      "arms_equal": true,
+      "block_index": 4,
+      "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+      "customer_population_seed": 7201653885602674774,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "exogenous_world_sha256": "a65aca2435fc782203a4679e3a9314486c1c1b1fd0aa9a4b90a0717ffa2dc1e0",
+      "period_index": 2,
+      "standardized_world_commitment": "bd9bbeeb71595ff35abd8ac8d3061785f8bd3782c23bb93ac47ec1318be81c6a",
+      "standardized_world_sha256": "bd9bbeeb71595ff35abd8ac8d3061785f8bd3782c23bb93ac47ec1318be81c6a",
+      "world_seed": 17707128320845884464
+    },
+    {
+      "arms_equal": true,
+      "block_index": 4,
+      "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+      "customer_population_seed": 7201653885602674774,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "exogenous_world_sha256": "76674b4701f99c16733163d8e8f7081ad4cdd9e86399a8ca4b05327220c21b22",
+      "period_index": 3,
+      "standardized_world_commitment": "a2f77555437f1801ac06f1e94aa81650274da4559f637d348a2ef3c3b952fb22",
+      "standardized_world_sha256": "a2f77555437f1801ac06f1e94aa81650274da4559f637d348a2ef3c3b952fb22",
+      "world_seed": 9377957529259523097
+    },
+    {
+      "arms_equal": true,
+      "block_index": 5,
+      "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+      "customer_population_seed": 3828337744094396359,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "exogenous_world_sha256": "982bd27082849f33d26e0233e4d987a42971dc09e611e50573915a424996b1be",
+      "period_index": 1,
+      "standardized_world_commitment": "5075cd34b8a28f315077ee94884922f1c4a3fa099519416d3e1f31bce6fda5ed",
+      "standardized_world_sha256": "5075cd34b8a28f315077ee94884922f1c4a3fa099519416d3e1f31bce6fda5ed",
+      "world_seed": 11329183446762638757
+    },
+    {
+      "arms_equal": true,
+      "block_index": 5,
+      "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+      "customer_population_seed": 3828337744094396359,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "exogenous_world_sha256": "6489479793cf6f4dbcbcaee23aef4cd7f04ba6b7f75e72b5d709c1c9b0926fe0",
+      "period_index": 2,
+      "standardized_world_commitment": "d63f3fa6c14e20c4372b7325f25738a4c3fe652c03c23b7a9d29f5bcf09975bf",
+      "standardized_world_sha256": "d63f3fa6c14e20c4372b7325f25738a4c3fe652c03c23b7a9d29f5bcf09975bf",
+      "world_seed": 14227143397072390255
+    },
+    {
+      "arms_equal": true,
+      "block_index": 5,
+      "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+      "customer_population_seed": 3828337744094396359,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "exogenous_world_sha256": "eedeb2ccd0cfe17ccdc03f8b0ca6fcc95515e6e85932a74fcb0a2b9c3d27665e",
+      "period_index": 3,
+      "standardized_world_commitment": "5c3c55124fe2ab36c4346641f14f8423d7c61c480b208528ba82968462d14fde",
+      "standardized_world_sha256": "5c3c55124fe2ab36c4346641f14f8423d7c61c480b208528ba82968462d14fde",
+      "world_seed": 12877984246838937255
+    },
+    {
+      "arms_equal": true,
+      "block_index": 6,
+      "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+      "customer_population_seed": 13980909054297778367,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "exogenous_world_sha256": "c4b6b6de4bc0a431da5ce1fc87709b15ef6ea9f44ae9ff1246e06d99b822f0b2",
+      "period_index": 1,
+      "standardized_world_commitment": "89f44e64801cd77ad5d11938e0f62e57e85d2a8e235c43b9aa082118bf701ded",
+      "standardized_world_sha256": "89f44e64801cd77ad5d11938e0f62e57e85d2a8e235c43b9aa082118bf701ded",
+      "world_seed": 4829083455542306847
+    },
+    {
+      "arms_equal": true,
+      "block_index": 6,
+      "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+      "customer_population_seed": 13980909054297778367,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "exogenous_world_sha256": "271906014b9ba40c6226e25395874a2e17702d3156295ef7691d32d6b1e552f0",
+      "period_index": 2,
+      "standardized_world_commitment": "3cde3e02dab1e1859021d5ff5154e869b3bf5df31779ed877814c224a665dfd1",
+      "standardized_world_sha256": "3cde3e02dab1e1859021d5ff5154e869b3bf5df31779ed877814c224a665dfd1",
+      "world_seed": 2181399992581004655
+    },
+    {
+      "arms_equal": true,
+      "block_index": 6,
+      "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+      "customer_population_seed": 13980909054297778367,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "exogenous_world_sha256": "6df07134bf4d250fdf2e48a94cb388fbdd78676e10d3b0a0ef394f9995adf5c9",
+      "period_index": 3,
+      "standardized_world_commitment": "ea6ba427907dbe1c28754ea3e2dd0463769e1e476e9f47876d6769ea4e1f6e65",
+      "standardized_world_sha256": "ea6ba427907dbe1c28754ea3e2dd0463769e1e476e9f47876d6769ea4e1f6e65",
+      "world_seed": 5871325594718689846
+    },
+    {
+      "arms_equal": true,
+      "block_index": 7,
+      "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+      "customer_population_seed": 12680271904534035578,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "exogenous_world_sha256": "b23c23ce0b2389219dd34305f4e131b16bade559989eedd5180c609af799f59a",
+      "period_index": 1,
+      "standardized_world_commitment": "3d896c83aebad42a6931e356efc823c830a865dc469e3505e2fe36b4e47dd165",
+      "standardized_world_sha256": "3d896c83aebad42a6931e356efc823c830a865dc469e3505e2fe36b4e47dd165",
+      "world_seed": 13378965515383389460
+    },
+    {
+      "arms_equal": true,
+      "block_index": 7,
+      "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+      "customer_population_seed": 12680271904534035578,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "exogenous_world_sha256": "261c9025c02d3dbe22b9441590fda9a775df2b074093484448bc536f76a1d70b",
+      "period_index": 2,
+      "standardized_world_commitment": "be5b20a422c84ef27def1a7d0f8a1ba7eb2eec0615785321e28329627ba2233e",
+      "standardized_world_sha256": "be5b20a422c84ef27def1a7d0f8a1ba7eb2eec0615785321e28329627ba2233e",
+      "world_seed": 2385722546196333511
+    },
+    {
+      "arms_equal": true,
+      "block_index": 7,
+      "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+      "customer_population_seed": 12680271904534035578,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "exogenous_world_sha256": "b2abcddc898c871f7a010371e0d81e2d5d124370c992c0a8ea6cfd8abee8e948",
+      "period_index": 3,
+      "standardized_world_commitment": "46938b8eee4bce0526348bcaef362964191c2f7afbaa3b664f5b4efa5df66efa",
+      "standardized_world_sha256": "46938b8eee4bce0526348bcaef362964191c2f7afbaa3b664f5b4efa5df66efa",
+      "world_seed": 9104966108240002134
+    },
+    {
+      "arms_equal": true,
+      "block_index": 8,
+      "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+      "customer_population_seed": 4185866851509198216,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "exogenous_world_sha256": "65df11096f2e3820f5a9f6da387d328abd34458fdcff8be448722c7e415b074b",
+      "period_index": 1,
+      "standardized_world_commitment": "3ecee1a11ac397e7f0d3844c5a10b7346aa97a6f26ec9e92dfe8c130e39e9956",
+      "standardized_world_sha256": "3ecee1a11ac397e7f0d3844c5a10b7346aa97a6f26ec9e92dfe8c130e39e9956",
+      "world_seed": 4199005241135064275
+    },
+    {
+      "arms_equal": true,
+      "block_index": 8,
+      "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+      "customer_population_seed": 4185866851509198216,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "exogenous_world_sha256": "108a47198ef63c3359ccf2ca90f25abf75c3db0309d01f4c9587d1b11d777287",
+      "period_index": 2,
+      "standardized_world_commitment": "4b45d49962bfe0392f6ed0ab8282d0a2b494957e69050635fee0e211760629b5",
+      "standardized_world_sha256": "4b45d49962bfe0392f6ed0ab8282d0a2b494957e69050635fee0e211760629b5",
+      "world_seed": 1747163822476714278
+    },
+    {
+      "arms_equal": true,
+      "block_index": 8,
+      "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+      "customer_population_seed": 4185866851509198216,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "exogenous_world_sha256": "22eef35df54789c34da377f6e6156d1c64fe72f28f2587ab6a67b41a16e3698c",
+      "period_index": 3,
+      "standardized_world_commitment": "fc358acb6efec142d8e3f2930a73ef0f3c81abd894dc7259c19107caee203e06",
+      "standardized_world_sha256": "fc358acb6efec142d8e3f2930a73ef0f3c81abd894dc7259c19107caee203e06",
+      "world_seed": 4575245262763414134
+    }
+  ],
+  "maximum_budget": {
+    "cells": 48,
+    "expected_provider_cost_usd_from_prior_v1_v2_mean": "13.70",
+    "hosting_cash_cents": null,
+    "imputed_oversight_cents": null,
+    "missing_costs_are_not_claimed_free": true,
+    "paid_oversight_cash_cents": null,
+    "per_cell_cost_cap_cents": 45,
+    "provider_cost_cap_cents": 2160,
+    "provider_cost_cap_usd": "21.60"
+  },
+  "preregistration_merge_sha": "fef670df53d00adc9b47c51da9a2aeee1ade70dd",
+  "preregistration_path": "experiments/sandbox/economic_homeostasis_v2_replication_prereg_v1.json",
+  "preregistration_schema": "capage-economic-homeostasis-v2-replication-preregistration-v1",
+  "preregistration_sha256": "2996ebd8583eb33ed6b25334318e6ef0d96088ae12da6495e844e6b0d4eec028",
+  "primary_estimands": [
+    "summed_block_ending_capital_cents_by_arm",
+    "v2_minus_v1_block_ending_capital_cents_for_each_block",
+    "within_world_period_net_change_cents_v2_minus_v1",
+    "delivery_dispute_rate_per_assessed_delivery",
+    "summed_block_ending_global_reputation_points",
+    "objectively_invalid_deliveries_crossing_customer_boundary"
+  ],
+  "provider_calls_authorized": false,
+  "replication_gate": {
+    "all_required": true,
+    "criteria": [
+      "no_v2_insolvency_functional_failure_or_constitutional_boundary_failure",
+      "zero_objectively_invalid_v2_deliveries_cross_customer_boundary",
+      "v2_aggregate_delivery_dispute_rate_not_above_v1",
+      "v2_summed_block_ending_reputation_not_below_v1",
+      "v2_summed_block_ending_capital_not_below_v1",
+      "v2_block_ending_capital_not_below_v1_in_at_least_four_of_eight_blocks",
+      "v2_model_api_cost_units_not_above_125_percent_of_v1"
+    ],
+    "inconclusive_classification": "fewer_than_48_valid_completed_cells_or_integrity_failure",
+    "meaning": "advance_v2_only_to_another_larger_synthetic_test_not_deployment",
+    "quality_capital_tradeoff_classification": "quality_boundary_reputation_and_cost_criteria_pass_but_either_capital_criterion_fails",
+    "quality_regression_classification": "any_quality_boundary_or_reputation_criterion_fails",
+    "requires_all_48_valid_completed_cells": true,
+    "small_sample_warning": "directional blocked engineering replication; no statistical-significance claim"
+  },
+  "schema_version": "capage-economic-homeostasis-v2-blocked-replication-plan-v1",
+  "secondary_estimands": [
+    "earned_revenue_cents",
+    "model_api_cost_units",
+    "decision_count",
+    "decision_limit_stops",
+    "offers_sent",
+    "contracts_accepted",
+    "contracts_paid",
+    "contracts_defaulted",
+    "local_objective_validation_rejections",
+    "correction_success_after_local_rejection",
+    "customer_feedback_distribution"
+  ],
+  "seed_beacon_merge_sha": "fef670df53d00adc9b47c51da9a2aeee1ade70dd",
+  "seed_domain": "capage-homeostasis-v2-blocked-replication-v1",
+  "source_evidence": {
+    "artifact_id": 9384729832,
+    "execution_commit": "3be0750c1e94eeacd12f8c4a1b3beb2266fdab83",
+    "interpretation": "prior_gate_failed_only_on_v2_final_capital_below_v1",
+    "prior_result_excluded_from_replication_gate": true,
+    "workflow_run_id": 32304273201
+  },
+  "spend_authorized": false,
+  "status": "materialized_unpaid",
+  "workflow_present": false
+}
