@@ -69,6 +69,36 @@ The primary economic metric remains:
 
 Human scoring occurs before identity reveal. Automated judging, if later used, is secondary evidence and must not overwrite locked human judgments. INCONCLUSIVE remains a valid outcome.
 
+## Economic Homeostasis V2 blocked replication result
+
+Proposed research layer 2 below (stateful sandbox economy) has since been
+specified, implemented, and iterated through Economic Homeostasis V1, a
+shadow-mode baseline, an active V1 experiment, a three-arm V1/V2/Control
+comparison, and a blocked V1-versus-V2 replication. This section records the
+outcome of that replication; it does not retroactively alter the frozen
+protocols it summarizes.
+
+The replication (preregistered in
+`experiments/sandbox/HOMEOSTASIS_V2_REPLICATION_PREREG.md`, materialized in
+`experiments/sandbox/HOMEOSTASIS_V2_REPLICATION_MATERIALIZATION.md`, gated in
+`experiments/sandbox/HOMEOSTASIS_V2_REPLICATION_LAUNCH_GATE.md`, and launched
+by owner-authorized commit `df3307eaa385372cfd8026e8fb151dad86b82732`) ran as
+GitHub Actions run `32349482559` on 2026-08-20. Full results are recorded in
+`experiments/sandbox/HOMEOSTASIS_V2_REPLICATION_RESULT.md` (merged via PR #38).
+
+Summary:
+
+- All 48 preregistered cells completed for $12.92 of attributable model cost,
+  against a $21.60 hard cap.
+- All eight frozen gate criteria passed. V2 led V1 on summed block-ending
+  capital (+$834.99), summed block-ending reputation (+426), and delivery
+  dispute rate (0.0% vs. 73.3%), and led V1 in 7 of 8 blocks on capital.
+- Classification: `advance_to_another_larger_synthetic_test`.
+  `deployment_authorized` is `false`. This result authorizes only a larger
+  synthetic test — not deployment, real-world economic action, or expanded
+  CapAge authority — and remains a small-sample engineering replication with
+  no statistical-significance claim.
+
 ## Adopted design directions
 
 These directions are accepted for continued research but do not alter the Constitution or frozen Smoke v2 protocol.
@@ -95,9 +125,11 @@ Create a separately versioned 30–50-scenario benchmark before inspecting its c
 
 A feasibility-aware tournament may qualify several serious candidates and advance fewer finalists to the expensive evaluation. Smoke results are debugging and qualification evidence only.
 
-### 2. Stateful sandbox economy
+### 2. Stateful sandbox economy — implemented
 
 Build a seeded, multi-round simulation that complements static scenarios. The simulator—not the candidate—controls hidden state, settlement, counterparty behavior, scoring, and transitions.
+
+This layer is no longer just proposed: see "Economic Homeostasis V2 blocked replication result" above for the current outcome and its explicit non-authorization boundary.
 
 Required properties:
 
@@ -123,3 +155,4 @@ Possible specialties—opportunity discovery, adversarial review, execution plan
 3. Resolve PR #2 and ensure Milestone 1 executor-boundary tests are merged or explicitly superseded.
 4. Specify and freeze the full benchmark before generating its candidate outputs.
 5. After the full single-model study, decide whether a stateful sandbox or model-routing experiment has the higher information value per attributable dollar.
+6. The Homeostasis V2 blocked replication passed its gate and is classified `advance_to_another_larger_synthetic_test`; specify and freeze that larger synthetic test before running it, and do not treat the passed gate as deployment or real-world authority.
