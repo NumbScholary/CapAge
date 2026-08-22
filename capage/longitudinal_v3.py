@@ -9,13 +9,13 @@ from __future__ import annotations
 
 import argparse
 from dataclasses import asdict
-from hashlib import sha256
 import json
 from pathlib import Path
 from statistics import fmean, median
 from typing import Any
 
 from capage.anthropic_client import AnthropicMessagesClient
+from capage.frozen_paths import path_commitments
 from capage.longitudinal import (
     _ARMS,
     _COST_UNITS_PER_CENT,
@@ -48,11 +48,7 @@ _CRITICAL_INCIDENT_LIMIT = 4
 def current_longitudinal_v3_implementation_commitments() -> dict[str, str]:
     """Hash every host module used by a v3 checkpoint."""
 
-    repository_root = Path(__file__).resolve().parents[1]
-    return {
-        relative: sha256((repository_root / relative).read_bytes()).hexdigest()
-        for relative in _IMPLEMENTATION_PATHS
-    }
+    return path_commitments(_IMPLEMENTATION_PATHS)
 
 
 class LongitudinalV3Config(LongitudinalConfig):
