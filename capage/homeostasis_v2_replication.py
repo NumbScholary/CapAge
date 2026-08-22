@@ -30,7 +30,32 @@ PREREGISTRATION_PATH = (
 PREREGISTRATION_SHA256 = (
     "2996ebd8583eb33ed6b25334318e6ef0d96088ae12da6495e844e6b0d4eec028"
 )
-REFERENCE_IMPLEMENTATION_SHA256 = {
+# 2026-08-22: superseded as the live validation target by
+# REFERENCE_IMPLEMENTATION_SHA256_CURRENT, below. This constant's values are
+# left byte-for-byte untouched -- it is the permanent evidentiary record of
+# the exact code that produced GitHub Actions run 32349482559 (workflow
+# "CapAge Homeostasis V2 blocked replication launch", conclusion: success,
+# 48/48 cells completed, classification: advance_to_another_larger_synthetic_test).
+# That run's own execution-sha256.json artifact was independently checked
+# against these exact values before this change was made, confirming they
+# genuinely reflect the code that ran, not merely a claim about it.
+#
+# `validate_plan()` still compares a plan object's own embedded
+# `frozen_reference_implementation_sha256` field against this constant,
+# unconditionally and forever -- that check validates one specific
+# historical plan (the frozen blocked-replication plan) against its own
+# known-correct expectation, which never changes regardless of ongoing
+# engineering work elsewhere in the repository.
+#
+# Going forward, `implementation_commitments()` and
+# `validate_reference_implementation()` check the current, on-disk state of
+# these files against REFERENCE_IMPLEMENTATION_SHA256_CURRENT instead. This
+# is forward engineering on a completed, already-evidenced experiment, not
+# retroactive alteration of that experiment's result: the blocked
+# replication's own result (run 32349482559, all 48 cells, gate passed) is
+# unaffected by any later edit to these files, because that result was
+# already produced, checkpointed, and preserved before this change existed.
+REFERENCE_IMPLEMENTATION_SHA256_HOMEOSTASIS_V2_REPLICATION_32349482559 = {
     "capage/anthropic_client.py": (
         "03578edb259875e4a0e906c3356466542ab54593910ccb794930dd8122a8cc2a"
     ),
@@ -75,6 +100,23 @@ REFERENCE_IMPLEMENTATION_SHA256 = {
     ),
 }
 
+# Live validation target for "do the current files on disk match what we
+# currently expect." Starts as an exact copy of the frozen record above,
+# with capage/models.py and capage/policy.py updated to their post-Step-1-PR-A
+# hashes (capage.models.ProposedAction.estimated_cost_cents and
+# capage.policy.PolicyEngine's per-action/per-run cap checks). Any future
+# deliberate, on-the-record change to one of these 14 files updates its
+# entry here, not the frozen constant above.
+REFERENCE_IMPLEMENTATION_SHA256_CURRENT = {
+    **REFERENCE_IMPLEMENTATION_SHA256_HOMEOSTASIS_V2_REPLICATION_32349482559,
+    "capage/models.py": (
+        "53158239abbd44fbed55d6afc93587d058ec96099b770b0767d31d0202ec35ef"
+    ),
+    "capage/policy.py": (
+        "9a5bbef90b46ae90897d36f49914335866ba29bbfeb92671abebde7d685242ba"
+    ),
+}
+
 
 def _canonical_json(value: object) -> str:
     return json.dumps(
@@ -98,13 +140,13 @@ def implementation_commitments(root: str | Path) -> dict[str, str]:
     root_path = Path(root)
     return {
         path: file_sha256(root_path / path)
-        for path in REFERENCE_IMPLEMENTATION_SHA256
+        for path in REFERENCE_IMPLEMENTATION_SHA256_CURRENT
     }
 
 
 def validate_reference_implementation(root: str | Path) -> None:
-    if implementation_commitments(root) != REFERENCE_IMPLEMENTATION_SHA256:
-        raise ValueError("frozen reference implementation does not match")
+    if implementation_commitments(root) != REFERENCE_IMPLEMENTATION_SHA256_CURRENT:
+        raise ValueError("reference implementation does not match the current pin")
     if file_sha256(Path(root) / PREREGISTRATION_PATH) != PREREGISTRATION_SHA256:
         raise ValueError("frozen replication preregistration does not match")
 
@@ -280,7 +322,7 @@ def validate_plan(
         raise ValueError("blocked replication preregistration hash mismatch")
     if (
         plan.get("frozen_reference_implementation_sha256")
-        != REFERENCE_IMPLEMENTATION_SHA256
+        != REFERENCE_IMPLEMENTATION_SHA256_HOMEOSTASIS_V2_REPLICATION_32349482559
     ):
         raise ValueError("blocked replication implementation hashes mismatch")
     if root is not None:
