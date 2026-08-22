@@ -17,6 +17,7 @@ import json
 from pathlib import Path
 from typing import Any, Callable
 
+from capage.frozen_paths import path_commitments
 from capage.homeostasis import EconomicStateProjector
 from capage.homeostasis_shadow import SandboxResultProjector
 from capage.homeostasis_v2 import validate_objective_delivery
@@ -84,8 +85,7 @@ def _atomic_json(path: Path, payload: dict[str, Any]) -> None:
 
 
 def runtime_commitments(root: str | Path) -> dict[str, str]:
-    root_path = Path(root)
-    return {path: file_sha256(root_path / path) for path in _ORCHESTRATION_PATHS}
+    return path_commitments(_ORCHESTRATION_PATHS, root=root)
 
 
 def _signal_payload(signal: Any) -> dict[str, Any]:

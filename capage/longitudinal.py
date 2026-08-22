@@ -12,6 +12,7 @@ from statistics import fmean, median
 from typing import Any, Callable, Protocol
 
 from capage.anthropic_client import AnthropicMessagesClient
+from capage.frozen_paths import path_commitments
 from capage.memory import AuditedMemoryStore
 from capage.sandbox import TokenTariff, empty_continuity_state, validate_continuity_state
 from capage.sandbox_runner import LiveSandboxRunner, ModelClient, SandboxRunConfig
@@ -38,11 +39,7 @@ def _continuity_hash(value: dict[str, Any]) -> str:
 def current_longitudinal_implementation_commitments() -> dict[str, str]:
     """Hash the exact host modules used by a longitudinal checkpoint."""
 
-    repository_root = Path(__file__).resolve().parents[1]
-    return {
-        relative: sha256((repository_root / relative).read_bytes()).hexdigest()
-        for relative in _IMPLEMENTATION_PATHS
-    }
+    return path_commitments(_IMPLEMENTATION_PATHS)
 
 
 def _atomic_json(path: Path, payload: dict[str, Any]) -> None:
