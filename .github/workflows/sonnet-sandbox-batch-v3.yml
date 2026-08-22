@@ -38,7 +38,7 @@ jobs:
         run: test "$CONFIRM" = "RUN_TWENTY_FRESH_SEEDS"
       - name: Validate batch and runner without an API call
         run: |
-          python -m unittest discover -s tests -p 'test_sandbox*.py' -v
+          python -m unittest discover -s tests -v
           python -m py_compile \
             capage/anthropic_client.py \
             capage/sandbox_runner.py \

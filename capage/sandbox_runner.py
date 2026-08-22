@@ -15,7 +15,12 @@ from capage.audit import AuditLog
 from capage.executor import Executor
 from capage.models import ProposedAction
 from capage.policy import PolicyEngine
-from capage.sandbox import EconomicSandbox, TokenTariff
+from capage.sandbox import (
+    EconomicSandbox,
+    TokenTariff,
+    validate_customer_namespace,
+    validate_market_profile,
+)
 
 
 _COST_UNITS_PER_CENT = 1_000_000
@@ -47,6 +52,9 @@ class SandboxRunConfig:
     horizon_days: int
     starting_capital_cents: int
     tariff: TokenTariff
+    customer_population_seed: int = 0
+    customer_namespace: str = ""
+    market_profile: str = "baseline-v1"
     assessor_version: str = "deterministic-artifact-v1"
     tariff_valid_through: str = ""
 
@@ -61,6 +69,17 @@ class SandboxRunConfig:
             raise ValueError("max_decisions must be between 1 and 100")
         if self.max_run_cost_cents < 1:
             raise ValueError("max_run_cost_cents must be positive")
+        if isinstance(self.customer_population_seed, bool) or not isinstance(
+            self.customer_population_seed, int
+        ):
+            raise TypeError("customer_population_seed must be an integer")
+        validate_customer_namespace(self.customer_namespace)
+        validate_market_profile(self.market_profile)
+        if self.assessor_version not in {
+            "deterministic-artifact-v1",
+            "deterministic-artifact-v2",
+        }:
+            raise ValueError("unsupported artifact assessor version")
         if self.tariff_valid_through:
             date.fromisoformat(self.tariff_valid_through)
 
@@ -90,6 +109,9 @@ class SandboxRunConfig:
                     tariff["output_cents_per_million_tokens"]
                 ),
             ),
+            customer_population_seed=int(payload.get("customer_population_seed", 0)),
+            customer_namespace=str(payload.get("customer_namespace", "")),
+            market_profile=str(payload.get("market_profile", "baseline-v1")),
             assessor_version=str(payload["assessor_version"]),
             tariff_valid_through=str(payload["tariff_valid_through"]),
         )
@@ -108,6 +130,10 @@ time under uncertainty. The environment alone controls hidden counterparties,
 chance, quality assessment, settlement, and revenue recognition. Never claim
 that an unobserved event happened and never invent a customer, payment, or
 capability. All monetary amounts are integer cents.
+
+An accepted contract includes a delivery_brief. When its required delivery
+schema is present, submit the artifact as one strict JSON object matching that
+schema and calculate every requested value from the supplied source records.
 
 Every one of your input, thinking, and output tokens is automatically charged
 against the synthetic ledger. Be economical but think enough to avoid costly
@@ -346,8 +372,19 @@ def assess_artifact(
     public_need: str,
     promised_scope: str,
     solution_tags: list[str],
+    assessor_version: str = "deterministic-artifact-v1",
+    task_brief: dict[str, Any] | None = None,
 ) -> tuple[int, dict[str, int]]:
     """Return a deterministic host score without asking the strategic model."""
+
+    if assessor_version == "deterministic-artifact-v2":
+        return _assess_artifact_v2(
+            artifact,
+            public_need=public_need,
+            task_brief=task_brief,
+        )
+    if assessor_version != "deterministic-artifact-v1":
+        raise ValueError("unsupported artifact assessor version")
 
     artifact_tokens = _tokens(artifact)
     target_tokens = _tokens(
@@ -374,6 +411,139 @@ def assess_artifact(
     return min(100, sum(factors.values())), factors
 
 
+def _assess_artifact_v2(
+    artifact: str,
+    *,
+    public_need: str,
+    task_brief: dict[str, Any] | None,
+) -> tuple[int, dict[str, int]]:
+    """Score a structured delivery against committed customer-supplied facts."""
+
+    factors = {
+        "valid_structure": 0,
+        "brief_identity": 0,
+        "record_coverage": 0,
+        "calculation_accuracy": 0,
+        "recommendation_accuracy": 0,
+        "implementation_quality": 0,
+        "customer_explanation": 0,
+        "penalties": 0,
+    }
+    if not isinstance(task_brief, dict):
+        return 0, factors
+    if task_brief.get("schema_version") != "capage-customer-task-v1":
+        return 0, factors
+    try:
+        delivery = json.loads(artifact)
+    except (TypeError, json.JSONDecodeError):
+        return 0, factors
+    if not isinstance(delivery, dict):
+        return 0, factors
+    required = {
+        "brief_id",
+        "record_evaluations",
+        "recommended_record_id",
+        "customer_summary",
+        "implementation_steps",
+    }
+    if set(delivery) != required:
+        return 0, factors
+    factors["valid_structure"] = 10
+    if delivery.get("brief_id") == task_brief.get("brief_id"):
+        factors["brief_identity"] = 10
+
+    records = task_brief.get("source_records")
+    evaluations = delivery.get("record_evaluations")
+    if not isinstance(records, list) or not isinstance(evaluations, list):
+        return sum(factors.values()), factors
+    expected_scores: dict[str, int] = {}
+    for record in records:
+        if not isinstance(record, dict):
+            return 0, {key: 0 for key in factors}
+        try:
+            record_id = str(record["record_id"])
+            expected_scores[record_id] = (
+                (2 * int(record["value_points"]))
+                - int(record["cost_points"])
+                - int(record["risk_points"])
+            )
+        except (KeyError, TypeError, ValueError):
+            return 0, {key: 0 for key in factors}
+
+    submitted_scores: dict[str, int] = {}
+    malformed = False
+    for evaluation in evaluations:
+        if not isinstance(evaluation, dict) or set(evaluation) != {
+            "record_id",
+            "computed_score",
+        }:
+            malformed = True
+            continue
+        record_id = str(evaluation["record_id"])
+        score = evaluation["computed_score"]
+        if (
+            record_id in submitted_scores
+            or isinstance(score, bool)
+            or not isinstance(score, int)
+        ):
+            malformed = True
+            continue
+        submitted_scores[record_id] = score
+
+    expected_ids = set(expected_scores)
+    submitted_ids = set(submitted_scores)
+    covered = len(expected_ids & submitted_ids)
+    factors["record_coverage"] = round(15 * covered / max(1, len(expected_ids)))
+    correct = sum(
+        submitted_scores.get(record_id) == score
+        for record_id, score in expected_scores.items()
+    )
+    factors["calculation_accuracy"] = round(
+        30 * correct / max(1, len(expected_scores))
+    )
+
+    recommended = min(
+        expected_scores,
+        key=lambda record_id: (-expected_scores[record_id], record_id),
+    )
+    calculations_complete = correct == len(expected_scores)
+    if calculations_complete and delivery.get("recommended_record_id") == recommended:
+        factors["recommendation_accuracy"] = 20
+
+    steps = delivery.get("implementation_steps")
+    if (
+        isinstance(steps, list)
+        and 2 <= len(steps) <= 8
+        and all(isinstance(step, str) and 12 <= len(step.strip()) <= 300 for step in steps)
+    ):
+        factors["implementation_quality"] = 10
+
+    summary = delivery.get("customer_summary")
+    if isinstance(summary, str):
+        summary_tokens = _tokens(summary)
+        need_tokens = _tokens(public_need)
+        recommended_label = next(
+            str(record.get("label", ""))
+            for record in records
+            if str(record.get("record_id")) == recommended
+        )
+        label_tokens = _tokens(recommended_label)
+        if (
+            calculations_complete
+            and 60 <= len(summary.strip()) <= 1_000
+            and (summary_tokens & need_tokens)
+            and (recommended in summary or bool(summary_tokens & label_tokens))
+        ):
+            factors["customer_explanation"] = 10
+
+    unknown_ids = submitted_ids - expected_ids
+    if malformed or unknown_ids or len(evaluations) != len(expected_ids):
+        factors["penalties"] = -20
+    elif not calculations_complete:
+        factors["penalties"] = -30
+    return max(0, min(100, sum(factors.values()))), factors
+
+
 class LiveSandboxRunner:
     """Orchestrate bounded model decisions while preserving the authority split."""
 
@@ -383,6 +553,8 @@ class LiveSandboxRunner:
         client: ModelClient,
         *,
         audit_path: str | Path,
+        durable_context: dict[str, Any] | None = None,
+        continuity_state: dict[str, Any] | None = None,
     ) -> None:
         self.config = config
         self.client = client
@@ -391,6 +563,10 @@ class LiveSandboxRunner:
             horizon_days=config.horizon_days,
             starting_capital_cents=config.starting_capital_cents,
             token_tariff=config.tariff,
+            continuity_state=continuity_state,
+            customer_population_seed=config.customer_population_seed,
+            customer_namespace=config.customer_namespace,
+            market_profile=config.market_profile,
         )
         registry = self.world.agent_tools()
         self.executor = Executor(
@@ -400,6 +576,15 @@ class LiveSandboxRunner:
         )
         self.transcript: list[dict[str, Any]] = []
         self.actual_cost_units = 0
+        self.durable_context = (
+            json.loads(json.dumps(durable_context, sort_keys=True))
+            if durable_context is not None
+            else None
+        )
+        if self.durable_context is not None and not isinstance(
+            self.durable_context, dict
+        ):
+            raise TypeError("durable_context must be an object")
 
     def run(self) -> dict[str, Any]:
         if self.config.tariff_valid_through:
@@ -559,6 +744,7 @@ class LiveSandboxRunner:
             ),
             "transcript": self.transcript,
             "outcome": self.world.outcome(),
+            "business_continuity": self.world.continuity_state(),
             "world_reveal": self.world.reveal_world(),
         }
         return result
@@ -579,6 +765,8 @@ class LiveSandboxRunner:
                 self._prompt_history_item(item) for item in self.transcript[-6:]
             ],
         }
+        if self.durable_context is not None:
+            state["durable_memory"] = self.durable_context
         return {
             "model": self.config.model,
             "max_tokens": self.config.max_output_tokens,
@@ -659,6 +847,8 @@ class LiveSandboxRunner:
             public_need=str(signal["text"]),
             promised_scope=str(offer["scope"]),
             solution_tags=list(offer["solution_tags"]),
+            assessor_version=self.config.assessor_version,
+            task_brief=contract.get("delivery_brief"),
         )
         result = self.world.assess_delivery(
             str(tool_result["delivery_id"]),
