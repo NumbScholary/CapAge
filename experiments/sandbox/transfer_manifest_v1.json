@@ -47,9 +47,10 @@
     "capage/sandbox.py": "35b4eec2eb80a9184ca5511fdfd72c51a0d26194b7c1b211abe3ffd8e5b0a5d3",
     "capage/sandbox_runner.py": "9712f321b898b66a7e129d78fc8218eed8639344b3a5d0486b0e9c70778f98cb",
     "capage/memory.py": "6a1348a6230b7431d12853ada5ba66f2cea9bad93ff1ba2d4e0e77986c22fcee",
-    "capage/longitudinal.py": "7a8e0cb895807869afe10ac1d9f7e9d6b503b15750d546d0434601e97fb965ab",
-    "capage/transfer.py": "3759bac970094f28d4107a6e40baa65b2bd88e54e46305864e942df7c7fac879"
+    "capage/longitudinal.py": "bb016a6db7941ac7df92ec7c53b7a0ef78981f03f2d1bb65236426deacfe5836",
+    "capage/transfer.py": "00bd74bad688479750ebcc225f751dfc863486e94f1004bfb94f5a3abad865bd"
   },
+  "implementation_commitments_note": "2026-08-22: capage/longitudinal.py and capage/transfer.py hashes updated directly (no rename/preservation) after this pin was independently verified to not protect a real completed paid run -- no .github/workflows/*transfer* file exists, and no GitHub Actions run in the repository's history has 'transfer' in its name. This experiment has never actually executed, so this is not evidentiary history; per standing policy, non-evidentiary pins are updated directly with this kind of note rather than using the rename-and-preserve pattern reserved for pins protecting a real run (see capage/homeostasis_v2_replication.py's REFERENCE_IMPLEMENTATION_SHA256_HOMEOSTASIS_V2_REPLICATION_32349482559 for that pattern). Prior values, for reference: capage/longitudinal.py was 7a8e0cb895807869afe10ac1d9f7e9d6b503b15750d546d0434601e97fb965ab, capage/transfer.py was 3759bac970094f28d4107a6e40baa65b2bd88e54e46305864e942df7c7fac879.",
   "python_runtime": "3.12",
   "tariff_valid_through": "2026-08-31"
 }

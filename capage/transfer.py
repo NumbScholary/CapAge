@@ -14,6 +14,7 @@ import sys
 from typing import Any, Callable, Protocol
 
 from capage.anthropic_client import AnthropicMessagesClient
+from capage.frozen_paths import path_commitments
 from capage.memory import AuditedMemoryStore
 from capage.sandbox import (
     TokenTariff,
@@ -71,11 +72,7 @@ def _file_sha256(path: Path) -> str:
 def current_implementation_commitments() -> tuple[tuple[str, str], ...]:
     """Return exact hashes for every host module frozen by transfer v1."""
 
-    repository_root = Path(__file__).resolve().parents[1]
-    return tuple(
-        (relative, _file_sha256(repository_root / relative))
-        for relative in _IMPLEMENTATION_PATHS
-    )
+    return tuple(path_commitments(_IMPLEMENTATION_PATHS).items())
 
 
 def derive_transfer_seed(
