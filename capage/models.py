@@ -17,6 +17,7 @@ class ProposedAction:
     tool_name: str
     arguments: dict[str, Any] = field(default_factory=dict)
     rationale: str = ""
+    estimated_cost_cents: int = 0
     action_id: str = field(
         default_factory=lambda: str(uuid.uuid4())
     )
