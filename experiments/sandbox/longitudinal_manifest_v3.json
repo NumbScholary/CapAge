@@ -1,0 +1,38 @@
+{
+  "schema_version": "capage-longitudinal-v3",
+  "experiment_name": "sonnet-matched-memory-v3-001",
+  "month_seeds": [485333, 277738, 594914, 458221, 923697, 660287],
+  "customer_population_seed": 408451,
+  "seed_derivation": {
+    "algorithm": "100000 + (int(sha256(label + '|' + purpose)[:12], 16) mod 900000)",
+    "label": "capage-longitudinal-v3|unseen-seed-v1",
+    "purposes": [
+      "month-001",
+      "month-002",
+      "month-003",
+      "month-004",
+      "month-005",
+      "month-006",
+      "customer-population"
+    ]
+  },
+  "experiment_epoch": "2027-01-01T00:00:00+00:00",
+  "starting_capital_cents": 25000,
+  "horizon_days": 30,
+  "max_decisions_per_month": 25,
+  "per_month_model_cost_cap_cents": 75,
+  "per_arm_model_cost_cap_cents": 450,
+  "aggregate_model_cost_cap_cents": 900,
+  "model": {
+    "name": "claude-sonnet-5",
+    "effort": "medium",
+    "max_output_tokens": 1024
+  },
+  "token_tariff": {
+    "name": "anthropic-sonnet-5-introductory-2026-08",
+    "input_cents_per_million_tokens": 200,
+    "output_cents_per_million_tokens": 1000
+  },
+  "assessor_version": "deterministic-artifact-v2",
+  "tariff_valid_through": "2026-08-31"
+}

@@ -1,0 +1,105 @@
+name: CapAge Economic Homeostasis V2 three-arm
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: Exact paid-run authorization phrase
+        required: true
+        type: string
+      max_cells:
+        description: Maximum new cells this dispatch (1-18)
+        required: true
+        default: "18"
+        type: string
+      resume_run_id:
+        description: Prior run ID to resume, blank for the first run
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: capage-homeostasis-v2-three-arm-one-at-a-time
+  cancel-in-progress: false
+
+jobs:
+  experiment:
+    if: github.run_attempt == 1
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      GH_TOKEN: ${{ github.token }}
+      EXPECTED_CONFIRMATION: RUN_MATCHED_HOMEOSTASIS_V2_THREE_ARM_MAX_1350_CENTS
+      ARTIFACT_ROOT: artifacts/homeostasis-v2-three-arm
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Enforce manual paid boundary
+        env:
+          PROVIDED_CONFIRMATION: ${{ inputs.confirmation }}
+          MAX_CELLS: ${{ inputs.max_cells }}
+          RESUME_RUN_ID: ${{ inputs.resume_run_id }}
+        run: |
+          set -eu
+          test "$GITHUB_EVENT_NAME" = "workflow_dispatch"
+          test "$GITHUB_RUN_ATTEMPT" = "1"
+          test -n "$ANTHROPIC_API_KEY"
+          test "$PROVIDED_CONFIRMATION" = "$EXPECTED_CONFIRMATION"
+          grep -Fxq "$EXPECTED_CONFIRMATION" experiments/sandbox/HOMEOSTASIS_V2_EXECUTION_GATE.md
+          case "$MAX_CELLS" in
+            1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18) ;;
+            *) exit 2 ;;
+          esac
+          case "$RESUME_RUN_ID" in
+            "") ;;
+            *[!0-9]*) exit 2 ;;
+            *) test "$RESUME_RUN_ID" != "$GITHUB_RUN_ID" ;;
+          esac
+
+      - name: Restore explicitly selected checkpoint
+        if: inputs.resume_run_id != ''
+        env:
+          RESUME_RUN_ID: ${{ inputs.resume_run_id }}
+        run: |
+          set -eu
+          mkdir -p "$ARTIFACT_ROOT"
+          gh run download "$RESUME_RUN_ID" --repo "$GITHUB_REPOSITORY" --name homeostasis-v2-three-arm-restricted --dir "$ARTIFACT_ROOT"
+          test -f "$ARTIFACT_ROOT/checkpoint.json"
+
+      - name: Run unpaid verification
+        run: |
+          set -eu
+          python -m unittest discover -s tests -p 'test_*.py' -v
+          python -m py_compile capage/*.py tests/*.py
+          python -m capage.homeostasis_v2_active_runner experiments/sandbox/economic_homeostasis_v2_prereg_v1.json --checkpoint /tmp/homeostasis-v2-validation-checkpoint.json --artifact-dir /tmp/homeostasis-v2-validation-cells --validate-only
+
+      - name: Record execution provenance
+        run: |
+          set -eu
+          mkdir -p "$ARTIFACT_ROOT/cells"
+          git rev-parse HEAD > "$ARTIFACT_ROOT/execution-commit.txt"
+          sha256sum experiments/sandbox/economic_homeostasis_v2_prereg_v1.json experiments/sandbox/HOMEOSTASIS_V2_EXECUTION_GATE.md capage/sandbox.py capage/sandbox_runner.py capage/homeostasis.py capage/homeostasis_shadow.py capage/homeostasis_experiment.py capage/homeostasis_v2.py capage/homeostasis_v2_runner.py capage/homeostasis_v2_experiment.py capage/homeostasis_v2_active_runner.py > "$ARTIFACT_ROOT/execution-sha256.txt"
+
+      - name: Execute bounded matched cells
+        env:
+          MAX_CELLS: ${{ inputs.max_cells }}
+        run: |
+          set -eu
+          python -m capage.homeostasis_v2_active_runner experiments/sandbox/economic_homeostasis_v2_prereg_v1.json --checkpoint "$ARTIFACT_ROOT/checkpoint.json" --artifact-dir "$ARTIFACT_ROOT/cells" --max-cells "$MAX_CELLS" --confirm "$EXPECTED_CONFIRMATION"
+
+      - name: Upload restricted evidence and resume state
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: homeostasis-v2-three-arm-restricted
+          path: artifacts/homeostasis-v2-three-arm/
+          if-no-files-found: warn
+          retention-days: 30

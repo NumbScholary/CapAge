@@ -1,0 +1,61 @@
+name: CapAge Sonnet sandbox pilot v2
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type RUN_ONE_FRESH_SEED to authorize this paid one-seed pilot"
+        required: true
+        type: string
+  push:
+    branches:
+      - sonnet-pilot-v1
+    paths:
+      - experiments/sandbox/PILOT_LAUNCH_V2.md
+
+permissions:
+  contents: read
+
+concurrency:
+  group: capage-sonnet-sandbox-pilot-v2
+  cancel-in-progress: false
+
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Require explicit confirmation for manual launches
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          CONFIRM: ${{ inputs.confirm }}
+        run: test "$CONFIRM" = "RUN_ONE_FRESH_SEED"
+      - name: Validate runner without an API call
+        run: |
+          python -m unittest discover -s tests -v
+          python -m py_compile capage/anthropic_client.py capage/sandbox_runner.py tests/test_sandbox_runner.py
+      - name: Record the frozen pre-output commitment
+        run: |
+          sha256sum experiments/sandbox/pilot_manifest_v2.json
+          git rev-parse HEAD
+      - name: Execute exactly one bounded paid seed
+        run: |
+          mkdir -p artifacts
+          python -m capage.sandbox_runner \
+            experiments/sandbox/pilot_manifest_v2.json \
+            artifacts/sonnet-pilot-seed-002.json \
+            --audit artifacts/sonnet-pilot-seed-002-audit.jsonl
+      - name: Upload restricted pilot evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sonnet-sandbox-pilot-v2-restricted
+          path: artifacts/
+          if-no-files-found: warn
+          retention-days: 30

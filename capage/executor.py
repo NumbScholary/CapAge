@@ -1,5 +1,6 @@
 """Governed execution boundary for CapAge proposed actions."""
 
+from collections.abc import Callable, Mapping
 from dataclasses import asdict
 from typing import Any
 
@@ -7,6 +8,9 @@ from capage.audit import AuditLog
 from capage.models import ProposedAction
 from capage.policy import PolicyEngine
 from capage.tools import TOOLS
+
+
+Tool = Callable[[dict[str, Any]], dict[str, Any]]
 
 
 class Executor:
@@ -21,15 +25,16 @@ class Executor:
         self,
         policy: PolicyEngine,
         audit_log: AuditLog | None = None,
+        tools: Mapping[str, Tool] | None = None,
     ) -> None:
         self.policy = policy
         self.audit_log = audit_log or AuditLog()
+        self.tools = dict(TOOLS if tools is None else tools)
 
     def execute(self, action: ProposedAction) -> dict[str, Any]:
         """Evaluate an action, execute it if authorized, and record the result."""
 
         self.audit_log.record("action_proposed", asdict(action))
-
         decision = self.policy.evaluate(action)
         self.audit_log.record(
             "policy_decision",
@@ -50,7 +55,7 @@ class Executor:
             self.audit_log.record("action_denied", result)
             return result
 
-        tool = TOOLS.get(action.tool_name)
+        tool = self.tools.get(action.tool_name)
         if tool is None:
             result = {
                 "success": False,
@@ -81,3 +86,4 @@ class Executor:
         }
         self.audit_log.record("action_executed", result)
         return result
+

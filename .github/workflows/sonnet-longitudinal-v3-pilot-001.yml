@@ -1,0 +1,179 @@
+name: CapAge Sonnet longitudinal v3 pilot 001
+
+on:
+  push:
+    branches:
+      - agent/longitudinal-v3-pilot-001-launch
+    paths:
+      - experiments/sandbox/LONGITUDINAL_V3_PILOT_001_AUTHORIZATION.md
+
+permissions:
+  contents: read
+
+concurrency:
+  group: capage-sonnet-longitudinal-v3-pilot-001-once
+  cancel-in-progress: false
+
+jobs:
+  pilot:
+    if: github.run_attempt == 1
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Enforce one-shot launch boundary
+        env:
+          EXPECTED_EVENT: push
+          EXPECTED_REF: agent/longitudinal-v3-pilot-001-launch
+          EXPECTED_AUTHORIZATION: CAPAGE_LONGITUDINAL_V3_PILOT_001_FIRST_FOUR_CELLS_MAX_200_CENTS
+        run: |
+          set -eu
+          test "$GITHUB_EVENT_NAME" = "$EXPECTED_EVENT"
+          test "$GITHUB_REF_NAME" = "$EXPECTED_REF"
+          test "$GITHUB_RUN_ATTEMPT" = "1"
+          test -n "$ANTHROPIC_API_KEY"
+          grep -Fxq "$EXPECTED_AUTHORIZATION" \
+            experiments/sandbox/LONGITUDINAL_V3_PILOT_001_AUTHORIZATION.md
+
+      - name: Verify frozen implementation and manifest
+        run: |
+          set -eu
+          test "$(sha256sum experiments/sandbox/longitudinal_manifest_v3_pilot_001.json | cut -d ' ' -f1)" = "0360c6126f9ad9eee6f960a8629f84d679e39f52c12772724591cefbc5bc0290"
+          test "$(sha256sum capage/sandbox.py | cut -d ' ' -f1)" = "35b4eec2eb80a9184ca5511fdfd72c51a0d26194b7c1b211abe3ffd8e5b0a5d3"
+          test "$(sha256sum capage/sandbox_runner.py | cut -d ' ' -f1)" = "9712f321b898b66a7e129d78fc8218eed8639344b3a5d0486b0e9c70778f98cb"
+          test "$(sha256sum capage/memory.py | cut -d ' ' -f1)" = "6a1348a6230b7431d12853ada5ba66f2cea9bad93ff1ba2d4e0e77986c22fcee"
+          test "$(sha256sum capage/longitudinal.py | cut -d ' ' -f1)" = "7a8e0cb895807869afe10ac1d9f7e9d6b503b15750d546d0434601e97fb965ab"
+          test "$(sha256sum capage/longitudinal_v3.py | cut -d ' ' -f1)" = "670bd56b2df67a24e618e358837af9838503bff57f94cba9b205d29a58034b2d"
+          python -c 'import sys; assert sys.version_info[:2] == (3, 12)'
+
+      - name: Verify mechanical seed derivation
+        run: |
+          set -eu
+          python - <<'PY'
+          from hashlib import sha256
+          import json
+          from pathlib import Path
+
+          def seed(label):
+              digest = sha256(label.encode()).hexdigest()
+              return 100_000 + (int(digest[:16], 16) % 900_000)
+
+          manifest = json.loads(
+              Path(
+                  "experiments/sandbox/longitudinal_manifest_v3_pilot_001.json"
+              ).read_text()
+          )
+          assert manifest["month_seeds"] == [
+              seed(f"capage-longitudinal-v3-pilot-001:month:{month}")
+              for month in range(1, 4)
+          ]
+          assert manifest["customer_population_seed"] == seed(
+              "capage-longitudinal-v3-pilot-001:customer-population"
+          )
+          PY
+
+      - name: Run unpaid quality and launch validation
+        run: |
+          set -eu
+          python -m unittest discover -s tests -v
+          python -m py_compile capage/*.py tests/*.py
+          python -m capage.longitudinal_v3 \
+            experiments/sandbox/longitudinal_manifest_v3_pilot_001.json \
+            --checkpoint /tmp/capage-v3-validation-checkpoint.json \
+            --artifact-dir /tmp/capage-v3-validation-months \
+            --memory /tmp/capage-v3-validation-memory.sqlite3 \
+            --validate-only
+
+      - name: Record launch provenance
+        run: |
+          set -eu
+          mkdir -p artifacts/longitudinal-v3-pilot-001/months
+          git rev-parse HEAD > artifacts/longitudinal-v3-pilot-001/launch-commit.txt
+          sha256sum \
+            experiments/sandbox/longitudinal_manifest_v3_pilot_001.json \
+            capage/sandbox.py \
+            capage/sandbox_runner.py \
+            capage/memory.py \
+            capage/longitudinal.py \
+            capage/longitudinal_v3.py \
+            > artifacts/longitudinal-v3-pilot-001/launch-sha256.txt
+
+      - name: Execute exactly four bounded paid cells
+        run: |
+          set -eu
+          python -m capage.longitudinal_v3 \
+            experiments/sandbox/longitudinal_manifest_v3_pilot_001.json \
+            --checkpoint artifacts/longitudinal-v3-pilot-001/checkpoint.json \
+            --artifact-dir artifacts/longitudinal-v3-pilot-001/months \
+            --memory artifacts/longitudinal-v3-pilot-001/memory.sqlite3 \
+            --max-cells 4 \
+            --confirm RUN_MATCHED_LONGITUDINAL_V3
+
+      - name: Verify four-cell engineering acceptance state
+        run: |
+          set -eu
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          from capage.memory import AuditedMemoryStore
+
+          root = Path("artifacts/longitudinal-v3-pilot-001")
+          checkpoint = json.loads((root / "checkpoint.json").read_text())
+          expected = {
+              "month-001:control",
+              "month-001:memory",
+              "month-002:control",
+              "month-002:memory",
+          }
+          assert checkpoint["schema_version"] == "capage-longitudinal-checkpoint-v4"
+          assert checkpoint["memory_projection_version"] == "outcome-complete-v3"
+          assert checkpoint["status"] == "paused"
+          assert checkpoint["stop_reason"] == "operator_checkpoint"
+          assert set(checkpoint["completed_cells"]) == expected
+          assert checkpoint["errors"] == []
+          assert checkpoint["model_cost_units"] <= 200_000_000
+
+          for cell_id, record in checkpoint["completed_cells"].items():
+              assert record["actual_model_cost_units"] <= 50_000_000
+              if cell_id.endswith(":control") or cell_id.startswith("month-001"):
+                  assert record["memory_record_count"] == 0
+          memory_month_two = checkpoint["completed_cells"]["month-002:memory"]
+          assert memory_month_two["memory_record_count"] > 0
+          for field in (
+              "mean_customer_satisfaction",
+              "reputation_delta",
+              "host_assessed_deliveries",
+          ):
+              assert field in memory_month_two
+
+          attempts = list((root / "months").glob("*-attempt.json"))
+          results = [
+              path
+              for path in (root / "months").glob("*.json")
+              if not path.name.endswith("-attempt.json")
+          ]
+          assert len(attempts) == 4
+          assert len(results) == 4
+          with AuditedMemoryStore(root / "memory.sqlite3", read_only=True) as memory:
+              assert memory.verify_chain()
+              active = memory.active_memories(as_of="2027-03-02T00:00:00+00:00")
+              ids = {item.memory_id for item in active}
+              assert "month-001-outcome" in ids
+              assert "month-002-outcome" in ids
+          PY
+
+      - name: Upload restricted evidence and paused continuation state
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sonnet-longitudinal-v3-pilot-001-restricted
+          path: artifacts/longitudinal-v3-pilot-001/
+          if-no-files-found: warn
+          retention-days: 30
