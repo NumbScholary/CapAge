@@ -12,6 +12,7 @@ from dataclasses import asdict, dataclass
 from hashlib import sha256
 import json
 import random
+import re
 from statistics import fmean, median, pstdev
 from typing import Any
 
@@ -19,6 +20,9 @@ from typing import Any
 STARTING_CAPITAL_CENTS = 25_000
 DEFAULT_HORIZON_DAYS = 30
 _COST_UNITS_PER_CENT = 1_000_000
+_CONTINUITY_SCHEMA = "capage-business-continuity-v1"
+_MAX_CONTINUITY_CUSTOMERS = 10_000
+_MAX_CONTINUITY_COUNT = 1_000_000
 
 _SECTORS = (
     "local_services",
@@ -140,6 +144,117 @@ _MARKET_TEMPLATES = (
     ),
 )
 
+_TRANSFER_MARKET_TEMPLATES = (
+    (
+        "local_services",
+        "intake_triage",
+        "business_page",
+        (
+            "A home-maintenance company receives incomplete service requests and "
+            "cannot reliably distinguish urgent work from routine inquiries."
+        ),
+    ),
+    (
+        "community_organizations",
+        "event_budget_reconciliation",
+        "public_forum",
+        (
+            "A community festival committee reports that planned, approved, and paid "
+            "expenses are recorded in separate lists that no longer agree."
+        ),
+    ),
+    (
+        "independent_media",
+        "sponsorship_inventory",
+        "creator_post",
+        (
+            "A small podcast network has several sponsorship placements but no clear "
+            "inventory showing availability, audience fit, and delivery obligations."
+        ),
+    ),
+    (
+        "small_retail",
+        "return_reason_analysis",
+        "review_stream",
+        (
+            "A specialty shop sees recurring returns but has not grouped the stated "
+            "reasons or connected them to product information and fulfillment choices."
+        ),
+    ),
+    (
+        "professional_services",
+        "workflow_bottleneck_analysis",
+        "discussion_board",
+        (
+            "A small consulting practice says client projects repeatedly wait between "
+            "intake, review, and approval without a clear account of the bottleneck."
+        ),
+    ),
+    (
+        "micro_manufacturing",
+        "quality_issue_prioritization",
+        "trade_forum",
+        (
+            "A workshop tracks several recurring defects but lacks a consistent way to "
+            "rank them by frequency, rework cost, and customer impact."
+        ),
+    ),
+    (
+        "local_services",
+        "route_planning",
+        "community_post",
+        (
+            "A mobile service spends too much time crossing its service area and wants "
+            "a repeatable way to group appointments by location and urgency."
+        ),
+    ),
+    (
+        "independent_media",
+        "content_schedule_analysis",
+        "creator_post",
+        (
+            "A publisher has draft, commissioned, and evergreen material but no shared "
+            "method for choosing what should be released next."
+        ),
+    ),
+    (
+        "small_retail",
+        "bundle_margin_analysis",
+        "business_page",
+        (
+            "A seller is considering product bundles but has not compared component "
+            "cost, expected discount, fulfillment effort, and likely customer value."
+        ),
+    ),
+    (
+        "community_organizations",
+        "volunteer_retention_analysis",
+        "public_forum",
+        (
+            "A volunteer program records signups and attendance but has not examined "
+            "where repeat participation falls away or which follow-ups appear useful."
+        ),
+    ),
+    (
+        "professional_services",
+        "document_intake_design",
+        "business_page",
+        (
+            "A professional office receives client documents through several channels, "
+            "causing missing items, duplicate requests, and uncertain review status."
+        ),
+    ),
+    (
+        "micro_manufacturing",
+        "maintenance_schedule",
+        "trade_forum",
+        (
+            "A small producer performs equipment maintenance reactively and wants to "
+            "prioritize recurring checks by downtime risk, cost, and required effort."
+        ),
+    ),
+)
+
 _EVENT_KINDS = (
     "demand_up",
     "demand_down",
@@ -148,6 +263,57 @@ _EVENT_KINDS = (
     "operating_cost_up",
     "operating_cost_down",
 )
+
+_TASK_NOUNS = {
+    "service_clarity": "service package",
+    "data_cleanup": "data source",
+    "documentation": "archive item",
+    "customer_research": "customer theme",
+    "comparison_research": "software option",
+    "supplier_research": "supplier option",
+    "scheduling": "scheduling policy",
+    "audience_research": "guide topic",
+    "catalog_cleanup": "catalog group",
+    "process_documentation": "process change",
+    "lead_qualification": "lead segment",
+    "inventory_analysis": "inventory policy",
+    "intake_triage": "intake rule",
+    "event_budget_reconciliation": "budget correction",
+    "sponsorship_inventory": "sponsorship package",
+    "return_reason_analysis": "return-reduction option",
+    "workflow_bottleneck_analysis": "workflow change",
+    "quality_issue_prioritization": "quality intervention",
+    "route_planning": "route policy",
+    "content_schedule_analysis": "publishing option",
+    "bundle_margin_analysis": "bundle option",
+    "volunteer_retention_analysis": "retention action",
+    "document_intake_design": "intake design",
+    "maintenance_schedule": "maintenance policy",
+}
+
+_LAST_OUTCOMES = {
+    "",
+    "delivery_accepted",
+    "delivery_disputed",
+    "paid",
+    "customer_payment_default",
+    "feedback_very_satisfied",
+    "feedback_satisfied",
+    "feedback_mixed",
+    "feedback_dissatisfied",
+}
+
+_CUSTOMER_NAMESPACE = re.compile(r"^[a-z0-9][a-z0-9-]{0,31}$")
+
+
+def validate_customer_namespace(value: str) -> str:
+    """Validate an optional namespace that prevents cross-population identity reuse."""
+
+    if not isinstance(value, str):
+        raise TypeError("customer_namespace must be a string")
+    if value and not _CUSTOMER_NAMESPACE.fullmatch(value):
+        raise ValueError("customer_namespace must be a lowercase stable identifier")
+    return value
 
 
 def _canonical_json(value: Any) -> str:
@@ -176,6 +342,95 @@ def _ceil_div(numerator: int, denominator: int) -> int:
 def _tokens(text: str) -> set[str]:
     normalized = "".join(character.lower() if character.isalnum() else " " for character in text)
     return {token for token in normalized.split() if len(token) > 2}
+
+
+def empty_continuity_state() -> dict[str, Any]:
+    """Return a new host-owned customer and reputation ledger."""
+
+    return {
+        "schema_version": _CONTINUITY_SCHEMA,
+        "global_reputation_points": 0,
+        "customers": {},
+    }
+
+
+def validate_continuity_state(value: dict[str, Any] | None) -> dict[str, Any]:
+    """Validate and detach longitudinal business state before a world uses it."""
+
+    if value is None:
+        return empty_continuity_state()
+    state = _json_copy(value)
+    if not isinstance(state, dict) or state.get("schema_version") != _CONTINUITY_SCHEMA:
+        raise ValueError("unsupported business continuity schema")
+    points = state.get("global_reputation_points")
+    customers = state.get("customers")
+    if isinstance(points, bool) or not isinstance(points, int) or not -100 <= points <= 100:
+        raise ValueError("global reputation points must be an integer from -100 to 100")
+    if not isinstance(customers, dict):
+        raise ValueError("continuity customers must be an object")
+    if len(customers) > _MAX_CONTINUITY_CUSTOMERS:
+        raise ValueError("continuity contains too many customers")
+    count_fields = (
+        "offers_sent",
+        "contracts_accepted",
+        "deliveries_assessed",
+        "contracts_paid",
+        "contracts_defaulted",
+        "contracts_disputed",
+        "feedback_responses",
+    )
+    for customer_id, record in customers.items():
+        if (
+            not isinstance(customer_id, str)
+            or not customer_id.startswith("customer-")
+            or len(customer_id) > 96
+            or any(
+                character not in "abcdefghijklmnopqrstuvwxyz0123456789-"
+                for character in customer_id
+            )
+        ):
+            raise ValueError("continuity contains an invalid customer identifier")
+        if not isinstance(record, dict):
+            raise ValueError("continuity customer record must be an object")
+        if set(record) != {*count_fields, "reputation_points", "last_outcome"}:
+            raise ValueError("continuity customer record has unexpected fields")
+        for field in count_fields:
+            item = record[field]
+            if (
+                isinstance(item, bool)
+                or not isinstance(item, int)
+                or not 0 <= item <= _MAX_CONTINUITY_COUNT
+            ):
+                raise ValueError(f"continuity {field} must be a bounded nonnegative integer")
+        reputation = record["reputation_points"]
+        if (
+            isinstance(reputation, bool)
+            or not isinstance(reputation, int)
+            or not -100 <= reputation <= 100
+        ):
+            raise ValueError("customer reputation points must be an integer from -100 to 100")
+        if record["last_outcome"] not in _LAST_OUTCOMES:
+            raise ValueError("customer last_outcome is unsupported")
+        offers = int(record["offers_sent"])
+        accepted = int(record["contracts_accepted"])
+        assessed = int(record["deliveries_assessed"])
+        terminal = sum(
+            int(record[field])
+            for field in (
+                "contracts_paid",
+                "contracts_defaulted",
+                "contracts_disputed",
+            )
+        )
+        if accepted > offers:
+            raise ValueError("accepted contracts cannot exceed offers")
+        if assessed > accepted:
+            raise ValueError("assessed deliveries cannot exceed accepted contracts")
+        if terminal > assessed:
+            raise ValueError("terminal contract outcomes cannot exceed assessed deliveries")
+        if int(record["feedback_responses"]) > assessed:
+            raise ValueError("feedback responses cannot exceed assessed deliveries")
+    return state
 
 
 @dataclass(frozen=True)
@@ -245,9 +500,73 @@ class ScheduledEvent:
     magnitude: int = 0
 
 
+@dataclass(frozen=True)
+class _MarketProfile:
+    """Host-owned market mechanics used for preregistered transfer tests."""
+
+    name: str
+    market_catalog: str
+    budget_multiplier: float
+    buyer_intent_probability: float
+    responsiveness_delta: float
+    payment_reliability_delta: float
+    quality_threshold_delta: int
+    discoverability_multiplier: float
+    event_probability: float
+    event_magnitudes: tuple[int, ...]
+    research_cost_cents: int
+    communication_cost_cents: int
+    feedback_cost_cents: int
+
+
+_MARKET_PROFILES = {
+    "baseline-v1": _MarketProfile(
+        name="baseline-v1",
+        market_catalog="baseline-v1",
+        budget_multiplier=1.0,
+        buyer_intent_probability=0.65,
+        responsiveness_delta=0.0,
+        payment_reliability_delta=0.0,
+        quality_threshold_delta=0,
+        discoverability_multiplier=1.0,
+        event_probability=0.45,
+        event_magnitudes=(10, 15, 20),
+        research_cost_cents=2,
+        communication_cost_cents=1,
+        feedback_cost_cents=1,
+    ),
+    "transfer-tight-market-v1": _MarketProfile(
+        name="transfer-tight-market-v1",
+        market_catalog="transfer-unseen-v1",
+        budget_multiplier=0.8,
+        buyer_intent_probability=0.50,
+        responsiveness_delta=-0.08,
+        payment_reliability_delta=-0.12,
+        quality_threshold_delta=5,
+        discoverability_multiplier=0.85,
+        event_probability=0.65,
+        event_magnitudes=(15, 20, 25),
+        research_cost_cents=3,
+        communication_cost_cents=2,
+        feedback_cost_cents=2,
+    ),
+}
+
+
+def validate_market_profile(value: str) -> str:
+    """Validate a frozen host-owned market profile identifier."""
+
+    if not isinstance(value, str):
+        raise TypeError("market_profile must be a string")
+    if value not in _MARKET_PROFILES:
+        raise ValueError("unsupported market profile")
+    return value
+
+
 @dataclass
 class _MarketSignal:
     signal_id: str
+    customer_id: str
     sector: str
     need_tag: str
     source_type: str
@@ -260,18 +579,25 @@ class _MarketSignal:
     discoverability: float
     active_from: int
     active_until: int
+    task_brief: dict[str, Any]
 
     def is_active(self, day: int) -> bool:
         return self.active_from <= day <= self.active_until
 
-    def public_view(self, day: int) -> dict[str, Any]:
-        return {
+    def public_view(
+        self, day: int, relationship: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
+        view = {
             "signal_id": self.signal_id,
+            "customer_id": self.customer_id,
             "source_type": self.source_type,
             "sector": self.sector,
             "text": self.public_text,
             "currently_visible": self.is_active(day),
         }
+        if relationship is not None:
+            view["prior_relationship"] = relationship
+        return view
 
 
 @dataclass
@@ -331,6 +657,10 @@ class EconomicSandbox:
         starting_capital_cents: int = STARTING_CAPITAL_CENTS,
         market_size: int = 18,
         token_tariff: TokenTariff | None = None,
+        continuity_state: dict[str, Any] | None = None,
+        customer_population_seed: int = 0,
+        customer_namespace: str = "",
+        market_profile: str = "baseline-v1",
     ) -> None:
         if isinstance(seed, bool) or not isinstance(seed, int):
             raise TypeError("seed must be an integer")
@@ -342,11 +672,22 @@ class EconomicSandbox:
             raise ValueError("market_size must be at least 6")
         if token_tariff is not None and not isinstance(token_tariff, TokenTariff):
             raise TypeError("token_tariff must be a TokenTariff")
+        if isinstance(customer_population_seed, bool) or not isinstance(
+            customer_population_seed, int
+        ):
+            raise TypeError("customer_population_seed must be an integer")
+        validate_customer_namespace(customer_namespace)
+        validate_market_profile(market_profile)
 
         self._seed = seed
         self.horizon_days = horizon_days
         self.starting_capital_cents = starting_capital_cents
         self.token_tariff = token_tariff
+        self.customer_population_seed = customer_population_seed
+        self.customer_namespace = customer_namespace
+        self.market_profile = market_profile
+        self._market_profile = _MARKET_PROFILES[market_profile]
+        self._continuity = validate_continuity_state(continuity_state)
         self.day = 0
         self._balance_cents = 0
         self._ledger: list[LedgerEntry] = []
@@ -376,7 +717,10 @@ class EconomicSandbox:
         self.cost_policy_commitment = sha256(
             _canonical_json(cost_policy_payload).encode("utf-8")
         ).hexdigest()
-        self.run_id = sha256(f"run:{seed}".encode("utf-8")).hexdigest()[:12]
+        run_material = f"run:{seed}"
+        if customer_namespace or market_profile != "baseline-v1":
+            run_material += f":{customer_namespace}:{market_profile}"
+        self.run_id = sha256(run_material.encode("utf-8")).hexdigest()[:12]
 
         self._post(
             "owner_capital",
@@ -397,9 +741,14 @@ class EconomicSandbox:
 
     def _build_market(self, market_size: int) -> dict[str, _MarketSignal]:
         rng = _derived_rng(self._seed, "market")
-        templates = list(_MARKET_TEMPLATES)
+        templates = list(
+            _MARKET_TEMPLATES
+            if self._market_profile.market_catalog == "baseline-v1"
+            else _TRANSFER_MARKET_TEMPLATES
+        )
         rng.shuffle(templates)
         signals: dict[str, _MarketSignal] = {}
+        customer_occurrences: dict[str, int] = {}
 
         for index in range(market_size):
             sector, need_tag, source_type, public_text = templates[
@@ -409,45 +758,160 @@ class EconomicSandbox:
             lower_end = max(active_from + 3, self.horizon_days // 2)
             active_until = rng.randint(lower_end, self.horizon_days)
             signal_id = f"signal-{index + 1:03d}"
+            customer_occurrences[need_tag] = customer_occurrences.get(need_tag, 0) + 1
+            namespace = f"{self.customer_namespace}-" if self.customer_namespace else ""
+            customer_id = (
+                f"customer-{namespace}{need_tag.replace('_', '-')}-"
+                f"{customer_occurrences[need_tag]:02d}"
+            )
+            customer_rng = _derived_rng(
+                self.customer_population_seed, f"customer-traits:{customer_id}"
+            )
+            if self.customer_population_seed == 0:
+                budget_cents = rng.randrange(2_500, 20_001, 500)
+                buyer_intent = (
+                    rng.random() < self._market_profile.buyer_intent_probability
+                )
+                responsiveness = round(rng.uniform(0.25, 0.95), 4)
+                payment_reliability = round(rng.uniform(0.55, 0.98), 4)
+                quality_threshold = rng.randint(55, 90)
+            else:
+                budget_cents = customer_rng.randrange(2_500, 20_001, 500)
+                buyer_intent = (
+                    rng.random() < self._market_profile.buyer_intent_probability
+                )
+                responsiveness = round(customer_rng.uniform(0.25, 0.95), 4)
+                payment_reliability = round(customer_rng.uniform(0.55, 0.98), 4)
+                quality_threshold = customer_rng.randint(55, 90)
+            budget_cents = max(
+                100,
+                round(budget_cents * self._market_profile.budget_multiplier),
+            )
+            responsiveness = round(
+                _clamp(
+                    responsiveness + self._market_profile.responsiveness_delta,
+                    0.10,
+                    0.98,
+                ),
+                4,
+            )
+            payment_reliability = round(
+                _clamp(
+                    payment_reliability
+                    + self._market_profile.payment_reliability_delta,
+                    0.35,
+                    0.99,
+                ),
+                4,
+            )
+            quality_threshold = int(
+                _clamp(
+                    quality_threshold
+                    + self._market_profile.quality_threshold_delta,
+                    55,
+                    98,
+                )
+            )
+            discoverability = round(
+                _clamp(
+                    rng.uniform(0.1, 0.95)
+                    * self._market_profile.discoverability_multiplier,
+                    0.05,
+                    0.95,
+                ),
+                4,
+            )
             signals[signal_id] = _MarketSignal(
                 signal_id=signal_id,
+                customer_id=customer_id,
                 sector=sector,
                 need_tag=need_tag,
                 source_type=source_type,
                 public_text=public_text,
-                budget_cents=rng.randrange(2_500, 20_001, 500),
-                buyer_intent=rng.random() < 0.65,
-                responsiveness=round(rng.uniform(0.25, 0.95), 4),
-                payment_reliability=round(rng.uniform(0.55, 0.98), 4),
-                quality_threshold=rng.randint(55, 90),
-                discoverability=round(rng.uniform(0.1, 0.95), 4),
+                budget_cents=budget_cents,
+                buyer_intent=buyer_intent,
+                responsiveness=responsiveness,
+                payment_reliability=payment_reliability,
+                quality_threshold=quality_threshold,
+                discoverability=discoverability,
                 active_from=active_from,
                 active_until=active_until,
+                task_brief=self._build_task_brief(signal_id, customer_id, need_tag),
             )
         return signals
+
+    def _build_task_brief(
+        self,
+        signal_id: str,
+        customer_id: str,
+        need_tag: str,
+    ) -> dict[str, Any]:
+        """Create a committed, objectively checkable customer-supplied task."""
+
+        noun = _TASK_NOUNS[need_tag]
+        rng = _derived_rng(self._seed, f"customer-task:{signal_id}:{customer_id}")
+        records = []
+        for index in range(1, 4):
+            records.append(
+                {
+                    "record_id": f"option-{index}",
+                    "label": f"{noun.title()} {index}",
+                    "value_points": rng.randint(35, 95),
+                    "cost_points": rng.randint(5, 45),
+                    "risk_points": rng.randint(0, 25),
+                }
+            )
+        brief_id = sha256(
+            f"brief:{self._seed}:{signal_id}:{customer_id}".encode("utf-8")
+        ).hexdigest()[:16]
+        return {
+            "schema_version": "capage-customer-task-v1",
+            "brief_id": brief_id,
+            "task_type": need_tag,
+            "objective": (
+                f"Evaluate all three {noun} records and recommend the strongest option."
+            ),
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": records,
+            "required_delivery_schema": {
+                "brief_id": "exact brief_id",
+                "record_evaluations": [
+                    {"record_id": "option-N", "computed_score": "integer"}
+                ],
+                "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+                "customer_summary": "plain-language explanation",
+                "implementation_steps": ["at least two concrete next steps"],
+            },
+        }
 
     def _build_event_schedule(self) -> tuple[ScheduledEvent, ...]:
         rng = _derived_rng(self._seed, "events")
         events: list[ScheduledEvent] = []
         for day in range(1, self.horizon_days + 1):
-            if rng.random() >= 0.45:
+            if rng.random() >= self._market_profile.event_probability:
                 continue
             kind = rng.choice(_EVENT_KINDS)
             sector = rng.choice(_SECTORS) if kind.startswith("demand_") else ""
-            magnitude = rng.choice((10, 15, 20))
+            magnitude = rng.choice(self._market_profile.event_magnitudes)
             events.append(ScheduledEvent(day, kind, sector, magnitude))
         return tuple(events)
 
     def _commitment_payload(self) -> dict[str, Any]:
-        return {
+        payload = {
             "seed": self._seed,
             "horizon_days": self.horizon_days,
             "starting_capital_cents": self.starting_capital_cents,
+            "customer_population_seed": self.customer_population_seed,
             "signals": [
                 asdict(self._signals[key]) for key in sorted(self._signals)
             ],
             "events": [asdict(event) for event in self._events],
         }
+        if self.customer_namespace:
+            payload["customer_namespace"] = self.customer_namespace
+        if self.market_profile != "baseline-v1":
+            payload["market_profile"] = asdict(self._market_profile)
+        return payload
 
     def _record(self, event_type: str, data: dict[str, Any]) -> None:
         self._journal.append(
@@ -554,7 +1018,9 @@ class EconomicSandbox:
             ),
             "capital": self._capital_summary(),
             "discovered_signals": [
-                self._signals[key].public_view(self.day)
+                self._signals[key].public_view(
+                    self.day, self._relationship_view(self._signals[key].customer_id)
+                )
                 for key in sorted(self._discovered)
             ],
             "offers": [self._offer_view(offer) for offer in self._offers.values()],
@@ -613,7 +1079,7 @@ class EconomicSandbox:
         except (TypeError, ValueError):
             return {"ok": False, "reason": "limit must be an integer"}
         limit = max(1, min(requested_limit, 10))
-        cost = self._tool_cost(2)
+        cost = self._tool_cost(self._market_profile.research_cost_cents)
         prior_searches = sum(
             event["event_type"] == "market_searched" for event in self._journal
         )
@@ -648,10 +1114,14 @@ class EconomicSandbox:
             public_tokens = _tokens(signal.public_text + " " + signal.sector)
             overlap = len(query_tokens & public_tokens)
             relevance = overlap / max(1, len(query_tokens))
-            score = relevance + (0.30 * signal.discoverability)
+            repeat_bonus = 0.12 if signal.customer_id in self._continuity["customers"] else 0.0
+            score = relevance + (0.30 * signal.discoverability) + repeat_bonus
             ranked.append((score, signal))
         ranked.sort(key=lambda item: (-item[0], item[1].signal_id))
-        results = [signal.public_view(self.day) for _, signal in ranked[:limit]]
+        results = [
+            signal.public_view(self.day, self._relationship_view(signal.customer_id))
+            for _, signal in ranked[:limit]
+        ]
         self._discovered.update(result["signal_id"] for result in results)
         self._record(
             "market_searched",
@@ -701,7 +1171,7 @@ class EconomicSandbox:
             return {"ok": False, "reason": "at least one solution tag is required"}
 
         offer_id = f"offer-{len(self._offers) + 1:03d}"
-        cost = self._tool_cost(1)
+        cost = self._tool_cost(self._market_profile.communication_cost_cents)
         if not self._charge(
             cost,
             "communication_cost",
@@ -720,6 +1190,7 @@ class EconomicSandbox:
         intent = 1.0 if signal.buyer_intent else 0.08
         active = 1.0 if signal.is_active(self.day) else 0.05
         demand = self._sector_demand[signal.sector]
+        reputation_multiplier = self._reputation_multiplier(signal.customer_id)
         acceptance_probability = _clamp(
             0.70
             * signal.responsiveness
@@ -727,7 +1198,8 @@ class EconomicSandbox:
             * fit
             * price_fit
             * active
-            * demand,
+            * demand
+            * reputation_multiplier,
             0.005,
             0.92,
         )
@@ -751,6 +1223,7 @@ class EconomicSandbox:
             planned_outcome=planned_outcome,
         )
         self._offers[offer_id] = offer
+        self._customer_record(signal.customer_id)["offers_sent"] += 1
         self._record(
             "offer_sent",
             {
@@ -768,6 +1241,62 @@ class EconomicSandbox:
             "response_not_before_day": offer.response_day,
             "cost_cents": cost,
         }
+
+    def _customer_record(self, customer_id: str) -> dict[str, Any]:
+        customers = self._continuity["customers"]
+        if customer_id not in customers:
+            customers[customer_id] = {
+                "offers_sent": 0,
+                "contracts_accepted": 0,
+                "deliveries_assessed": 0,
+                "contracts_paid": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "feedback_responses": 0,
+                "reputation_points": 0,
+                "last_outcome": "",
+            }
+        return customers[customer_id]
+
+    def _relationship_view(self, customer_id: str) -> dict[str, Any] | None:
+        record = self._continuity["customers"].get(customer_id)
+        if record is None:
+            return None
+        return {
+            "offers_sent": record["offers_sent"],
+            "contracts_accepted": record["contracts_accepted"],
+            "contracts_paid": record["contracts_paid"],
+            "contracts_defaulted": record["contracts_defaulted"],
+            "contracts_disputed": record["contracts_disputed"],
+            "feedback_responses": record["feedback_responses"],
+            "last_outcome": record["last_outcome"],
+        }
+
+    def _reputation_multiplier(self, customer_id: str) -> float:
+        customer = self._continuity["customers"].get(customer_id)
+        customer_points = int(customer["reputation_points"]) if customer else 0
+        global_points = int(self._continuity["global_reputation_points"])
+        weighted = (0.7 * customer_points) + (0.3 * global_points)
+        return _clamp(1.0 + (weighted / 200), 0.60, 1.40)
+
+    def _adjust_reputation(self, customer_id: str, delta: int, outcome: str) -> None:
+        record = self._customer_record(customer_id)
+        record["reputation_points"] = int(
+            _clamp(int(record["reputation_points"]) + delta, -100, 100)
+        )
+        self._continuity["global_reputation_points"] = int(
+            _clamp(
+                int(self._continuity["global_reputation_points"]) + delta,
+                -100,
+                100,
+            )
+        )
+        record["last_outcome"] = outcome
+
+    def continuity_state(self) -> dict[str, Any]:
+        """Export detached host-owned state only after the run is settled."""
+
+        return validate_continuity_state(self._continuity)
 
     def submit_delivery(self, arguments: dict[str, Any]) -> dict[str, Any]:
         """Submit work for independent assessment; submission cannot create revenue."""
@@ -820,7 +1349,7 @@ class EconomicSandbox:
             return {"ok": False, "reason": "delivery has not been assessed"}
         if contract.feedback_requested:
             return {"ok": False, "reason": "feedback has already been requested"}
-        cost = self._tool_cost(1)
+        cost = self._tool_cost(self._market_profile.feedback_cost_cents)
         if not self._charge(
             cost,
             "communication_cost",
@@ -912,6 +1441,8 @@ class EconomicSandbox:
                     deadline_day=self.day + offer.promise_days,
                 )
                 self._contracts[contract_id] = contract
+                customer = self._signals[offer.signal_id].customer_id
+                self._customer_record(customer)["contracts_accepted"] += 1
                 message = {
                     "day": self.day,
                     "from": offer.signal_id,
@@ -920,6 +1451,9 @@ class EconomicSandbox:
                     "contract_id": contract_id,
                     "deadline_day": contract.deadline_day,
                     "agreed_price_cents": contract.price_cents,
+                    "delivery_brief": _json_copy(
+                        self._signals[offer.signal_id].task_brief
+                    ),
                 }
                 self._inbox.append(message)
                 self._record("offer_accepted", message)
@@ -962,6 +1496,8 @@ class EconomicSandbox:
         satisfaction = int(_clamp(quality_score - (5 * lateness), 0, 100))
         delivery.assessment_status = "assessed"
         contract.satisfaction = satisfaction
+        customer = self._customer_record(signal.customer_id)
+        customer["deliveries_assessed"] += 1
 
         if satisfaction >= signal.quality_threshold:
             contract.status = "accepted_pending_payment"
@@ -973,9 +1509,15 @@ class EconomicSandbox:
             contract.planned_payment = (
                 "paid" if payment_roll < signal.payment_reliability else "defaulted"
             )
+            reputation_delta = 12 if satisfaction >= 85 else 6
+            self._adjust_reputation(
+                signal.customer_id, reputation_delta, "delivery_accepted"
+            )
         else:
             contract.status = "disputed"
             contract.planned_payment = "not_due"
+            customer["contracts_disputed"] += 1
+            self._adjust_reputation(signal.customer_id, -18, "delivery_disputed")
 
         self._record(
             "delivery_assessed",
@@ -1016,6 +1558,15 @@ class EconomicSandbox:
             else:
                 contract.status = "defaulted"
                 message_type = "payment_defaulted"
+            customer = self._customer_record(
+                self._signals[contract.signal_id].customer_id
+            )
+            if message_type == "payment_received":
+                customer["contracts_paid"] += 1
+                customer["last_outcome"] = "paid"
+            else:
+                customer["contracts_defaulted"] += 1
+                customer["last_outcome"] = "customer_payment_default"
             message = {
                 "day": self.day,
                 "from": contract.signal_id,
@@ -1060,6 +1611,9 @@ class EconomicSandbox:
             }
             self._inbox.append(message)
             self._record("feedback_received", message)
+            customer = self._customer_record(signal.customer_id)
+            customer["feedback_responses"] += 1
+            customer["last_outcome"] = f"feedback_{rating}"
 
     def quote_model_call(
         self,
@@ -1176,7 +1730,7 @@ class EconomicSandbox:
         }
 
     def _contract_view(self, contract: _Contract) -> dict[str, Any]:
-        return {
+        view = {
             "contract_id": contract.contract_id,
             "offer_id": contract.offer_id,
             "signal_id": contract.signal_id,
@@ -1187,6 +1741,11 @@ class EconomicSandbox:
             "delivery_id": contract.delivery_id,
             "feedback_requested": contract.feedback_requested,
         }
+        if contract.status != "accepted" or contract.accepted_day <= self.day:
+            view["delivery_brief"] = _json_copy(
+                self._signals[contract.signal_id].task_brief
+            )
+        return view
 
     def outcome(self) -> dict[str, Any]:
         """Return host-visible run measures without rewriting economic history."""

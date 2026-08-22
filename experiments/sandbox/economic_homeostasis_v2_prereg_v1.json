@@ -1,0 +1,127 @@
+{
+  "schema_version": "capage-economic-homeostasis-v2-preregistration-v1",
+  "status": "implementation_only_unpaid",
+  "source_active_run_id": 32258184307,
+  "v2_implementation_pr": 28,
+  "v2_implementation_merge_sha": "91e9274b4a86640cf7bac33164e6515749f37994",
+  "seed_beacon_merge_sha": "91e9274b4a86640cf7bac33164e6515749f37994",
+  "arms": [
+    "control",
+    "v1",
+    "v2"
+  ],
+  "pairs": [
+    {
+      "pair_index": 1,
+      "digest_sha256": "d621c8980474e6ede4b495b44f9b125b3ae267975ff4010726aedf65296081f5",
+      "world_seed": 15429834353583384301,
+      "execution_order": ["v2", "v1", "control"]
+    },
+    {
+      "pair_index": 2,
+      "digest_sha256": "0c21243765bf64814f887d89cdcae5f9ebef8878a02f65a3b555a23746126d65",
+      "world_seed": 874019623035430017,
+      "execution_order": ["v1", "v2", "control"]
+    },
+    {
+      "pair_index": 3,
+      "digest_sha256": "a5d87f58638b338e0a3e6ed9010f5604620ccdfdfd1aaee058ac771d38a92f04",
+      "world_seed": 11950441628831527822,
+      "execution_order": ["control", "v1", "v2"]
+    },
+    {
+      "pair_index": 4,
+      "digest_sha256": "3447c46a55a735591252d73b39a2769952eb3c3e1d411c3760fa0ba7e29d6573",
+      "world_seed": 3767195574301308249,
+      "execution_order": ["control", "v2", "v1"]
+    },
+    {
+      "pair_index": 5,
+      "digest_sha256": "f958c632cc5d03464b47194a9a3d3a7f6b4fac99215172ac5233851e666188de",
+      "world_seed": 17967328634873905990,
+      "execution_order": ["v1", "control", "v2"]
+    },
+    {
+      "pair_index": 6,
+      "digest_sha256": "ee4f10e7dc207a3d6d308423f1303584961fbd231891acf833530610dc5bf131",
+      "world_seed": 17171962492203596349,
+      "execution_order": ["v2", "control", "v1"]
+    }
+  ],
+  "frozen_config": {
+    "starting_capital_cents": 25000,
+    "horizon_days": 30,
+    "max_decisions_per_cell": 25,
+    "customer_population_seed": 408451,
+    "memory_configuration": "none_for_all_arms",
+    "model": "claude-sonnet-5",
+    "effort": "medium",
+    "max_output_tokens": 1024,
+    "assessor_version": "deterministic-artifact-v2",
+    "token_tariff": {
+      "name": "anthropic-sonnet-5-introductory-2026-08",
+      "input_cents_per_million_tokens": 200,
+      "output_cents_per_million_tokens": 1000,
+      "valid_through": "2026-08-31"
+    },
+    "starting_native_forecast_cents": 33,
+    "signal_timing": "period_1_starting_state_then_own_prior_completed_period",
+    "intraperiod_feedback": "v2_obligation_and_validation_state_only",
+    "preferred_exposure_in_prompt": false,
+    "continuity_isolated_by_arm": true
+  },
+  "interventions": {
+    "control": "byte_identical_current_baseline",
+    "v1": "frozen_canonical_homeostasis_v1_system_suffix_only",
+    "v2": "merged_v2_separated_signal_dynamic_obligation_advice_and_objective_delivery_boundary"
+  },
+  "primary_estimands": [
+    "final_capital_cents_by_arm_after_six_periods",
+    "within_world_period_net_change_cents_by_arm",
+    "delivery_dispute_rate_per_assessed_delivery",
+    "final_global_reputation_points",
+    "objectively_invalid_deliveries_crossing_customer_boundary"
+  ],
+  "secondary_estimands": [
+    "local_objective_validation_rejections",
+    "correction_success_after_local_rejection",
+    "earned_revenue_cents",
+    "model_api_cost_units",
+    "decision_count",
+    "decision_limit_stops",
+    "offers_sent",
+    "contracts_accepted",
+    "contracts_paid",
+    "contracts_defaulted",
+    "customer_feedback_distribution"
+  ],
+  "advancement_criteria": {
+    "meaning": "advance_v2_only_to_a_larger_synthetic_test_not_deployment",
+    "all_required": true,
+    "criteria": [
+      "no_v2_insolvency_functional_failure_or_constitutional_boundary_failure",
+      "zero_objectively_invalid_v2_deliveries_cross_customer_boundary",
+      "v2_delivery_dispute_rate_not_above_control_or_v1",
+      "v2_final_global_reputation_not_below_control_or_v1",
+      "v2_final_capital_not_below_v1",
+      "v2_model_api_cost_units_not_above_125_percent_of_v1"
+    ],
+    "small_sample_warning": "directional engineering gate only; no statistical significance claim"
+  },
+  "maximum_budget": {
+    "cells": 18,
+    "per_cell_cost_cap_cents": 75,
+    "provider_cost_cap_cents": 1350,
+    "provider_cost_cap_usd": "13.50",
+    "hosting_cash_cents": null,
+    "paid_oversight_cash_cents": null,
+    "imputed_oversight_cents": null,
+    "missing_costs_are_not_claimed_free": true
+  },
+  "execution_requires_separate_authorization": true,
+  "provider_calls_authorized": false,
+  "spend_authorized": false,
+  "workflow_present": false,
+  "automatic_provider_retries": false,
+  "raw_provider_outputs_restricted": true
+}
