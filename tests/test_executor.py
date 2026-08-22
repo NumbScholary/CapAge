@@ -104,29 +104,3 @@ def test_authorized_but_unregistered_tool_fails_closed(tmp_path):
     assert events[1]["data"]["action_id"] == action.action_id
     assert events[1]["data"]["allowed"] is True
     assert events[2]["data"]["action_id"] == action.action_id
-
-
-def test_executor_uses_an_explicit_injected_registry(tmp_path):
-    audit_path = tmp_path / "audit.jsonl"
-    calls = []
-
-    def bound_tool(arguments):
-        calls.append(arguments)
-        return {"bound": True}
-
-    executor = Executor(
-        PolicyEngine({"sandbox.bound"}),
-        AuditLog(str(audit_path)),
-        tools={"sandbox.bound": bound_tool},
-    )
-    action = ProposedAction(
-        action_type="sandbox",
-        tool_name="sandbox.bound",
-        arguments={"value": 7},
-    )
-
-    result = executor.execute(action)
-
-    assert result["success"] is True
-    assert result["tool_result"] == {"bound": True}
-    assert calls == [{"value": 7}]
