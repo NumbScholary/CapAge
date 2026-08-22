@@ -115,6 +115,9 @@ REFERENCE_IMPLEMENTATION_SHA256_CURRENT = {
     "capage/policy.py": (
         "9a5bbef90b46ae90897d36f49914335866ba29bbfeb92671abebde7d685242ba"
     ),
+    "capage/sandbox.py": (
+        "22a69bdb23365d56835410a62632615af060e7d5f1730998d624ebb32cec2a3f"
+    ),
 }
 
 
