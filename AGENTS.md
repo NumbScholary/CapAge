@@ -111,3 +111,9 @@ python -m capage.homeostasis_v2_replication_launch --validate-only
 ```
 
 Stop if any command tries to use a live credential or provider.
+
+## Agent mailbox
+
+Check `docs/MAILBOX_PROTOCOL.md` on branch `agent/mailbox-init` for the current
+inter-agent (Claude/Coder) communication protocol before assuming continuity
+from a prior session. Read that file directly rather than relying on memory.
