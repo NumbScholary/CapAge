@@ -664,6 +664,7 @@ class EconomicSandbox:
         hosting_cost_cents_per_day: int = 0,
         reserved_input_tokens: int = 0,
         reserved_output_tokens: int = 0,
+        allow_unreserved_hosting_tokens: bool = False,
     ) -> None:
         if isinstance(seed, bool) or not isinstance(seed, int):
             raise TypeError("seed must be an integer")
@@ -690,6 +691,8 @@ class EconomicSandbox:
                 raise TypeError(f"{_label} must be an integer")
             if _value < 0:
                 raise ValueError(f"{_label} cannot be negative")
+        if not isinstance(allow_unreserved_hosting_tokens, bool):
+            raise TypeError("allow_unreserved_hosting_tokens must be a bool")
 
         self._seed = seed
         self.horizon_days = horizon_days
@@ -722,11 +725,22 @@ class EconomicSandbox:
         self._reserved_input_tokens = reserved_input_tokens
         self._reserved_output_tokens = reserved_output_tokens
         self._unpaid_hosting_cents = 0
-        if token_tariff is not None and (reserved_input_tokens or reserved_output_tokens):
-            _reserve_units = token_tariff.cost_units(
-                reserved_input_tokens, reserved_output_tokens
-            )
-            self._min_reserve_cents = _ceil_div(_reserve_units, _COST_UNITS_PER_CENT)
+        self._allow_unreserved_hosting_tokens = allow_unreserved_hosting_tokens
+        if reserved_input_tokens or reserved_output_tokens:
+            if token_tariff is None:
+                if not allow_unreserved_hosting_tokens:
+                    raise ValueError(
+                        "reserved_input_tokens/reserved_output_tokens require a "
+                        "token_tariff to compute a reserve floor; pass "
+                        "allow_unreserved_hosting_tokens=True to explicitly run "
+                        "without reserving funds for them"
+                    )
+                self._min_reserve_cents = 0
+            else:
+                _reserve_units = token_tariff.cost_units(
+                    reserved_input_tokens, reserved_output_tokens
+                )
+                self._min_reserve_cents = _ceil_div(_reserve_units, _COST_UNITS_PER_CENT)
         else:
             self._min_reserve_cents = 0
 
@@ -742,6 +756,8 @@ class EconomicSandbox:
             cost_policy_payload["hosting_cost_cents_per_day"] = hosting_cost_cents_per_day
             cost_policy_payload["reserved_input_tokens"] = reserved_input_tokens
             cost_policy_payload["reserved_output_tokens"] = reserved_output_tokens
+            if allow_unreserved_hosting_tokens:
+                cost_policy_payload["allow_unreserved_hosting_tokens"] = True
         self.cost_policy_commitment = sha256(
             _canonical_json(cost_policy_payload).encode("utf-8")
         ).hexdigest()
@@ -1870,6 +1886,8 @@ class EconomicSandbox:
             cost_policy["hosting_cost_cents_per_day"] = self._hosting_cost_cents_per_day
             cost_policy["reserved_input_tokens"] = self._reserved_input_tokens
             cost_policy["reserved_output_tokens"] = self._reserved_output_tokens
+            if self._allow_unreserved_hosting_tokens:
+                cost_policy["allow_unreserved_hosting_tokens"] = True
         return {
             "world_commitment": self.world_commitment,
             "payload": _json_copy(payload),
