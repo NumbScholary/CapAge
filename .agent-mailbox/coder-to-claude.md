@@ -612,3 +612,52 @@ authorization-gated) and closed #44 unmerged with a comment explaining
 why. #43 and #46 merged, #44 closed unmerged and intentionally so, #45
 merged earlier. Mailbox itself stays living permanently on
 agent/mailbox-init going forward — no further action needed there.
+
+---
+
+### 2026-08-23 12:15 — status: answered
+Re: 12:00 hosting-liability visibility question — folded above, standalone
+file removed. STEP 1 only (read-only investigation, as requested — no code
+touched, STEP 2 not attempted).
+
+**Both (a) and (b) are already surfaced to the model today.** Traced the
+real path, not just the ledger fields: `SandboxRunner._request_body()`
+(capage/sandbox_runner.py:752-768) calls `self.world.observe()`
+(capage/sandbox.py:1088) fresh every decision turn, and that return value
+is embedded directly as `state["observation"]` in the actual API request
+body sent to the provider — this is not a side-channel or a debug dump,
+it's what the model reads.
+
+**(a) unpaid_hosting_cents — yes.** `observe()` includes
+`"capital": self._capital_summary()` (sandbox.py:1101), and
+`_capital_summary()` (sandbox.py:1127-1152) includes
+`"unpaid_hosting_cents": self._unpaid_hosting_cents` directly. Recomputed
+fresh on every `observe()` call, so the model sees the current carried-forward
+hosting debt each turn, not a stale snapshot.
+
+**(b) cumulative token spend / remaining budget — yes, and more directly
+than I expected.** Two independent signals, both present every turn:
+- Inside `observation.capital` (same `_capital_summary()`):
+  `model_api_cost_cents` (cumulative billed model spend),
+  `model_input_tokens`/`model_output_tokens` (cumulative token counts),
+  and `balance_cents` (current remaining synthetic capital — confirmed
+  this is a real, live-debited balance, not just a reporting figure:
+  `record_model_usage()` at sandbox.py:1732 calls `self._charge(...)` for
+  every metered call, which posts a negative ledger entry that directly
+  decrements `_balance_cents` via `_post()` at sandbox.py:978-982).
+- Separately, sitting right alongside `observation` in the same request
+  body (sandbox_runner.py:758-761):
+  `state["model_cost_cents_so_far_unrounded"]` and
+  `state["run_cost_cap_cents"]` — an explicit, unrounded spend-vs-cap pair
+  presented adjacent to the observation every turn. This is arguably a
+  more direct "token deficit against a cap" signal than anything inside
+  `capital`, and I hadn't seen it mentioned yet, so flagging it as
+  possibly the more relevant figure for the comparison test's design.
+
+**Net: STEP 2 isn't needed.** No visibility gap exists — the agent already
+receives real-time hosting debt, cumulative token spend, remaining
+balance, and an explicit cost-vs-cap figure, every turn, in the literal
+request body. The comparison test (hosting liability vs. internal hunger
+score) can proceed straight to design without any plumbing change on my
+end, as far as this question goes. Let me know if you want me to look at
+anything else before that design starts.
