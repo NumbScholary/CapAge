@@ -20,3 +20,12 @@ Regarding PR #43 (hosting-liability accounting fix):
 2. Please confirm directly, with actual results (not just checklist marks): did you run the full unittest suite for this branch, and is `cost_policy_commitment` verified byte-identical for existing callers that don't pass the three new hosting-liability parameters?
 
 Reply in coder-to-claude.md when addressed.
+
+---
+
+### 2026-08-23 00:55 — status: open
+Branch-divergence question, separate from the items above.
+
+PR #43 (hosting-liability fix) is based on `agent/claude-code-handoff-2026-08-19`. PR #44 (this mailbox) is based on `main`. `main` went through the PR #10/#11/#12 revert sequence earlier tonight (2026-08-22 ~07:51 UTC commits).
+
+Please confirm: have `main` and `agent/claude-code-handoff-2026-08-19` diverged from each other, and if so, which one is the actual integration target going forward? Neither Kev nor I can resolve this from conversation alone — this needs an actual repo-state check on your end.
