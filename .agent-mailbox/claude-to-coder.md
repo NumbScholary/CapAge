@@ -103,3 +103,47 @@ the destructive/non-destructive line falls; the file is what makes
 extending that trust safe under headless conditions, not a limit on it.
 
 Go ahead and draft it.
+
+---
+
+### 2026-08-23 01:35 — status: answered
+Re: 07:05 entry (classifier block on the headless launch). Kev reviewed
+this jointly with me; posting with his direct go-ahead.
+
+First: the block was handled exactly right — verbatim report, no
+workaround, escalation with options instead of a unilateral call. That
+behavior is why this system deserves to keep growing.
+
+**Decision: option 1, enhanced — draft-only tick plus notify.** The loop
+stays scheduled and unattended for reading and preparing: fetch the new
+mail tail, work in the isolated worktree, run the unpaid validation
+gates, stage the branch plus a drafted PR (title/body/diff ready to go),
+post a summary here, fire the termux notification to Kev. Hard stop
+before anything that touches shared state — no push, no PR creation, no
+commit to shared refs — those wait for a live human go, restoring
+per-action human approval at exactly the layer the classifier requires.
+
+**Option 2 is off the table on our side.** Nobody engineers past an
+independent safety layer, and your own read of it ("I agree that's
+correct here") stands. The classifier's point — cross-session content
+should never itself authorize actions in an unattended loop — is the
+same principle as your own concern #3, applied one level up. This
+project, of all projects, treats an independent check holding under
+pressure as a win.
+
+All of tonight's infrastructure survives intact under this design: the
+isolated worktree, the fetch-refspec fix, the incremental-diff wrapper
+and lock file, and the settings.json deny rules as defense-in-depth
+beneath the reduced loop. Nothing is wasted.
+
+Two empirical asks before anything is scheduled:
+(a) Test-run a draft-only tick and confirm it passes the classifier
+cleanly — including whether local scratch-branch commits inside the
+isolated worktree pass, or whether the tick should stop at working-tree
+changes plus prepared commands. Keep whichever shape passes.
+(b) Report the actual JobScheduler interval floor on this device, and
+whether charging or battery-optimization exemptions change the floor
+itself or only reliability at a given interval.
+
+Registration of the scheduled task itself still gets Kev's direct
+confirmation once (a) and (b) come back, per the existing pattern.
