@@ -937,3 +937,71 @@ Net: a real, multi-file build, not a small patch — but every piece is now
 concretely scoped from actual code, no remaining unknowns I'm aware of.
 Ready to build once Kev locks final cost and gives run authorization, per
 your note that this reply is the last confirmation step before that.
+
+---
+
+### 2026-08-23 16:10 — status: open
+Re: 15:30 build approval. Progress report plus a real design finding on
+item 3 that changes its shape — flagging before continuing rather than
+forcing a bad fit silently.
+
+**Items 1 and 2: done, tested, PR open.**
+https://github.com/Numbscholar/CapAge/pull/47 (draft, not merged, no
+paid cells run or authorized). `SandboxRunConfig` now threads
+`hosting_cost_cents_per_day`/`reserved_input_tokens`/
+`reserved_output_tokens`/`allow_unreserved_hosting_tokens` from manifest
+into `EconomicSandbox`, verified end-to-end. `_cell_metrics` now returns
+`tool_token_totals` (per-tool token/call counts, with the
+`unattributed_failed_decision` bucket for metered-but-failed decisions).
+`capage/sandbox_runner.py` is part of the frozen V2 replication's
+implementation-commitment hash set, so I updated
+`REFERENCE_IMPLEMENTATION_SHA256_CURRENT` the same way PR #43 did for
+`sandbox.py`, after confirming no paid V2 cell has run yet (no
+checkpoint files exist locally; prereg's `spend_authorized`/
+`provider_calls_authorized` both still false). Full unpaid gate clean
+except the same 10 pre-existing, unrelated Python-version-mismatch
+errors already on record.
+
+**Item 3 — real finding: `BlockedReplicationRunner` isn't just
+"hardcoded to 2 arms," it's architecturally built around comparing two
+*homeostasis signal variants*, not an abstract arm label.** Traced the
+full path: `run()` calls `self._expected_signal(block_index, arm,
+period_index)` (`homeostasis_v2_replication_runner.py:263-287`), which
+dispatches to `signal_for_arm_start(arm)` /
+`completed_signal_for_arm(arm, result, history)` — both imported from
+`capage/homeostasis_v2_experiment.py`, and both specifically shaped
+around `"v1"`/`"v2"` producing different signal *types* (V1: mode/
+urgency/sustainability_pressure; V2: continuity_mode/
+opportunity_urgency/obligation_urgency/verification_requirement/
+priority_profile — confirmed via `_aggregate_arm`'s explicit
+`if arm == "v1"` field-shape branch at line ~954). Every arm's
+`SandboxRunConfig`/`EconomicSandbox` construction is already identical
+regardless of arm (confirmed in my 13:00 investigation) — the entire
+axis of variation in this class is the signal/prompt comparison, not
+tariff or any other config value.
+
+My tariff experiment doesn't want signal-variant comparison at all — all
+4 arms should use the same signal setup, varying only
+`hosting_cost_cents_per_day`. Forcing that through
+`_expected_signal`/`signal_for_arm_start` would mean either giving those
+functions two unrelated jobs (signal-variant dispatch AND tariff-level
+dispatch) or modifying `capage/homeostasis_v2_experiment.py` — which is
+*also* in the frozen implementation-commitment hash set, same
+hash-update dance as `sandbox_runner.py`, but this time touching logic
+that's conceptually about signal generation, not tariff variation. That
+felt like the wrong shape to force, so I stopped rather than build it.
+
+**Proposed alternative:** a new, dedicated, simpler runner for this
+experiment — reuses `SandboxRunConfig`/`EconomicSandbox` (item 2) and the
+`_cell_metrics`-style token attribution (item 1) directly, but with its
+own block/period/arm loop that has no `_expected_signal` call and no
+signal-shape branching at all, since none is needed. Narrower in scope
+than generalizing `BlockedReplicationRunner`, and leaves the V1/V2
+signal-comparison machinery completely untouched rather than stretching
+it to do something it wasn't built for.
+
+Not building this yet either way — want your read on whether the
+alternative is right before I write a new module, since it's a real
+change from what "generalization" meant in the 15:30 approval. Item 4 (4
+arm ordering scheme) is on hold behind this same decision, since its
+shape depends on which runner architecture it's feeding.
