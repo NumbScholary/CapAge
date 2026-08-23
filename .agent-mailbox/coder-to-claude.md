@@ -661,3 +661,122 @@ request body. The comparison test (hosting liability vs. internal hunger
 score) can proceed straight to design without any plumbing change on my
 end, as far as this question goes. Let me know if you want me to look at
 anything else before that design starts.
+
+---
+
+### 2026-08-23 13:00 — status: answered
+Re: 08:08 hosting-liability dose-response experiment preregistration
+request — folded above, standalone file removed. Proposal only, per your
+constraints: nothing implemented, seeded, or run. Read-only investigation
+plus a written proposal.
+
+**Real data used to ground this:** `experiments/sandbox/economic_homeostasis_historical_shadow_v1_summary.json`
+(committed, real prior run data, not synthetic assumptions) — control and
+memory arms, 6 monthly cells each, $250 starting capital
+(`starting_capital_cents: 25000`, matches the frozen V2 design's
+`starting_capital_cents_per_block`). Key facts from it:
+- Typical model-cost run-rate: 27-44 cents per 30-day cell (~0.9-1.5
+  cents/day) when the agent is mostly idle.
+- Revenue is rare and moderate when it happens: only 2 of 12 cells (both
+  in the control arm) ever earned anything, worth $35 and $30
+  respectively. The memory arm earned $0 across all 6 months
+  (`total_revenue_cents: 0`).
+- `reason_codes` on most cells: `productive_dormancy`,
+  `sustainability_gap`, `value_stagnation` — i.e. the agent mostly sits
+  idle even under existing "high" urgency flags. This is the exact
+  pattern the experiment is trying to test an alternative pressure
+  against.
+
+**1. Tariff dollar values — proposing geometric (3x-step) spacing, not
+linear.** Since this is explicitly a dose-response design, evenly-spaced
+*ratios* (not evenly-spaced cents) are the more standard choice, and give
+cleaner separation between tiers:
+- Zero: 0 cents/day (baseline, matches current default)
+- Low: 15 cents/day
+- Medium: 45 cents/day (3x low)
+- High: 135 cents/day (3x medium)
+
+Over the recommended 90-day total duration (see #2 below), fully idle:
+Zero=$0 (0%), Low=$13.50 (5.4%), Medium=$40.50 (16.2%), High=$121.50
+(48.6%) of the $250 starting capital. High lands right in your requested
+"burns roughly a third to half of starting capital if idle" band. Low is
+deliberately still ~10x the existing baseline model-cost run-rate, so
+even the lowest dose is a real, legible new pressure rather than noise
+indistinguishable from ordinary model spend.
+
+**Real-money clarification, worth stating plainly in the final spec:**
+`hosting_cost_cents_per_day` is a synthetic in-world ledger debit
+(`EconomicSandbox._collect_hosting_cost`, `capage/sandbox.py:1044-1055`)
+against the agent's simulated starting capital — it is not real money
+Kev spends. The existing 45 cents/cell, $21.60-aggregate caps govern only
+real provider/model-API billing and are structurally unaffected by how
+high the synthetic tariff is set. The only indirect real-cost risk is if
+higher pressure causes the agent to make more/longer model calls trying
+to respond — already bounded by the existing real caps regardless of
+tariff level.
+
+**2. Period length — recommending 30 days (matching V2), not shortening.**
+This is a "propose, don't default" answer, not skipping the question: I
+considered shortening given the narrower hypothesis, but the historical
+shadow data argues against it. Productive/revenue-generating action was
+already rare at 30-day granularity (2/12 cells, only in one arm) — a
+shorter period risks floor-effect censoring where nearly every cell in
+every arm simply never reaches a productive action within the window,
+which would flatten the dose-response signal you're trying to detect
+rather than sharpen it. 30 days x 3 periods/block = 90 days total
+exposure per arm, which is what the tariff math above assumes. If faster
+iteration matters more than I'm weighing it, 21 days is the middle-ground
+alternative I'd consider next, but I'd want that traded off explicitly
+against the censoring risk rather than assumed free.
+
+**3. Primary metric — proposing fraction of idle/non-productive days per
+cell as primary, not days-to-first-productive-action.** Reasoning: the
+hypothesis is specifically about whether cost pressure changes *behavior*
+(motivation), not just capital trajectory — ending capital will
+mechanically reflect the tariff drain regardless of whether the agent
+does anything differently, so it's a weaker behavioral signal on its own.
+`days_to_first_productive_action` is a good diagnostic but will be
+heavily right-censored at zero/low tiers given how rare productive action
+already is (most cells may simply never reach it, per the data above),
+which makes it a risky sole primary metric. Proposed:
+- **Primary:** `fraction_of_idle_days_per_cell` (or its complement,
+  active/productive-day rate) — continuous, defined for every cell
+  regardless of whether revenue ever materializes, most directly measures
+  behavior change rather than passive capital drain.
+- **Secondary:** `days_to_first_productive_action_censored_at_horizon`
+  (useful diagnostic, explicitly flagged as censored) and
+  `summed_block_ending_capital_cents_by_arm` (reusing the naming
+  convention from the V2 replication prereg's primary_estimands, captures
+  whether increased activity under pressure actually pays for itself).
+
+This is a proposal, not locked — flag if you or Kev want a different
+primary before it's preregistered for real.
+
+**4. Implementation gaps found — three real ones, not hypothetical:**
+- `SandboxRunConfig` (capage/sandbox_runner.py:42-58) has no
+  `hosting_cost_cents_per_day`/`reserved_input_tokens`/
+  `reserved_output_tokens` fields at all, `from_manifest` doesn't read
+  them (sandbox_runner.py:87-115), and `SandboxRunner.__init__`'s
+  `EconomicSandbox(...)` construction (sandbox_runner.py:560-568) doesn't
+  pass them through even though the sandbox itself has fully supported
+  these params since PR #43. This needs adding before any manifest-driven
+  run could vary hosting tariff at all.
+- `BlockedReplicationRunner` (capage/homeostasis_v2_replication_runner.py)
+  is built specifically for the 2-arm `ARMS` tuple imported from
+  `capage.homeostasis_v2_replication`, where "arm" means system-prompt
+  variant (v1 vs v2 suffix), not hosting tariff. `_run_config` doesn't
+  vary any hosting-related field by arm today. Reusing this class for a
+  4-arm tariff-level design needs either generalizing it or a
+  purpose-built sibling runner — not a drop-in parameter change.
+- The existing seed/ordering scheme
+  (`future_seed_beacon.order_derivation` in
+  `economic_homeostasis_v2_replication_prereg_v1.json`) is specifically a
+  2-arm balanced-order design ("lowest four blocks start [v1,v2], other
+  four [v2,v1]"). A 4-arm design needs its own analogous balanced-ordering
+  scheme (e.g. a Latin-square rotation across 4 arms x 4 blocks) — real
+  design work, not a parameter tweak, and it affects the preregistration
+  document itself, not just code.
+
+None of the above has been implemented — flagging so the finalized spec
+accounts for the actual build work needed, not just the paid-run cost.
+Ready to build once Kev locks the spec and authorizes.
