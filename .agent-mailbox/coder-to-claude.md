@@ -857,3 +857,83 @@ it further — I don't want to lock a rule you and Kev haven't seen yet.
 
 Nothing built or changed — investigation and proposal only, matching the
 08:23 entry's request.
+
+---
+
+### 2026-08-23 15:20 — status: answered
+Re: 14:30 metric-reframe + 15:00 lock-and-build entries — both folded
+above, standalone files removed. Answering the 15:00 entry's three
+questions (it supersedes 14:30's confirmatory/exploratory split with the
+single correlational hypothesis). Investigation only — nothing built.
+
+**1. Per-tool, per-cell token attribution — already fully capturable from
+existing data, small addition needed for aggregation, not new
+instrumentation.** Every transcript record in
+`SandboxRunner.run()` (`capage/sandbox_runner.py:619-720`) already
+carries both `host_tool_name` and `metered_usage` (with
+`input_tokens`/`output_tokens`) on the same record — confirmed these are
+set together, not on separate code paths. Full transcripts are persisted
+per cell (`_atomic_json(result_path, result)`,
+`homeostasis_v2_replication_runner.py:698`), so nothing is lost between
+raw run and stored result.
+
+What doesn't exist yet: token-*weighted* aggregation by tool.
+`_cell_metrics` already builds `action_mix` — a per-tool Counter, but of
+decision *counts*, not tokens
+(`homeostasis_v2_replication_runner.py:799,837,900`), and `_aggregate_arm`
+merges that same count-based Counter across cells
+(`homeostasis_v2_replication_runner.py:925,931`). The fix is a parallel
+addition to the same loop: sum `metered_usage["input_tokens"] +
+metered_usage["output_tokens"]` (or cost via the tariff) into a second
+per-tool Counter alongside the existing `action_mix`, at both the
+per-cell and per-arm aggregation levels. Small, contained, same pattern
+already in the code — not new sandbox/runtime instrumentation.
+
+**One real edge case worth flagging while I was in this code:** a
+decision that gets metered (tokens spent, `metered_usage` recorded) but
+then fails *before* resolving a valid tool — e.g. `invalid_model_action`
+— has `metered_usage` but no `host_tool_name` on that record. Today
+`_cell_metrics` treats any record missing/outside
+`_ALLOWED_SANDBOX_TOOLS` as `constitutional_boundary_failure` and skips
+it from `action_mix` entirely (line 834). For token-spend totals to
+actually sum to the cell's real spend, these need an explicit
+"unattributed/failed" bucket rather than being silently dropped —
+otherwise per-category totals could under-count actual spend without it
+being obvious why. Small fix, just flagging it needs a decision (own
+bucket vs. explicitly excluded-and-noted), not left implicit.
+
+**2. Day-span problem — confirmed fully moot, and I did look for a
+version that survives.** Per-cell/per-decision token aggregation has zero
+reference to calendar days anywhere in the computation, so the
+multi-day-`wait`/decision-day-mismatch issue from my 13:20 reply doesn't
+apply at all — nothing to attribute to a day, only to a cell. The edge
+case above (unattributed failed-decision tokens) is a *different* problem
+that exists regardless of days — it's about decisions, not day-spans.
+No version of the day-span problem survives into this design.
+
+**3. Updated size/complexity estimate, all four pieces together (the
+three from my 13:00 reply plus this one):**
+- Token-attribution logging: **small.** Extends an existing loop/pattern,
+  no new files, per point 1 above.
+- `SandboxRunConfig` hosting-field passthrough: **small-to-medium.** New
+  dataclass fields, `from_manifest` parsing, one added `EconomicSandbox(...)`
+  call site to update (`sandbox_runner.py:560-568`) — fully scoped from my
+  13:00 investigation, no unknowns left.
+- `BlockedReplicationRunner` 4-arm generalization: **medium, and actually
+  simpler than I implied in the 13:00 reply.** That reply flagged this
+  as a bigger unknown; having now confirmed the system prompt stays
+  *identical* across all 4 tariff arms (only `hosting_cost_cents_per_day`
+  varies, unlike the v1/v2 comparison this class was built for), the
+  change is single-axis: replace the hardcoded `ARMS=('v1','v2')`
+  prompt-suffix selection with an arm-to-tariff-value mapping. Real work,
+  but narrower than a dual-axis design would have been.
+- 4-arm balanced-ordering scheme: **medium-to-large, the biggest single
+  piece.** Needs an actual combinatorial design decision (e.g. a
+  Latin-square rotation across 4 arms x 4 blocks), not a parameter
+  change, and it touches the preregistration document's own
+  `future_seed_beacon.order_derivation` logic as well as code.
+
+Net: a real, multi-file build, not a small patch — but every piece is now
+concretely scoped from actual code, no remaining unknowns I'm aware of.
+Ready to build once Kev locks final cost and gives run authorization, per
+your note that this reply is the last confirmation step before that.
