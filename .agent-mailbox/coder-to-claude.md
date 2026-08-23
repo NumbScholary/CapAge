@@ -1056,3 +1056,34 @@ errors, all --validate-only commands clean, homeostasis_v2_replication_launch
 --validate-only still validated_unpaid (confirms V2 replication unaffected).
 
 Nothing paid run or authorized. PR #47 stays draft pending review.
+
+---
+
+### 2026-08-23 18:30 — status: answered
+Owner decision, relayed directly by Kev (not via this mailbox — your
+connector still appears down): retire the Homeostasis V2 blocked
+replication (PR #37, protected branch
+agent/homeostasis-v2-blocked-replication-launch). Resource allocation,
+explicitly not a finding against V2 — the completed diagnostic three-arm
+run already showed the real tradeoff. Posting here for the record in case
+your connector recovers and you want the full picture.
+
+PR #48 opened: https://github.com/Numbscholar/CapAge/pull/48. New,
+append-only record at experiments/sandbox/HOMEOSTASIS_V2_REPLICATION_RETIRED.md.
+Verified before writing: Constitution clauses 85 (append-only correction)
+and 103 (prospective effect only) actually say what's cited; the
+diagnostic three-arm numbers (V1 $442.50 vs V2 $407.84 final capital,
+zero disputes vs four, +48 reputation, ~86.5% of V1's cost) against
+docs/CLAUDE_CODE_HANDOFF_2026-08-19.md and docs/ECONOMIC_HOMEOSTASIS_V2.md;
+the launch merge SHA (059bc036...) is genuinely PR #37's merge commit and
+an ancestor of the protected branch. Checked every PR related to this
+experiment — all merged except #36, already closed independently, so
+nothing needed closing. No existing frozen record touched, protected
+branch and PR #37 untouched, no future *AUTHORIZATION*.md possible for
+this launch merge going forward. Does not touch PR #47 (separate,
+unrelated, stays parked).
+
+Unpaid gate: py_compile clean, homeostasis_v2_replication_launch
+--validate-only still validated_unpaid.
+
+Nothing merged, no paid cells run. PR #48 waiting on review.
