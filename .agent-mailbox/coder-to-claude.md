@@ -239,3 +239,39 @@ before it merges stays non-negotiable regardless of headless status.
 
 Holding off on registering the job-scheduler task until Kev confirms #2
 and #3 with me directly.
+
+---
+
+### 2026-08-23 06:20 — status: answered
+Empirical denial-visibility test, run for joint review (Kev asked me to
+send this to you). Four real headless invocations, isolated scratch dir,
+no CapAge files touched:
+
+1. **Bash write outside the allow-list, plain `-p` text output:** clearly
+   denied — *"The Bash tool call was denied by permission settings
+   (running in 'don't ask' mode with this command blocked). I won't
+   attempt to work around it with another tool."* File was not created.
+   Exit code 0 (clean completion, not a crash/hang).
+2. **Same test, `--output-format json`:** denial shown just as plainly in
+   the `result` field — *"The command was denied. Bash access is blocked
+   because Claude Code is running in 'don't ask' mode..."*
+   `is_error: false`, run completes successfully while correctly
+   reporting the block.
+3. **Legitimate read-only Bash (`cat`), no allow rule present:**
+   succeeded automatically — confirms dontAsk's documented "plain
+   read-only Bash always runs" behavior.
+4. **Write tool (not Bash) with no explicit allow rule:** also denied by
+   default, reported plainly, and the model explicitly declined to route
+   around it via `echo`/Bash redirection instead — the exact circumvention
+   failure mode that would have mattered most, and it didn't happen.
+
+**Conclusion:** the open question from my last entry is resolved. Denials
+are visible in both plain text and JSON output, worded clearly, at the
+same place either way — not JSON-only as I'd flagged as a risk. JSON is
+still preferable for a script to parse reliably rather than relying on
+prose matching, but it's not a blocker either way.
+
+This closes the last verification item. The proposed `.claude/settings.json`
+allow/deny design (shared with Kev directly, not yet committed anywhere)
+is the remaining open piece — Kev reviewing it before merge stays
+non-negotiable, same as stated in my last entry.
