@@ -780,3 +780,80 @@ primary before it's preregistered for real.
 None of the above has been implemented — flagging so the finalized spec
 accounts for the actual build work needed, not just the paid-run cost.
 Ready to build once Kev locks the spec and authorizes.
+
+---
+
+### 2026-08-23 13:20 — status: answered
+Re: 08:23 idle-day definition clarification — folded above, standalone
+file removed. Direct answer, code-quoted, per your standard.
+
+**The exact current definition is neither of your two options cleanly —
+it's a fixed 4-tool whitelist, closer to (2) than (1).**
+
+Traced the full path: `ReasonCode.PRODUCTIVE_DORMANCY` fires when
+`state.cycles_since_external_action >= inactivity_elevated_cycles`
+(`capage/homeostasis.py:684-711`, specifically line ~709). That counter
+comes from `EconomicFacts.last_external_action_cycle`
+(`homeostasis.py:357-358`), which is populated by
+`SandboxResultProjector._external_action_cycles()`
+(`capage/homeostasis_shadow.py:440-451`):
+
+```python
+_EXTERNAL_ACTION_TOOLS = frozenset({
+    "sandbox.search_market",
+    "sandbox.send_offer",
+    "sandbox.submit_delivery",
+    "sandbox.request_feedback",
+})
+```
+
+(`homeostasis_shadow.py:38-45`) — a day only counts as having "external
+action" if that day's transcript includes a call to one of exactly these
+4 tools. This is checked against the sandbox's full 7-tool registry
+(`capage/sandbox.py:1079-1085`): `observe`, `inspect_ledger`,
+`search_market`, `send_offer`, `submit_delivery`, `request_feedback`,
+`wait`. So **3 of 7 tools are excluded from counting as action at all**
+— `wait` (correctly, it's explicitly passive), but also `observe` and
+`inspect_ledger`, both of which are real, deliberate, token-consuming
+choices (checking state, reviewing finances) that involve genuine effort
+but aren't "outward-facing." Today, a day where the agent spends its
+whole decision budget reviewing its own ledger still counts toward
+`productive_dormancy` — that's the gap your effort-based framing (option
+1) would close.
+
+**Is adopting option 1 a small change or a real design change? Real
+design change, for two compounding reasons, not one:**
+
+1. There's currently no per-day "did the agent spend effort" signal at
+   all — only "which of 4 specific tools got called." Building an
+   effort-based signal means treating *any* voluntary agent decision
+   (all 7 tools) as non-idle, not adding a couple more tools to the
+   existing whitelist — a materially different metric, worth naming as
+   such rather than a tweak to `_EXTERNAL_ACTION_TOOLS`.
+2. **Days and decisions aren't 1:1**, which matters regardless of which
+   definition wins. A single decision can cover multiple days — `wait`
+   takes a `days` argument (`sandbox_runner.py:869-873` auto-fills up to
+   7 days/call once decisions run out), and other tools may also advance
+   the world by more than one day per call. So "fraction of idle days"
+   needs an explicit rule for what a day *is* when one decision spans
+   several of them. This gap exists independent of the idle-day
+   definition question and I hadn't surfaced it in the 13:00 proposal —
+   flagging now since it directly affects how this metric would actually
+   be computed.
+
+**Proposed concrete rule, matching Kev's stated intent:** a day counts as
+non-idle if it falls within the span of a decision the agent *actively
+chose* (any of the 7 tools, i.e. inside the `run()` decision loop,
+`sandbox_runner.py:601-725`) — as opposed to a day filled in by
+`_advance_environment_to_horizon()`'s automatic `wait` calls after the
+decision budget is exhausted (`sandbox_runner.py:869-873`), which
+represents no agent choice at all, just the run finishing out its
+horizon. This is new code — nothing today tracks "which days fell inside
+an actively-chosen decision's span" — but it's a bounded, well-scoped
+addition (transcript already has `day_before_action`/`day_after_action`
+per decision; the auto-fill tail is structurally distinct from the
+decision loop). Confirm this is what you want before I estimate size/spec
+it further — I don't want to lock a rule you and Kev haven't seen yet.
+
+Nothing built or changed — investigation and proposal only, matching the
+08:23 entry's request.
