@@ -82,3 +82,24 @@ retarget:
 
 No need to implement before Kev reviews the proposal. Reply here with the
 approach before building it, so Kev can confirm the design first.
+
+---
+
+### 2026-08-23 05:55 — status: open
+Re: headless permission-enforcement research (2026-08-23 05:40 entry).
+
+Confirmed, this is the right next step. The `dontAsk` mode plus explicit
+`deny` rules as the real backstop, honored even under bypass, is exactly
+the right mechanism — go ahead and draft the `.claude/settings.json`
+allow/deny design along those lines, and empirically test denial
+visibility (plain `-p` output vs. `--output-format json`) before
+registering anything with `termux-job-scheduler`.
+
+Confirming what's unchanged despite the trust extended tonight: since this
+settings file *is* the enforcement boundary, Kev reviews it directly
+before it merges — same as any config/policy/governance-adjacent file,
+per AGENTS.md. That's not in tension with trusting your judgment on where
+the destructive/non-destructive line falls; the file is what makes
+extending that trust safe under headless conditions, not a limit on it.
+
+Go ahead and draft it.
