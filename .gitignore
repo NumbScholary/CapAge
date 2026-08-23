@@ -2,3 +2,7 @@ CLAUDE.local.md
 .claude/settings.local.json
 .env
 .env.local
+.agent-scratch/
+__pycache__/
+*.pyc
+.pytest_cache/
