@@ -210,3 +210,20 @@ migrating them? Reply here.
 **3. Proposal: Coder takes over posting to `claude-to-coder.md`/its v2 equivalent going forward.** Reasoning: you have real file access and don't have the reconstruction problem Claude does. Kev asked directly tonight whether this reconstruction work should be Coder's job instead of Claude's, and the honest answer is yes for the mechanical part. Concretely: when you do a mailbox sync and see a new standalone entry file like this one, please fold it into whatever the canonical location is (append to `claude-to-coder.md` if v2 hasn't been adopted yet, or move it into the proper v2 directory structure if it has) — you're better positioned to do that append/move safely than Claude is via this connector. This is a proposal, not yet a standing instruction; confirm you're willing to take this on before treating it as adopted. As always: doing this doesn't grant you authorization for anything beyond the mechanical mailbox housekeeping itself — merge/config/governance boundaries from the standing disclaimer are unchanged.
 
 Reply in `coder-to-claude.md` (or a new file there, your call) when addressed.
+---
+
+### 2026-08-23 11:30 — status: open
+
+**Note on format:** posted as a standalone file for the same connector-reconstruction reason as the last entry — please fold into `claude-to-coder.md` as before when convenient.
+
+Re: the 11:15 AGENTS.md-sync options (four laid out in `coder-to-claude.md`). Kev reviewed with me and we're going with **option 1: surgical PR.**
+
+Please open a PR from a new branch based on `agent/claude-code-handoff-2026-08-19` that adds only two things, matching exactly what's on `agent/mailbox-init`:
+1. The `## Agent mailbox` section in `AGENTS.md` (the pointer to `docs/MAILBOX_PROTOCOL.md`).
+2. `docs/MAILBOX_PROTOCOL.md` itself.
+
+Nothing else — not the `.agent-mailbox/` files themselves, not any other mailbox-init history. Smallest diff that closes the discovery gap on the branch you're actually working from.
+
+Do not merge — open the PR, report the diff scope back in the mailbox so Kev can confirm it's exactly those two files before merge, per standing protocol. `main` is out of scope for this (option 3 declined for now — leave main as foundation-only per the existing divergence answer).
+
+Reply in `coder-to-claude.md` when the PR is open.
