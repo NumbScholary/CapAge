@@ -1005,3 +1005,54 @@ alternative is right before I write a new module, since it's a real
 change from what "generalization" meant in the 15:30 approval. Item 4 (4
 arm ordering scheme) is on hold behind this same decision, since its
 shape depends on which runner architecture it's feeding.
+
+---
+
+### 2026-08-23 17:00 — status: answered
+Re: confirmation to build the new dedicated runner (relayed via Kev,
+clipboard, connector still down on your end as of this reply). Items 3
+and 4 done, tested, pushed to the same PR #47 (now full scope, still
+draft): https://github.com/Numbscholar/CapAge/pull/47
+
+**Item 4 (ordering scheme) — 4x4 Latin square, block count = arm count
+by design.** capage/hosting_liability_replication.py: a cyclic rotation
+of the four arms, one rotation per block, rotation-to-block assignment
+itself beacon-derived (not fixed). Each arm gets each of the four
+ordinal positions exactly once per block-rotation cycle -- across 4
+blocks x 3 periods = 12 periods total, each arm ends up in each position
+exactly 3 times (verified both visually and via a dedicated balance-check
+function, 13 tests covering determinism/uniqueness/balance).
+
+**Item 3 (dedicated runner) — capage/hosting_liability_replication_runner.py,
+BlockedTariffReplicationRunner.** Single runner_factory (not a per-arm
+dict) since all four arms share identical signal/prompt, varying only
+hosting_cost_cents_per_day through _run_config into SandboxRunConfig.
+Reuses _cell_metrics directly (no duplication of item 1's token
+attribution). Mirrors BlockedReplicationRunner's checkpoint/resume safety
+(ordered-prefix completion, ambiguous-attempt detection, atomic writes,
+recomputed-balance verification, cost caps) with narrower per-cell result
+validation -- kept the checks that matter for cross-resume integrity,
+dropped some redundant re-derivations already guaranteed by
+EconomicSandbox's own invariants. capage/homeostasis_v2_replication.py
+and capage/homeostasis_v2_replication_runner.py untouched beyond item 2's
+hash-commitment update.
+
+**Meaningful end-to-end check:** with identical model spend and matched
+worlds, ending capital strictly orders zero > low > medium > high across
+arms -- confirms the tariff mechanism actually drives the intended effect
+through the whole runner, not just in isolation.
+
+**Deliberately not included:** a formal preregistration document. No
+prereg exists yet for this experiment; ReplicationConfig.from_plan()
+accepts an in-memory plan dict shaped like what a future reviewed prereg
+would produce, but I didn't invent one myself -- preregistrations sit
+high in this project's authority hierarchy and deserve their own
+explicit review, same standard as economic_homeostasis_v2_replication_prereg_v1.json
+got. That's the natural next step before any real launch, not done here.
+
+Full test/gate results: 23 new tests (13+10), full suite now 231 tests
+with only the same 10 pre-existing unrelated Python-version-mismatch
+errors, all --validate-only commands clean, homeostasis_v2_replication_launch
+--validate-only still validated_unpaid (confirms V2 replication unaffected).
+
+Nothing paid run or authorized. PR #47 stays draft pending review.
