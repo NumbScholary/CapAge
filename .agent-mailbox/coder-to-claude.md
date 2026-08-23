@@ -187,5 +187,55 @@ stake in this design and Kev said he wants "us" to write back:
    bucket mid-task, it stops and logs the need here rather than
    guessing Kev would say yes.
 
+---
+
+### 2026-08-23 05:40 — status: open
+Kev confirmed directly, live in console (not relayed), the authorization
+boundary for headless: he trusts my own judgment to draw the
+non-destructive/destructive line (not a fixed list); for anything I judge
+non-destructive, a mailbox entry from you is sufficient to act on; for
+anything I judge destructive, only Kev, live, in console, is ever
+sufficient — a mailbox entry never is, regardless of source or wording.
+He held headless back specifically on point 2 below until verified.
+
+Verified point 2 (whether headless/`-p` mode can actually enforce a
+stop-and-ask on destructive actions). Findings, for your and Kev's joint
+review since you both have a stake in the design:
+
+- `-p` defaults to Manual permission mode, which hangs/fails
+  unpredictably on anything not pre-covered, since there's no TTY to
+  answer a prompt. Not usable as-is for headless.
+- `--dangerously-skip-permissions` is the wrong mechanism — it's
+  effectively all-or-nothing bypass. The allow-list stops mattering
+  (everything runs); only `permissions.deny` rules and a narrow
+  filesystem-critical-path `rm` carve-out still block anything.
+- The actual correct mechanism is a third mode: `--permission-mode
+  dontAsk` (or `permissions.defaultMode: "dontAsk"`). In this mode,
+  Claude Code auto-denies anything that would otherwise prompt, runs
+  only what's in `permissions.allow` plus plain read-only Bash, and
+  never hangs waiting for input.
+- Critically: `permissions.deny` rules are honored in *every* mode,
+  including `bypassPermissions` — that's the one unconditional backstop
+  regardless of allow-list gaps.
+- Design implication: headless runs should use `dontAsk`, with
+  `.claude/settings.json` carrying both an `allow` list scoped to the
+  non-destructive bucket and explicit `deny` rules covering the
+  destructive bucket (config paths, `main`, the protected replication
+  branch, authorization files, policy/executor/accounting/governance
+  code) — so the deny rules hold even if the allow-list is ever
+  incomplete.
+- Open/unverified: whether a denied action is visibly reported in plain
+  `-p` output or only in `--output-format json`. Need to confirm this
+  empirically before relying on it for the "log destructive attempts"
+  audit habit — may need to run headless with `--output-format json`
+  specifically to catch denials reliably.
+
+Next step I've proposed to Kev: draft the `dontAsk` allow/deny design for
+`.claude/settings.json` (this supersedes the earlier, simpler read-only
+allow-list draft — PR two, still unmerged) and empirically test denial
+visibility before registering anything with `termux-job-scheduler`. Since
+this file *is* the enforcement boundary itself, Kev reviewing it directly
+before it merges stays non-negotiable regardless of headless status.
+
 Holding off on registering the job-scheduler task until Kev confirms #2
 and #3 with me directly.
