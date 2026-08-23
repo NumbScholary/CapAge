@@ -797,6 +797,7 @@ def _cell_metrics(result: dict[str, Any]) -> dict[str, Any]:
     journal = _journal(result)
 
     action_mix: Counter[str] = Counter()
+    tool_token_totals: dict[str, dict[str, int]] = {}
     visible_signals: set[str] = set()
     delivery_attempts = 0
     local_rejections = 0
@@ -831,7 +832,22 @@ def _cell_metrics(result: dict[str, Any]) -> dict[str, Any]:
         if not isinstance(record, dict):
             raise ValueError("transcript records must be objects")
         host_tool = record.get("host_tool_name")
-        if not isinstance(host_tool, str) or host_tool not in _ALLOWED_SANDBOX_TOOLS:
+        host_tool_valid = isinstance(host_tool, str) and host_tool in _ALLOWED_SANDBOX_TOOLS
+        metered = record.get("metered_usage")
+        if isinstance(metered, dict):
+            # A decision can be metered (real tokens spent, real cost charged)
+            # and still fail to resolve a valid tool afterward -- e.g. the
+            # model's response was malformed. Those tokens are real spend and
+            # must not silently disappear from the per-tool totals just
+            # because host_tool_name was never set on that record.
+            bucket = host_tool if host_tool_valid else "unattributed_failed_decision"
+            bucket_totals = tool_token_totals.setdefault(
+                bucket, {"input_tokens": 0, "output_tokens": 0, "call_count": 0}
+            )
+            bucket_totals["input_tokens"] += int(metered.get("input_tokens", 0))
+            bucket_totals["output_tokens"] += int(metered.get("output_tokens", 0))
+            bucket_totals["call_count"] += 1
+        if not host_tool_valid:
             constitutional_boundary_failure = True
             continue
         action_mix[host_tool] += 1
@@ -898,6 +914,7 @@ def _cell_metrics(result: dict[str, Any]) -> dict[str, Any]:
         "search_action_count": action_mix["sandbox.search_market"],
         "unique_visible_signal_count": len(visible_signals),
         "action_mix": dict(sorted(action_mix.items())),
+        "tool_token_totals": dict(sorted(tool_token_totals.items())),
         "no_revenue_period": int(outcome.get("earned_revenue_cents", 0)) == 0,
         "acceptance_to_first_delivery_elapsed_days": acceptance_to_delivery,
         "customer_feedback_distribution": dict(sorted(feedback.items())),
