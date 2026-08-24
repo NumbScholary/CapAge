@@ -118,6 +118,9 @@ REFERENCE_IMPLEMENTATION_SHA256_CURRENT = {
     "capage/sandbox.py": (
         "b68936f057b75e79bef62f910fc353fcc04f78a922c9bcf28091ea8a2eca09e1"
     ),
+    "capage/sandbox_runner.py": (
+        "92c98a21bdd1bc999824a3ed4975c4e3736de8762dfff812daae360ef8011263"
+    ),
 }
 
 

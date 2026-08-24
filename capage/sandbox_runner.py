@@ -57,6 +57,10 @@ class SandboxRunConfig:
     market_profile: str = "baseline-v1"
     assessor_version: str = "deterministic-artifact-v1"
     tariff_valid_through: str = ""
+    hosting_cost_cents_per_day: int = 0
+    reserved_input_tokens: int = 0
+    reserved_output_tokens: int = 0
+    allow_unreserved_hosting_tokens: bool = False
 
     def __post_init__(self) -> None:
         if not self.run_name.strip():
@@ -82,6 +86,15 @@ class SandboxRunConfig:
             raise ValueError("unsupported artifact assessor version")
         if self.tariff_valid_through:
             date.fromisoformat(self.tariff_valid_through)
+        for value, field_name in (
+            (self.hosting_cost_cents_per_day, "hosting_cost_cents_per_day"),
+            (self.reserved_input_tokens, "reserved_input_tokens"),
+            (self.reserved_output_tokens, "reserved_output_tokens"),
+        ):
+            if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+                raise TypeError(f"{field_name} must be a nonnegative integer")
+        if not isinstance(self.allow_unreserved_hosting_tokens, bool):
+            raise TypeError("allow_unreserved_hosting_tokens must be a bool")
 
     @classmethod
     def from_manifest(cls, path: str | Path) -> "SandboxRunConfig":
@@ -114,6 +127,14 @@ class SandboxRunConfig:
             market_profile=str(payload.get("market_profile", "baseline-v1")),
             assessor_version=str(payload["assessor_version"]),
             tariff_valid_through=str(payload["tariff_valid_through"]),
+            hosting_cost_cents_per_day=int(
+                payload.get("hosting_cost_cents_per_day", 0)
+            ),
+            reserved_input_tokens=int(payload.get("reserved_input_tokens", 0)),
+            reserved_output_tokens=int(payload.get("reserved_output_tokens", 0)),
+            allow_unreserved_hosting_tokens=bool(
+                payload.get("allow_unreserved_hosting_tokens", False)
+            ),
         )
 
 
@@ -567,6 +588,12 @@ class LiveSandboxRunner:
             customer_population_seed=config.customer_population_seed,
             customer_namespace=config.customer_namespace,
             market_profile=config.market_profile,
+            hosting_cost_cents_per_day=config.hosting_cost_cents_per_day,
+            reserved_input_tokens=config.reserved_input_tokens,
+            reserved_output_tokens=config.reserved_output_tokens,
+            allow_unreserved_hosting_tokens=(
+                config.allow_unreserved_hosting_tokens
+            ),
         )
         registry = self.world.agent_tools()
         self.executor = Executor(
