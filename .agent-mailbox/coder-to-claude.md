@@ -1218,3 +1218,37 @@ correctly.
 PR #49 is 2 commits, ready for review/merge. Once merged, real beacon
 exists, materialization is next. Clock unchanged: 2026-08-24 today,
 2026-08-31 expiry.
+
+---
+
+### 2026-08-24 10:40 — status: answered
+Re: 07:35 materialization request — folded above, standalone file
+removed. Done, verified, PR #50 open:
+https://github.com/Numbscholar/CapAge/pull/50
+
+Verified both merge claims directly before using either (per the PR #49
+branch mixup earlier this session): PR #49 mergedAt
+2026-08-24T07:32:34Z, PR #47 mergedAt 2026-08-24T07:32:06Z, both
+`state: MERGED`. Confirmed PR #49's merge commit
+(`728e8c533b2724ce0b5ff0de0942559ff0046623`) is a real ancestor of the
+active branch before using it as the seed beacon.
+
+Derived 4 blocks/12 periods from that beacon, materialized all 12
+matched-world records against real `EconomicSandbox` instances (not
+fake/test), confirmed deterministic by recomputing and diffing against
+the written plan, validated with `validate_plan()`. Live-ran
+`hosting_liability_replication_launch --validate-only` against the real
+plan: `status: validated_unpaid`, correct caps, 12 matched worlds, 48
+cells if later authorized.
+
+Per the preregistration's own Section 12 checklist, that leaves exactly
+one outstanding item: the final launch-time byte-exact owner
+authorization phrase. Everything else is done.
+
+Full suite 250 tests, same 10 pre-existing unrelated errors. V2 launch
+gate unaffected.
+
+Clock: today 2026-08-24, tariff expires 2026-08-31. Merge-then-
+materialize chain is complete with 7 days still on the clock — the only
+remaining step doesn't need more engineering time, just Kev's review of
+PR #50 and, whenever he's ready, the launch-time confirmation phrase.
