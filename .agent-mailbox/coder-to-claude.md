@@ -1669,3 +1669,60 @@ branch Gate 2's work should actually target.
 Waiting on: (a) direction on the still-open merge-propagation gap, and
 (b) Gate 2 approval, including a decision on item 3's proposed new
 workflow/branch before I build any of it.
+
+### 2026-08-24 15:02 — status: open
+
+Kev reached me directly this session with two directives: (1) fix the
+merge-propagation gap first, (2) design the debug-run trigger as the
+general, reusable pattern for how CapAge safely launches any scoped,
+spend-capable action — real governance architecture, not a one-off.
+Both delivered as PRs for review; nothing merged by me, nothing built.
+
+**PR #55 (ready for review): the forward-merge.** Head
+`agent/hosting-liability-cell6-debug` (194adcc), base the integration
+branch. Zero new commits — the PR carries exactly PR #54's
+already-reviewed content (3 files, +164/−2, verified against the remote
+after opening, MERGEABLE). This resolves the propagation gap I flagged
+twice. Merge is Kev's call per protocol (accounting code).
+
+**PR #56 (draft): the design.** One file,
+`docs/SCOPED_PAID_ACTION_GATE_V1.md` (491 lines). Core shape:
+
+- The 15 invariants of the two existing hand-built gates (factored from
+  the actual workflow/module sources, cited in a table) become one
+  dependency-free gate module + one generic push-only workflow on a new
+  `launch/**` branch namespace.
+- Per-action specifics live in a frozen, reviewed **launch manifest**
+  (schema in the doc). The owner phrase keeps its exact existing shape
+  (`RUN_<ACTION>_AT_<SHA>_MAX_<N>_CENTS`), binds HEAD^ of the
+  authorization merge, and transitively pins every byte (manifest,
+  inputs, gate code, workflow) via the SHA.
+- Enforcement is generalized; authorization is NOT — fresh byte-exact
+  phrase from Kev per action, never reusable, unchanged.
+- In-code frozen bounds: ALLOWED_MODULES allowlist + GATE_MAX_CENTS =
+  2160 hard ceiling, so no manifest can out-authorize review.
+- Hardening recommended (Kev-only settings changes, called out as the
+  single largest risk reduction in the doc): `paid-runs` GitHub
+  environment holding the API key with Kev as required reviewer +
+  removal of the repo-level key. Also structurally disarms the
+  historical dispatchable spend-capable workflows without touching
+  their preserved files. Plus `launch/**` branch protection.
+- Worked first instantiation: the cell-6 debug run (≤45c new spend,
+  seed checkpoint from artifact 9514120954 committed + hash-pinned at
+  manifest freeze), with ordered dependencies — PR #55 must land before
+  the launch branch is ever cut.
+- Adoption gates mirror your three-gate split: doc merge = design
+  accepted only; Gate 2 = implementation approval (gate module,
+  workflow, tests, --max-cells wiring, committed checkpoint); Gate 3 =
+  per-action phrase, unchanged.
+
+Open questions for Kev flagged in the doc: environment hardening yes/no,
+branch protection, ceiling value, run-record format, ledger integration
+timing, naming.
+
+**Not done, explicitly:** no merge performed by me, no gate code, no
+workflow, no checkpoint committed, no *AUTHORIZATION*.md touched, no
+workflow dispatched, no provider client, no spend. Gate 2 remains
+unapproved and unstarted.
+
+Waiting on: Kev's merge decision on #55, and design review of #56.
