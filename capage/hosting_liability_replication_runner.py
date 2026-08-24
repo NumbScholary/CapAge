@@ -475,6 +475,8 @@ class BlockedTariffReplicationRunner:
             }
             _atomic_json(attempt_path, attempt)
             _atomic_text(audit_path, "")
+            raw_result_path = self.artifact_dir / f"{stem}-raw.json"
+            result: dict[str, Any] | None = None
             try:
                 runner = self.runner_factory(
                     run_config,
@@ -483,18 +485,31 @@ class BlockedTariffReplicationRunner:
                     continuity_state=arm_state["business_continuity"],
                 )
                 result = runner.run()
+                # Persist the raw sandbox result immediately, before
+                # validation -- if validation below raises, this is the
+                # only place the real stop_reason/failure detail survives.
+                # result_path (the "official" per-cell result other code
+                # trusts as validated) is still only written after success,
+                # further down.
+                _atomic_json(raw_result_path, result)
                 matched = self._matched_worlds[
                     (block.block_index, period.period_index)
                 ]
                 self._validate_result(result, run_config, matched, arm)
             except Exception as exc:
-                self.state["errors"].append(
-                    {
-                        "cell_id": cell_id,
-                        "error_type": type(exc).__name__,
-                        "error": str(exc),
-                    }
-                )
+                error_record: dict[str, Any] = {
+                    "cell_id": cell_id,
+                    "error_type": type(exc).__name__,
+                    "error": str(exc),
+                    "raw_result_file": (
+                        f"{stem}-raw.json" if raw_result_path.exists() else None
+                    ),
+                }
+                if isinstance(result, dict):
+                    error_record["raw_status"] = result.get("status")
+                    error_record["raw_stop_reason"] = result.get("stop_reason")
+                    error_record["raw_failure"] = result.get("failure")
+                self.state["errors"].append(error_record)
                 self.state["status"] = "stopped"
                 self.state["stop_reason"] = "provider_or_runner_error"
                 self._checkpoint()
