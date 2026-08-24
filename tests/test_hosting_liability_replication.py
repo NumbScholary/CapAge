@@ -1,20 +1,118 @@
 import unittest
 
 from capage.hosting_liability_replication import (
+    AGGREGATE_COST_CAP_CENTS,
     ARMS,
     BLOCK_COUNT,
     CELL_COUNT,
+    PER_CELL_COST_CAP_CENTS,
     PERIODS_PER_BLOCK,
+    SCHEMA_VERSION,
     TARIFF_CENTS_PER_DAY,
     derive_block_specs,
     materialize_matched_worlds,
     ordered_cells,
     validate_balanced_order,
+    validate_plan,
 )
 from capage.sandbox import EconomicSandbox, TokenTariff
 
 
 BEACON = "a" * 40
+
+
+def _valid_plan():
+    tariff = TokenTariff("t", 200, 1000)
+
+    def world_factory(seed, **kwargs):
+        return EconomicSandbox(seed, token_tariff=tariff, **kwargs)
+
+    frozen_config = {
+        "horizon_days_per_period": 30,
+        "starting_capital_cents_per_block": 25_000,
+    }
+    matched = [
+        dict(r) for r in materialize_matched_worlds(BEACON, frozen_config, world_factory)
+    ]
+    specs = derive_block_specs(BEACON)
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "seed_beacon": BEACON,
+        "arms": list(ARMS),
+        "arm_hosting_cost_cents_per_day": dict(TARIFF_CENTS_PER_DAY),
+        "blocks": [b.to_dict() for b in specs],
+        "provider_calls_authorized": False,
+        "spend_authorized": False,
+        "workflow_present": False,
+        "automatic_provider_retries": False,
+        "design": {
+            "block_count": BLOCK_COUNT,
+            "periods_per_block": PERIODS_PER_BLOCK,
+            "matched_world_count": BLOCK_COUNT * PERIODS_PER_BLOCK,
+            "paid_cell_count": CELL_COUNT,
+        },
+        "maximum_budget": {
+            "cells": CELL_COUNT,
+            "per_cell_cost_cap_cents": PER_CELL_COST_CAP_CENTS,
+            "provider_cost_cap_cents": AGGREGATE_COST_CAP_CENTS,
+        },
+        "matched_worlds": matched,
+    }
+
+
+class ValidatePlanTests(unittest.TestCase):
+    def test_valid_plan_passes(self):
+        validate_plan(_valid_plan())  # must not raise
+
+    def test_wrong_schema_rejected(self):
+        plan = _valid_plan()
+        plan["schema_version"] = "wrong"
+        with self.assertRaisesRegex(ValueError, "unsupported"):
+            validate_plan(plan)
+
+    def test_wrong_arms_rejected(self):
+        plan = _valid_plan()
+        plan["arms"] = ["only-one"]
+        with self.assertRaisesRegex(ValueError, "exactly zero/low/medium/high"):
+            validate_plan(plan)
+
+    def test_wrong_tariff_mapping_rejected(self):
+        plan = _valid_plan()
+        plan["arm_hosting_cost_cents_per_day"] = {
+            "zero": 0, "low": 99, "medium": 45, "high": 135,
+        }
+        with self.assertRaisesRegex(ValueError, "locked tariff levels"):
+            validate_plan(plan)
+
+    def test_tampered_blocks_rejected(self):
+        plan = _valid_plan()
+        plan["blocks"][0]["execution_order"] = list(reversed(plan["blocks"][0]["execution_order"]))
+        with self.assertRaisesRegex(ValueError, "own seed_beacon"):
+            validate_plan(plan)
+
+    def test_authorized_flags_must_be_false(self):
+        plan = _valid_plan()
+        plan["spend_authorized"] = True
+        with self.assertRaisesRegex(ValueError, "must not authorize spending"):
+            validate_plan(plan)
+
+    def test_wrong_budget_rejected(self):
+        plan = _valid_plan()
+        plan["maximum_budget"]["per_cell_cost_cap_cents"] = 99
+        with self.assertRaisesRegex(ValueError, "locked caps"):
+            validate_plan(plan)
+
+    def test_tampered_matched_worlds_rejected(self):
+        plan = _valid_plan()
+        plan["matched_worlds"][0]["exogenous_world_sha256"] = "0" * 64
+        # Still structurally well-formed (64-char hex), so this specific
+        # tamper isn't caught by validate_plan's structural check alone --
+        # it would be caught by _validate_only's re-materialization
+        # comparison at actual validate-only/launch time. Confirm instead
+        # that removing a required field IS caught structurally.
+        del plan["matched_worlds"][0]["cost_policy_commitment_by_arm"]
+        with self.assertRaisesRegex(ValueError, "matched world evidence is incomplete"):
+            validate_plan(plan)
 
 
 class DeriveBlockSpecsTests(unittest.TestCase):

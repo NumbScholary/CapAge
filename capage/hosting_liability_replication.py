@@ -55,6 +55,15 @@ TARIFF_CENTS_PER_DAY = {
 }
 CELL_COUNT = BLOCK_COUNT * PERIODS_PER_BLOCK * len(ARMS)
 
+# Locked via .agent-mailbox / owner confirmation (2026-08-24): mirrors the
+# V2 replication's own numbers exactly (45 cents/cell, $21.60 aggregate for
+# 48 cells), since the real-provider-cost-generating mechanism (same
+# model/effort/max_decisions/horizon_days) is structurally unchanged from
+# that experiment -- only the synthetic hosting tariff differs, which is
+# not real money.
+PER_CELL_COST_CAP_CENTS = 45
+AGGREGATE_COST_CAP_CENTS = PER_CELL_COST_CAP_CENTS * CELL_COUNT
+
 
 def _canonical_json(value: object) -> str:
     return json.dumps(
@@ -287,3 +296,108 @@ def materialize_matched_worlds(
                 }
             )
     return tuple(records)
+
+
+def validate_plan(
+    plan: dict[str, Any],
+    *,
+    preregistration: dict[str, Any] | None = None,
+) -> None:
+    """Structural validation of a materialized plan before launch.
+
+    Unlike homeostasis_v2_replication.validate_plan, this does not compare
+    against a single frozen historical constant for arms/derivation --
+    there is no completed historical run of this experiment to pin against
+    yet. It validates internal consistency instead: the plan's own beacon
+    reproduces its own blocks/matched_worlds, the arm set is exactly the
+    four locked tariff levels, and the budget matches the locked caps.
+    """
+
+    if plan.get("schema_version") != SCHEMA_VERSION:
+        raise ValueError("unsupported hosting-liability replication plan schema")
+    if plan.get("arms") != list(ARMS):
+        raise ValueError("replication arms must be exactly zero/low/medium/high")
+    if plan.get("arm_hosting_cost_cents_per_day") != dict(TARIFF_CENTS_PER_DAY):
+        raise ValueError("arm_hosting_cost_cents_per_day does not match the locked tariff levels")
+    beacon = plan.get("seed_beacon")
+    if not isinstance(beacon, str):
+        raise ValueError("plan is missing its seed_beacon")
+    specs = derive_block_specs(beacon)
+    if plan.get("blocks") != [block.to_dict() for block in specs]:
+        raise ValueError("materialized blocks do not match the plan's own seed_beacon")
+    if plan.get("provider_calls_authorized") is not False:
+        raise ValueError("plan must not authorize provider calls")
+    if plan.get("spend_authorized") is not False:
+        raise ValueError("plan must not authorize spending")
+    if plan.get("workflow_present") is not False:
+        raise ValueError("plan must not claim a workflow")
+    if plan.get("automatic_provider_retries") is not False:
+        raise ValueError("plan must forbid automatic provider retries")
+
+    validate_balanced_order(beacon)
+    world_seeds = [period.world_seed for block in specs for period in block.periods]
+    customer_seeds = [block.customer_population_seed for block in specs]
+    if len(world_seeds) != len(set(world_seeds)):
+        raise ValueError("derived world seeds are not unique")
+    if len(customer_seeds) != len(set(customer_seeds)):
+        raise ValueError("derived customer population seeds are not unique")
+
+    design = plan.get("design")
+    if not isinstance(design, dict) or any(
+        design.get(key) != expected
+        for key, expected in {
+            "block_count": BLOCK_COUNT,
+            "periods_per_block": PERIODS_PER_BLOCK,
+            "matched_world_count": BLOCK_COUNT * PERIODS_PER_BLOCK,
+            "paid_cell_count": CELL_COUNT,
+        }.items()
+    ):
+        raise ValueError("hosting-liability replication dimensions do not match")
+
+    budget = plan.get("maximum_budget")
+    if not isinstance(budget, dict):
+        raise ValueError("maximum budget must be an object")
+    per_cell = budget.get("per_cell_cost_cap_cents")
+    aggregate = budget.get("provider_cost_cap_cents")
+    if (
+        isinstance(per_cell, bool)
+        or not isinstance(per_cell, int)
+        or per_cell != PER_CELL_COST_CAP_CENTS
+        or isinstance(aggregate, bool)
+        or not isinstance(aggregate, int)
+        or aggregate != AGGREGATE_COST_CAP_CENTS
+        or aggregate != CELL_COUNT * per_cell
+    ):
+        raise ValueError("hosting-liability replication budget does not match the locked caps")
+    if budget.get("cells") != CELL_COUNT:
+        raise ValueError("maximum budget must cover all forty-eight cells")
+
+    matched = plan.get("matched_worlds")
+    if not isinstance(matched, list) or len(matched) != BLOCK_COUNT * PERIODS_PER_BLOCK:
+        raise ValueError("plan must contain twelve matched world records")
+    expected_coordinates = {
+        (block.block_index, period.period_index)
+        for block in specs
+        for period in block.periods
+    }
+    observed_coordinates = {
+        (record.get("block_index"), record.get("period_index"))
+        for record in matched
+        if isinstance(record, dict)
+    }
+    if observed_coordinates != expected_coordinates:
+        raise ValueError("matched world coordinates do not match the plan's own derivation")
+    if any(
+        not isinstance(record, dict)
+        or record.get("arms_exogenously_equal") is not True
+        or not isinstance(record.get("exogenous_world_sha256"), str)
+        or len(record["exogenous_world_sha256"]) != 64
+        or not isinstance(record.get("cost_policy_commitment_by_arm"), dict)
+        or set(record["cost_policy_commitment_by_arm"]) != set(ARMS)
+        for record in matched
+    ):
+        raise ValueError("matched world evidence is incomplete")
+
+    if preregistration is not None:
+        if preregistration.get("seed_beacon_domain") != SEED_DOMAIN:
+            raise ValueError("preregistered seed domain mismatch")
