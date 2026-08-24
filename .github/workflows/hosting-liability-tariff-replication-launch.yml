@@ -1,0 +1,152 @@
+name: CapAge Hosting Liability Tariff Replication launch
+
+on:
+  push:
+    branches:
+      - agent/hosting-liability-tariff-replication-launch
+    paths:
+      - experiments/sandbox/HOSTING_LIABILITY_TARIFF_REPLICATION_AUTHORIZATION.md
+
+permissions:
+  contents: read
+
+concurrency:
+  group: capage-hosting-liability-tariff-replication-launch-once
+  cancel-in-progress: false
+
+jobs:
+  experiment:
+    if: github.run_attempt == 1
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      AUTHORIZATION_FILE: experiments/sandbox/HOSTING_LIABILITY_TARIFF_REPLICATION_AUTHORIZATION.md
+      MATERIALIZATION_MERGE: d0d92cc5a36788dd619fb3dd14c81a0b5dd995b2
+      ARTIFACT_ROOT: artifacts/hosting-liability-tariff-replication
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Enforce merge-bound one-shot paid boundary
+        run: |
+          set -eu
+          test "$GITHUB_EVENT_NAME" = "push"
+          test "$GITHUB_REF_NAME" = "agent/hosting-liability-tariff-replication-launch"
+          test "$GITHUB_RUN_ATTEMPT" = "1"
+          test -n "$ANTHROPIC_API_KEY"
+
+          LAUNCH_COMMIT="$(git rev-parse HEAD^)"
+          EXPECTED_CONFIRMATION="RUN_HOSTING_LIABILITY_TARIFF_REPLICATION_AT_${LAUNCH_COMMIT}_MAX_2160_CENTS"
+          test -f "$AUTHORIZATION_FILE"
+          test ! -L "$AUTHORIZATION_FILE"
+          test "$(wc -l < "$AUTHORIZATION_FILE")" -eq 1
+          test "$(grep -Fxc "$EXPECTED_CONFIRMATION" "$AUTHORIZATION_FILE")" -eq 1
+          test "$(git diff --name-status "$LAUNCH_COMMIT" HEAD)" = "$(printf 'A\t%s' "$AUTHORIZATION_FILE")"
+          if git cat-file -e "$LAUNCH_COMMIT:$AUTHORIZATION_FILE" 2>/dev/null; then
+            exit 2
+          fi
+
+          git merge-base --is-ancestor "$MATERIALIZATION_MERGE" "$LAUNCH_COMMIT"
+          test "$(git rev-list --first-parent --count "$MATERIALIZATION_MERGE..$LAUNCH_COMMIT")" -eq 1
+          git diff --name-only "$MATERIALIZATION_MERGE" "$LAUNCH_COMMIT" | sort > /tmp/observed-launch-files.txt
+          printf '%s\n' \
+            .github/workflows/hosting-liability-tariff-replication-launch.yml \
+            experiments/sandbox/HOSTING_LIABILITY_TARIFF_REPLICATION_LAUNCH_GATE.md \
+            | sort > /tmp/expected-launch-files.txt
+          diff -u /tmp/expected-launch-files.txt /tmp/observed-launch-files.txt
+
+          printf 'LAUNCH_COMMIT=%s\nEXPECTED_CONFIRMATION=%s\n' \
+            "$LAUNCH_COMMIT" "$EXPECTED_CONFIRMATION" >> "$GITHUB_ENV"
+
+      - name: Run unpaid verification
+        run: |
+          set -eu
+          python -m unittest discover -s tests -p 'test_*.py' -v
+          python -m py_compile capage/*.py tests/*.py
+          python -m capage.hosting_liability_replication_launch --validate-only
+
+      - name: Record authorization, budget, and source provenance
+        run: |
+          set -eu
+          mkdir -p "$ARTIFACT_ROOT/cells"
+          python - <<'PY' > "$ARTIFACT_ROOT/authorization-and-budget.json"
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          authorization_path = Path(os.environ["AUTHORIZATION_FILE"])
+          plan_path = Path(
+              "experiments/sandbox/hosting_liability_tariff_replication_plan_v1.json"
+          )
+          plan = json.loads(plan_path.read_text(encoding="utf-8"))
+          assert plan["provider_calls_authorized"] is False
+          assert plan["spend_authorized"] is False
+          assert plan["automatic_provider_retries"] is False
+          assert plan["maximum_budget"]["cells"] == 48
+          assert plan["maximum_budget"]["per_cell_cost_cap_cents"] == 45
+          assert plan["maximum_budget"]["provider_cost_cap_cents"] == 2_160
+          print(json.dumps({
+              "aggregate_cost_cap_cents": 2_160,
+              "aggregate_cost_cap_units": 2_160_000_000,
+              "authorization_file": str(authorization_path),
+              "authorization_sha256": hashlib.sha256(
+                  authorization_path.read_bytes()
+              ).hexdigest(),
+              "automatic_provider_retries": False,
+              "cell_count": 48,
+              "execution_commit": os.environ["GITHUB_SHA"],
+              "launch_commit": os.environ["LAUNCH_COMMIT"],
+              "materialization_merge": os.environ["MATERIALIZATION_MERGE"],
+              "per_cell_cost_cap_cents": 45,
+              "tariff_valid_through": plan["frozen_config"]["token_tariff"][
+                  "valid_through"
+              ],
+          }, sort_keys=True))
+          PY
+          python - <<'PY' > "$ARTIFACT_ROOT/execution-sha256.json"
+          import hashlib
+          import json
+          from pathlib import Path
+
+          paths = {
+              ".github/workflows/hosting-liability-tariff-replication-launch.yml",
+              "capage/hosting_liability_replication.py",
+              "capage/hosting_liability_replication_launch.py",
+              "capage/hosting_liability_replication_runner.py",
+              "experiments/sandbox/HOSTING_LIABILITY_TARIFF_REPLICATION_AUTHORIZATION.md",
+              "experiments/sandbox/HOSTING_LIABILITY_TARIFF_REPLICATION_LAUNCH_GATE.md",
+              "experiments/sandbox/HOSTING_LIABILITY_TARIFF_REPLICATION_PREREG_v1.md",
+              "experiments/sandbox/hosting_liability_tariff_replication_plan_v1.json",
+          }
+          print(json.dumps({
+              path: hashlib.sha256(Path(path).read_bytes()).hexdigest()
+              for path in sorted(paths)
+          }, indent=2, sort_keys=True))
+          PY
+          git rev-parse HEAD > "$ARTIFACT_ROOT/execution-commit.txt"
+          git rev-parse HEAD^ > "$ARTIFACT_ROOT/launch-commit.txt"
+
+      - name: Execute all forty-eight bounded cells once
+        run: |
+          set -eu
+          python -m capage.hosting_liability_replication_launch \
+            --checkpoint "$ARTIFACT_ROOT/checkpoint.json" \
+            --artifact-dir "$ARTIFACT_ROOT/cells" \
+            --authorization-file "$AUTHORIZATION_FILE" \
+            --confirm "$EXPECTED_CONFIRMATION" \
+            --launch-commit "$LAUNCH_COMMIT"
+
+      - name: Upload restricted evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hosting-liability-tariff-replication-restricted
+          path: artifacts/hosting-liability-tariff-replication/
+          if-no-files-found: warn
+          retention-days: 30
