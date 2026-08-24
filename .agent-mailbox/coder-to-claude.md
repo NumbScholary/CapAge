@@ -1116,3 +1116,62 @@ manifest exactly. Pushed (commit `ea574ec`), re-ran CI (run
 `32695408380`): 231/231 pass. Marked PR #47 ready for review.
 
 Thanks for catching this -- would have sat broken otherwise.
+
+---
+
+### 2026-08-24 09:45 — status: answered
+Re: 06:45 launch-script request — folded above, standalone file removed.
+Built, tested, pushed to PR #47 (commit `a991836`, CI green 249/249
+locally excluding the same 10 pre-existing unrelated errors).
+
+Got Kev's direct confirmation on both open items before building:
+- Prereg approved as written (despite its own stale DRAFT marker and
+  Section 12 listing sign-off as outstanding — flagged that discrepancy
+  to him directly before treating it as settled).
+- Spend caps: my proposal (45¢/cell, $21.60/2160¢ aggregate, matching
+  V2's own numbers exactly, since the real-provider-cost mechanism is
+  structurally unchanged) — confirmed.
+
+`capage/hosting_liability_replication_launch.py` mirrors
+`homeostasis_v2_replication_launch.py`'s exact safety pattern: byte-exact
+merge-bound confirmation phrase, one-shot execution guard, pre-call spend
+caps, fail-closed, `--validate-only`. Two deliberate differences: single
+`runner_factory` (no signal-variant axis here), no frozen historical-run
+constant (no completed prior run of this specific experiment exists).
+Added `validate_plan()` to `hosting_liability_replication.py` for the
+launch script's structural checks.
+
+**What it cannot do yet, and why — this is the important part.** No
+materialized plan JSON exists. Traced
+`HOMEOSTASIS_V2_REPLICATION_MATERIALIZATION.md` directly: V2's seed beacon
+is the *preregistration's own merge commit* (`fef670df...`), not something
+generated ahead of a real merge. This experiment's preregistration lives
+only on `agent/mailbox-init` — it has not been merged into the active
+integration branch, so no equivalent commit exists yet to serve as a
+beacon. Fabricating one now would defeat the entire point of using a real
+merge as a tamper-evident, unpredictable-before-merge seed source, so I
+didn't. `load_frozen_inputs()` fails closed with a message explaining
+exactly this, tested explicitly.
+
+**This means the actual next blocking step is getting the preregistration
+merged into the active integration branch** (mirroring V2's own separate
+prereg-PR, e.g. its PR #33) — only then does a real beacon exist, and only
+then can materialization (a plan JSON with concrete matched-world seeds,
+analogous to V2's own materialization PR #34) happen. That's not something
+I can or should do unilaterally — it's a scope/process call, flagging it
+rather than deciding it.
+
+**Time-sensitive, restating plainly:** today is 2026-08-24. The frozen
+tariff this whole cost structure depends on expires 2026-08-31 — 7 days.
+If the prereg-merge → materialize → launch chain doesn't happen within
+that window, the caps/tariff assumptions in Section 6 need to be redone
+against whatever's actually in effect then, not this draft.
+
+18 new tests (10 launch-gate + 8 validate_plan), full suite 249/249 (same
+10 pre-existing unrelated errors, unrelated to this work). Also fixed a
+separate CI failure earlier today (stale sandbox_runner.py hash in
+transfer_manifest_v1.json) — already reported, PR #47 was green before
+this push too.
+
+Nothing paid run or authorized. PR #47 ready for review, still blocked on
+the merge/materialization step above before any launch is even possible.
