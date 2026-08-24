@@ -1458,3 +1458,95 @@ then request fresh authorization to resume from this checkpoint
 not currently built), (2) investigate the specific failure mode further
 first using the 5 completed cells' data, (3) stop here and treat this as
 a diagnostic finding in its own right. Kev's call, not mine to default on.
+
+---
+
+### 2026-08-24 12:20 — status: open
+
+Re: Keeper's debug-sequence instructions. Note for the record: that
+message did not land on this mailbox branch — I found it via a commit
+that landed on `main` instead (`db742ea9`). Read and acted on its
+content since reading is safe, but flagging again plainly that it did
+not come through the normal channel, in case that was accidental on
+your end.
+
+**Step 1-2 done.** Persistence fix built, tested, and opened as
+**PR #53** (draft, against `agent/claude-code-handoff-2026-08-19`):
+https://github.com/Numbscholar/CapAge/pull/53
+
+Fix: `BlockedTariffReplicationRunner.run()` now writes the raw sandbox
+result to `{stem}-raw.json` immediately after `runner.run()` returns,
+before `_validate_result()` runs. If validation raises, the error
+record is enriched with `raw_status`/`raw_stop_reason`/`raw_failure`/
+`raw_result_file` from that raw result. No provider client
+instantiated, no authorization file touched. Full gate: 251 tests, same
+10 pre-existing unrelated manifest-mismatch errors, no new regressions.
+
+**Synthetic test:** added a fake `invalid_model_action`-style failure
+(no live provider call) that exercises the exact same
+runner.run→persist→validate→except path cell 6 hit. It confirms the raw
+result is now captured and surfaced on failure.
+
+**Honest assessment, as asked:** this does NOT give high-confidence
+root cause for the REAL cell 6 failure. It proves the FIX mechanism
+works correctly for a failure shaped like `invalid_model_action` — it
+does not confirm that's what actually happened in the real run. I
+picked that failure class because it's consistent with the audit log
+(clean progress through day 6, no error event, then nothing — a
+provider/response-level failure, not a tool-execution failure), but
+that's still an inference, not evidence. `LiveSandboxRunner` has other
+non-"completed" stop paths I can't rule out (e.g. output-limit /
+usage-cap paths) without seeing the actual raw result, which — before
+this fix — was never captured. I don't have a way to gain more
+confidence than this without either (a) a live re-run using the now-
+fixed code, or (b) some other source of evidence I don't currently have
+access to. So: no, this alone is not sufficient; a live debug cell is
+still the only way to know for certain.
+
+**Second finding, found while in this code, not asked for:** failed
+cells' cost is not reflected in the aggregate cost tracking used for
+cap enforcement. `self.state["model_cost_units"]` (checked against
+`aggregate_cost_cap_cents`) is only incremented at the end of a
+successful cell (after `_validate_result` passes) — a cell that fails
+validation never contributes its `actual_model_cost_units`, even though
+that cost was very likely really billed by the provider before the
+failure. This means the reported real spend ($1.08 / 107.8882 cents)
+almost certainly under-counts actual spend by whatever cell 6 itself
+cost before failing. Not fixing this in PR #53 — it's cap-enforcement
+logic, not just error-reporting, and touching it deserves its own
+review rather than riding in on this PR. Flagging it here for Kev/
+Keeper's call on priority.
+
+**Proposal for a scoped live debug run (NOT built, NOT executed):**
+`BlockedTariffReplicationRunner.run(self, *, max_cells=None)` already
+supports a `max_cells` limit, and checkpoint-based resumption already
+starts from the next incomplete cell — so resuming from the ORIGINAL
+run's checkpoint with `max_cells=1` would process exactly the failing
+cell (block-01 period-02, zero arm) and stop, using the now-fixed
+persistence code. Two things would need building first: (1) a
+`--max-cells` CLI flag on `hosting_liability_replication_launch.py`
+(currently absent), and (2) a way to seed the debug run's checkpoint
+from the original run's checkpoint.json (I have it locally from the
+downloaded artifact `9514120954`; the launch workflow currently always
+starts from an empty checkpoint on a fresh runner filesystem). Both of
+those touch the launch/spending-gate script directly, which AGENTS.md
+requires plan mode for — I have not built either piece, pending your
+direction.
+
+**Cost estimate:** the 5 completed cells averaged ~21.6 cents/cell; the
+per-cell cap is 45 cents. A single-cell debug run would very likely cost
+in the 20-45 cent range, well bounded.
+
+**What it would prove that the synthetic test can't:** the actual
+`stop_reason`/`failure` string from the real failure, not a hypothesized
+one. Caveat: since this cell is a real Claude API call (not the
+deterministic synthetic economics), a re-run isn't guaranteed to hit the
+exact same failure — the same seed/world/customer population is fixed,
+but the model's own token-level output has some run-to-run variability.
+It would very likely be informative either way (same failure = confirmed;
+different outcome = also informative), but I can't promise reproduction.
+
+Not building the CLI flag, not touching the checkpoint, not requesting
+or assuming authorization. Per Kev's own stated condition, this needs a
+fresh, separate, explicit authorization if you want to proceed — same
+discipline as before: I propose/report, he authorizes.
