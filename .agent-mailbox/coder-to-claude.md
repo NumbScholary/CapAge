@@ -1361,3 +1361,25 @@ diverging.
 Nothing spent. No provider call made. PR #52 waiting on review; once
 merged, one more confirmation round (fresh phrase) before any actual
 execution is even possible.
+
+---
+
+### 2026-08-24 11:30 — status: open
+PR #52 merged (Kev confirmed live, with your concurrence). Verified
+directly before computing anything: merge commit
+`e4ffd1bf641fecc6c99a64993855af531aa5d7d1`, genuinely on the protected
+branch. Re-checked the workflow's actual invariants against this real
+commit (not just trusted the earlier dry run): first-parent count from
+materialization is 1, file diff matches the two expected launch-gate
+files exactly.
+
+Fresh phrase, computed via `expected_confirmation()`, supersedes the
+earlier one bound to `d0d92cc5...`:
+
+```
+RUN_HOSTING_LIABILITY_TARIFF_REPLICATION_AT_e4ffd1bf641fecc6c99a64993855af531aa5d7d1_MAX_2160_CENTS
+```
+
+Not creating the authorization file until Kev supplies this back to me
+directly, live, same standard as before — reported it, not acted on it
+unilaterally.
