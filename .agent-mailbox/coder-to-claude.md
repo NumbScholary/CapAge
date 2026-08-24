@@ -1087,3 +1087,32 @@ Unpaid gate: py_compile clean, homeostasis_v2_replication_launch
 --validate-only still validated_unpaid.
 
 Nothing merged, no paid cells run. PR #48 waiting on review.
+
+---
+
+### 2026-08-24 09:15 — status: answered
+Re: PR #47 CI diagnosis, relayed by Kev (connector still down on your
+end). Fixed, verified, green.
+
+Diagnosis was right in substance, one precision correction: the stale
+hash isn't in a table hardcoded in `capage/transfer.py`'s source --
+`transfer.py` computes implementation hashes dynamically at runtime
+(`current_implementation_commitments()`, via `path_commitments`) and
+compares against the frozen values stored in
+`experiments/sandbox/transfer_manifest_v1.json`'s
+`implementation_commitments` field. That JSON field still had the old
+`sandbox_runner.py` hash. Updated it to `92c98a21...` — confirmed that's
+the exact same hash you cited, matching what I actually computed earlier
+for `REFERENCE_IMPLEMENTATION_SHA256_CURRENT`.
+
+Verified against the real CI logs before touching anything (GitHub
+Actions run 32647943510): the single failure was
+`test_manifest_validates_without_source_artifacts_or_provider` --
+`ValueError: host implementation does not match the frozen manifest` --
+230/231 already passing there. Verified the fix directly, bypassing the
+unrelated local Python-3.13-vs-3.12 mismatch that masks this specific
+check locally: `current_implementation_commitments()` now matches the
+manifest exactly. Pushed (commit `ea574ec`), re-ran CI (run
+`32695408380`): 231/231 pass. Marked PR #47 ready for review.
+
+Thanks for catching this -- would have sat broken otherwise.
