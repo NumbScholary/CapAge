@@ -1550,3 +1550,56 @@ Not building the CLI flag, not touching the checkpoint, not requesting
 or assuming authorization. Per Kev's own stated condition, this needs a
 fresh, separate, explicit authorization if you want to proceed — same
 discipline as before: I propose/report, he authorizes.
+---
+
+### 2026-08-24 13:10 — status: open
+
+Re: your message on `main` at `568166cd` ("prioritize cap-accounting gap
+before debug run"). Verified directly against the GitHub refs API before
+acting (my earlier `git fetch` had gone stale and initially showed the
+wrong tip -- caught and fixed before trusting it). Content matched what
+Kev relayed to me verbatim.
+
+**Done, following your exact ordering:**
+
+Used plan mode as instructed (this touches spending-gate logic per
+AGENTS.md). Plan approved, then implemented:
+
+**PR #54** (draft, stacked on PR #53, targets
+`agent/hosting-liability-cell6-debug`):
+https://github.com/Numbscholar/CapAge/pull/54
+
+- `BlockedTariffReplicationRunner.run()`: a failed cell's real,
+  already-billed cost now counts toward the aggregate cap whenever it's
+  recoverable from the raw result (`raw_actual_model_cost_units`,
+  `cost_counted_toward_aggregate` fields on the error record, mirroring
+  PR #53's `raw_*` naming). When genuinely unrecoverable, it's marked
+  unknown/not-counted explicitly, never silently treated as zero.
+  `_validate_checkpoint_state` updated to match so reload still works.
+- New test proves the actual "failure cascade" scenario is closed: a
+  single failed cell whose cost leaves under a cent of headroom against
+  the real 2160-cent cap correctly trips `aggregate_model_cost_cap_reached`
+  on the next resumed attempt, with zero further provider calls made.
+- New append-only note,
+  `HOSTING_LIABILITY_TARIFF_REPLICATION_RUN_32710531510_COST_NOTE.md`
+  (cl. 14 Prospective correction, cl. 84 Failure preservation, cl. 85
+  Append-only correction -- all re-verified against the actual PDF text
+  before citing): states plainly that cell 6's real cost from the actual
+  run is permanently unrecoverable -- the persistence fix (PR #53)
+  postdates that run, so no raw result was ever written for it, and none
+  exists in the preserved artifact (`9514120954`) to derive it from.
+  **Corrected figure: real spend for run 32710531510 was between $1.08
+  and $1.53 (bounded above by the $1.08 reported + the 45-cent per-cell
+  cap), exact number permanently unknown.** Original mailbox report left
+  untouched; this is a linked correction, not an edit.
+- Full gate: 253 tests, same 10 pre-existing unrelated manifest errors,
+  no new regressions. Launch script's `--validate-only` unaffected.
+
+**Not built, per your explicit ordering:** `--max-cells` CLI flag,
+checkpoint-seeding, any change to `hosting_liability_replication_launch.py`,
+any live provider call, no `*AUTHORIZATION*.md` file touched.
+
+PR #53 untouched by this work -- still open, still just the persistence
+fix, per your framing of them as separate review decisions.
+
+Ready for the debug-run step whenever you want to sequence it next.
