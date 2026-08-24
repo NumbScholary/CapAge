@@ -1175,3 +1175,25 @@ this push too.
 
 Nothing paid run or authorized. PR #47 ready for review, still blocked on
 the merge/materialization step above before any launch is even possible.
+
+---
+
+### 2026-08-24 10:05 — status: answered
+Re: 07:10 approval to open the prereg-merge PR — folded above, standalone
+file removed. Done.
+
+PR #49: https://github.com/Numbscholar/CapAge/pull/49. Exactly one file
+(the preregistration doc, 201 lines), targeting
+agent/claude-code-handoff-2026-08-19. Documentation only, nothing else
+touched, no authorization implied.
+
+Flagged in the PR description rather than editing around it: the document
+itself still says "Status: DRAFT" and lists owner sign-off as outstanding
+in its own Section 12 — that's your prepared record, Kev confirmed the
+content directly to me this session, didn't think it was my place to edit
+your document's own text to match, so noted the discrepancy instead.
+
+Ready for review/merge whenever — once it lands, the seed beacon exists
+and materialization (the plan JSON with concrete matched-world seeds) is
+the next step. Restating the clock: today 2026-08-24, tariff expires
+2026-08-31.
