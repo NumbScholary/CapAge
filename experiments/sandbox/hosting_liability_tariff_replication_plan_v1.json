@@ -1,0 +1,501 @@
+{
+  "arm_hosting_cost_cents_per_day": {
+    "high": 135,
+    "low": 15,
+    "medium": 45,
+    "zero": 0
+  },
+  "arms": [
+    "zero",
+    "low",
+    "medium",
+    "high"
+  ],
+  "automatic_provider_retries": false,
+  "blocks": [
+    {
+      "block_index": 1,
+      "customer_digest_sha256": "61e4bc674e23c1982afa4cd4eca46dea5ef7e1b11b97ca2cb71d534dd8c8fca8",
+      "customer_population_seed": 7053970068247658904,
+      "execution_order": [
+        "high",
+        "zero",
+        "low",
+        "medium"
+      ],
+      "periods": [
+        {
+          "block_index": 1,
+          "execution_order": [
+            "high",
+            "zero",
+            "low",
+            "medium"
+          ],
+          "period_index": 1,
+          "world_digest_sha256": "f1eccf83461cb9407e53badc94ee2c3bb38c99d80d29330d8800e0bec4736431",
+          "world_seed": 17432536420368300352
+        },
+        {
+          "block_index": 1,
+          "execution_order": [
+            "high",
+            "zero",
+            "low",
+            "medium"
+          ],
+          "period_index": 2,
+          "world_digest_sha256": "bd55fa89a53cd4be4053714193341d4adb4b3a871f22cae5e8a91d269f816e6e",
+          "world_seed": 13643086115278476478
+        },
+        {
+          "block_index": 1,
+          "execution_order": [
+            "high",
+            "zero",
+            "low",
+            "medium"
+          ],
+          "period_index": 3,
+          "world_digest_sha256": "8c68fb6bfe91a6046781a47462991f43e02ae1e12a3743dec6b9e1e440e414bb",
+          "world_seed": 10117613004138849796
+        }
+      ]
+    },
+    {
+      "block_index": 2,
+      "customer_digest_sha256": "1e1b6ddff8a5570db184d80a82aa5497d12521f84221b1e165b9c4d34572efdb",
+      "customer_population_seed": 2169448454225745677,
+      "execution_order": [
+        "low",
+        "medium",
+        "high",
+        "zero"
+      ],
+      "periods": [
+        {
+          "block_index": 2,
+          "execution_order": [
+            "low",
+            "medium",
+            "high",
+            "zero"
+          ],
+          "period_index": 1,
+          "world_digest_sha256": "741a012125fb1dafda05d5abba5e3fa0df15f7c7511d042682718b78fe387730",
+          "world_seed": 8366000499676880303
+        },
+        {
+          "block_index": 2,
+          "execution_order": [
+            "low",
+            "medium",
+            "high",
+            "zero"
+          ],
+          "period_index": 2,
+          "world_digest_sha256": "6b83bc5d0012bdc974d5a389704e882645322195fde3bb8cf19dc1370bb1f154",
+          "world_seed": 7747242891626593737
+        },
+        {
+          "block_index": 2,
+          "execution_order": [
+            "low",
+            "medium",
+            "high",
+            "zero"
+          ],
+          "period_index": 3,
+          "world_digest_sha256": "443041c5c8bd618539f1a5512879d38e7191b760f6e84a42fb493b67a74bd9b8",
+          "world_seed": 4913499511193428357
+        }
+      ]
+    },
+    {
+      "block_index": 3,
+      "customer_digest_sha256": "099a82def902cc8e8a85d917f3fe232df51ee3a20e416ea2322a26ac81eff361",
+      "customer_population_seed": 692009386926853262,
+      "execution_order": [
+        "zero",
+        "low",
+        "medium",
+        "high"
+      ],
+      "periods": [
+        {
+          "block_index": 3,
+          "execution_order": [
+            "zero",
+            "low",
+            "medium",
+            "high"
+          ],
+          "period_index": 1,
+          "world_digest_sha256": "75fa828c64ae967ca20edc49cd8abdcb21b834913677b5bd151132a7b1ffad85",
+          "world_seed": 8501250786111428220
+        },
+        {
+          "block_index": 3,
+          "execution_order": [
+            "zero",
+            "low",
+            "medium",
+            "high"
+          ],
+          "period_index": 2,
+          "world_digest_sha256": "e3238b4101f7585db7c7d79b989e26b73733bb648dd365bd2fbe2ee2af27b129",
+          "world_seed": 16367078582116636765
+        },
+        {
+          "block_index": 3,
+          "execution_order": [
+            "zero",
+            "low",
+            "medium",
+            "high"
+          ],
+          "period_index": 3,
+          "world_digest_sha256": "f13f27c657fb2ca10a817c772ce77825c1e3d3b82f91b2fc38ae7813afe8cdfd",
+          "world_seed": 17383656819506490529
+        }
+      ]
+    },
+    {
+      "block_index": 4,
+      "customer_digest_sha256": "42b9cffb1e5485d2dec95b2e5edcadb1ce82e83eca8aa32cda6441bda5c8ca8e",
+      "customer_population_seed": 4808102754647311826,
+      "execution_order": [
+        "medium",
+        "high",
+        "zero",
+        "low"
+      ],
+      "periods": [
+        {
+          "block_index": 4,
+          "execution_order": [
+            "medium",
+            "high",
+            "zero",
+            "low"
+          ],
+          "period_index": 1,
+          "world_digest_sha256": "0ddcfebbc28e9a3eac7bddf03b0a2c05252dc30ef08856c44dfe631dac0de3e5",
+          "world_seed": 998953299745872446
+        },
+        {
+          "block_index": 4,
+          "execution_order": [
+            "medium",
+            "high",
+            "zero",
+            "low"
+          ],
+          "period_index": 2,
+          "world_digest_sha256": "4c5b9f9e13735bdaf0a3a1faf4853e46415ea18c4289df1206165effe2a83f79",
+          "world_seed": 5502166871043169242
+        },
+        {
+          "block_index": 4,
+          "execution_order": [
+            "medium",
+            "high",
+            "zero",
+            "low"
+          ],
+          "period_index": 3,
+          "world_digest_sha256": "de51527d9539223381a1d4f150249fb47320747f05f53922e2a7c11ccb9d236c",
+          "world_seed": 16019676048861504051
+        }
+      ]
+    }
+  ],
+  "design": {
+    "block_count": 4,
+    "matched_world_count": 12,
+    "paid_cell_count": 48,
+    "periods_per_block": 3
+  },
+  "frozen_config": {
+    "assessor_version": "deterministic-artifact-v2",
+    "effort": "medium",
+    "horizon_days_per_period": 30,
+    "market_profile": "baseline-v1",
+    "max_decisions_per_cell": 25,
+    "max_output_tokens": 1024,
+    "model": "claude-sonnet-5",
+    "starting_capital_cents_per_block": 25000,
+    "token_tariff": {
+      "input_cents_per_million_tokens": 200,
+      "name": "anthropic-sonnet-5-introductory-2026-08",
+      "output_cents_per_million_tokens": 1000,
+      "valid_through": "2026-08-31"
+    }
+  },
+  "matched_worlds": [
+    {
+      "arms_exogenously_equal": true,
+      "block_index": 1,
+      "cost_policy_commitment_by_arm": {
+        "high": "efadb68e62e58a436db64c4c61f0ae6f0be11a4a9ebd6c9b2da4481c88b59900",
+        "low": "276d8ee406d9c0a01bee8dc4587ecf3a804e3f797e6787cfedc4b8475f65caeb",
+        "medium": "0aa2ae6828d44e16309a902f67a731fbf3bc0ccd02cdc0ffa96cb2826f020d01",
+        "zero": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42"
+      },
+      "customer_population_seed": 7053970068247658904,
+      "execution_order": [
+        "high",
+        "zero",
+        "low",
+        "medium"
+      ],
+      "exogenous_world_sha256": "bd5aaa6b6a2d5c75a07ee108c18ec7e3d32fb661c3206cc11992015ea0d986a4",
+      "period_index": 1,
+      "standardized_world_sha256": "63aa07b78ae95cafcc108b1b48872d030b56bea4fdd7a9987d075ecfebbe4a43",
+      "world_seed": 17432536420368300352
+    },
+    {
+      "arms_exogenously_equal": true,
+      "block_index": 1,
+      "cost_policy_commitment_by_arm": {
+        "high": "efadb68e62e58a436db64c4c61f0ae6f0be11a4a9ebd6c9b2da4481c88b59900",
+        "low": "276d8ee406d9c0a01bee8dc4587ecf3a804e3f797e6787cfedc4b8475f65caeb",
+        "medium": "0aa2ae6828d44e16309a902f67a731fbf3bc0ccd02cdc0ffa96cb2826f020d01",
+        "zero": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42"
+      },
+      "customer_population_seed": 7053970068247658904,
+      "execution_order": [
+        "high",
+        "zero",
+        "low",
+        "medium"
+      ],
+      "exogenous_world_sha256": "5832d3fb9dd094fdd16914830e6fe5200957a2a6d39ba2a11ef72e78829cc3bf",
+      "period_index": 2,
+      "standardized_world_sha256": "f4c760a091a93f38e6e9463653e36461a47690ea1fc57bcf32a16df4e3403757",
+      "world_seed": 13643086115278476478
+    },
+    {
+      "arms_exogenously_equal": true,
+      "block_index": 1,
+      "cost_policy_commitment_by_arm": {
+        "high": "efadb68e62e58a436db64c4c61f0ae6f0be11a4a9ebd6c9b2da4481c88b59900",
+        "low": "276d8ee406d9c0a01bee8dc4587ecf3a804e3f797e6787cfedc4b8475f65caeb",
+        "medium": "0aa2ae6828d44e16309a902f67a731fbf3bc0ccd02cdc0ffa96cb2826f020d01",
+        "zero": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42"
+      },
+      "customer_population_seed": 7053970068247658904,
+      "execution_order": [
+        "high",
+        "zero",
+        "low",
+        "medium"
+      ],
+      "exogenous_world_sha256": "456cdbb25eab8ec90c6d051f420e2af3c8072e8a5e663e981849c9710cc40d34",
+      "period_index": 3,
+      "standardized_world_sha256": "39154a2eef4d9b3d613f756e645de5674544560a0ec0216cebae77f51e01299a",
+      "world_seed": 10117613004138849796
+    },
+    {
+      "arms_exogenously_equal": true,
+      "block_index": 2,
+      "cost_policy_commitment_by_arm": {
+        "high": "efadb68e62e58a436db64c4c61f0ae6f0be11a4a9ebd6c9b2da4481c88b59900",
+        "low": "276d8ee406d9c0a01bee8dc4587ecf3a804e3f797e6787cfedc4b8475f65caeb",
+        "medium": "0aa2ae6828d44e16309a902f67a731fbf3bc0ccd02cdc0ffa96cb2826f020d01",
+        "zero": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42"
+      },
+      "customer_population_seed": 2169448454225745677,
+      "execution_order": [
+        "low",
+        "medium",
+        "high",
+        "zero"
+      ],
+      "exogenous_world_sha256": "b526207d333737d40aee1d980cac9b11bfac588bcc06d61cf0bed188c125c344",
+      "period_index": 1,
+      "standardized_world_sha256": "4f9f712ee42a7ce6efbd8005d3180471c86ccdf41d6d3303273288d14aa7d810",
+      "world_seed": 8366000499676880303
+    },
+    {
+      "arms_exogenously_equal": true,
+      "block_index": 2,
+      "cost_policy_commitment_by_arm": {
+        "high": "efadb68e62e58a436db64c4c61f0ae6f0be11a4a9ebd6c9b2da4481c88b59900",
+        "low": "276d8ee406d9c0a01bee8dc4587ecf3a804e3f797e6787cfedc4b8475f65caeb",
+        "medium": "0aa2ae6828d44e16309a902f67a731fbf3bc0ccd02cdc0ffa96cb2826f020d01",
+        "zero": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42"
+      },
+      "customer_population_seed": 2169448454225745677,
+      "execution_order": [
+        "low",
+        "medium",
+        "high",
+        "zero"
+      ],
+      "exogenous_world_sha256": "8cf30aea6bd2fadab1d7f03787a9d2517d891b73ff7734ee64fde2c7351374ee",
+      "period_index": 2,
+      "standardized_world_sha256": "260d034407362b88bf91479c0517e44e3a7ffb171eb18fae0314d1fe4a5bd7cb",
+      "world_seed": 7747242891626593737
+    },
+    {
+      "arms_exogenously_equal": true,
+      "block_index": 2,
+      "cost_policy_commitment_by_arm": {
+        "high": "efadb68e62e58a436db64c4c61f0ae6f0be11a4a9ebd6c9b2da4481c88b59900",
+        "low": "276d8ee406d9c0a01bee8dc4587ecf3a804e3f797e6787cfedc4b8475f65caeb",
+        "medium": "0aa2ae6828d44e16309a902f67a731fbf3bc0ccd02cdc0ffa96cb2826f020d01",
+        "zero": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42"
+      },
+      "customer_population_seed": 2169448454225745677,
+      "execution_order": [
+        "low",
+        "medium",
+        "high",
+        "zero"
+      ],
+      "exogenous_world_sha256": "ae8f78e1305fa3550abfcb7bf3cbc71fa81658776394a91e938b058e9c4b63bc",
+      "period_index": 3,
+      "standardized_world_sha256": "5c365ec56313d696fa68447eecc2dc44a41a96bbfa38d5f61135b2f1ca2f629e",
+      "world_seed": 4913499511193428357
+    },
+    {
+      "arms_exogenously_equal": true,
+      "block_index": 3,
+      "cost_policy_commitment_by_arm": {
+        "high": "efadb68e62e58a436db64c4c61f0ae6f0be11a4a9ebd6c9b2da4481c88b59900",
+        "low": "276d8ee406d9c0a01bee8dc4587ecf3a804e3f797e6787cfedc4b8475f65caeb",
+        "medium": "0aa2ae6828d44e16309a902f67a731fbf3bc0ccd02cdc0ffa96cb2826f020d01",
+        "zero": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42"
+      },
+      "customer_population_seed": 692009386926853262,
+      "execution_order": [
+        "zero",
+        "low",
+        "medium",
+        "high"
+      ],
+      "exogenous_world_sha256": "f71d43b6b0782f8ce7bcd4e0368d1999fbfdc4b1e2d83f48eb6d05100aae3694",
+      "period_index": 1,
+      "standardized_world_sha256": "6c6f7b0304b7046400939d4300554bd9df5bfa1fcf870a3ba6bacb9aa64fbd34",
+      "world_seed": 8501250786111428220
+    },
+    {
+      "arms_exogenously_equal": true,
+      "block_index": 3,
+      "cost_policy_commitment_by_arm": {
+        "high": "efadb68e62e58a436db64c4c61f0ae6f0be11a4a9ebd6c9b2da4481c88b59900",
+        "low": "276d8ee406d9c0a01bee8dc4587ecf3a804e3f797e6787cfedc4b8475f65caeb",
+        "medium": "0aa2ae6828d44e16309a902f67a731fbf3bc0ccd02cdc0ffa96cb2826f020d01",
+        "zero": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42"
+      },
+      "customer_population_seed": 692009386926853262,
+      "execution_order": [
+        "zero",
+        "low",
+        "medium",
+        "high"
+      ],
+      "exogenous_world_sha256": "19e03b68ee9ced6552c8f70dfd0f935fbf602388e40dc7bc041c4638850f62fc",
+      "period_index": 2,
+      "standardized_world_sha256": "4a2e1fae056dc5d7c6e87e6ab3066277ae858f95dae45d84f6059dbd94b2dbb3",
+      "world_seed": 16367078582116636765
+    },
+    {
+      "arms_exogenously_equal": true,
+      "block_index": 3,
+      "cost_policy_commitment_by_arm": {
+        "high": "efadb68e62e58a436db64c4c61f0ae6f0be11a4a9ebd6c9b2da4481c88b59900",
+        "low": "276d8ee406d9c0a01bee8dc4587ecf3a804e3f797e6787cfedc4b8475f65caeb",
+        "medium": "0aa2ae6828d44e16309a902f67a731fbf3bc0ccd02cdc0ffa96cb2826f020d01",
+        "zero": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42"
+      },
+      "customer_population_seed": 692009386926853262,
+      "execution_order": [
+        "zero",
+        "low",
+        "medium",
+        "high"
+      ],
+      "exogenous_world_sha256": "19a3bd4b4855a0083dc65f10ade2701bef1037e6896387a093e8cfcb5c3299ec",
+      "period_index": 3,
+      "standardized_world_sha256": "35e5d290d1a659403afd39d32bd39d38704a652aa6712237ad4daf36bbbedde4",
+      "world_seed": 17383656819506490529
+    },
+    {
+      "arms_exogenously_equal": true,
+      "block_index": 4,
+      "cost_policy_commitment_by_arm": {
+        "high": "efadb68e62e58a436db64c4c61f0ae6f0be11a4a9ebd6c9b2da4481c88b59900",
+        "low": "276d8ee406d9c0a01bee8dc4587ecf3a804e3f797e6787cfedc4b8475f65caeb",
+        "medium": "0aa2ae6828d44e16309a902f67a731fbf3bc0ccd02cdc0ffa96cb2826f020d01",
+        "zero": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42"
+      },
+      "customer_population_seed": 4808102754647311826,
+      "execution_order": [
+        "medium",
+        "high",
+        "zero",
+        "low"
+      ],
+      "exogenous_world_sha256": "b8ded0a7419c8900d827b260f7642f468e18bb50c222fb5b8e5d0940cb5a3498",
+      "period_index": 1,
+      "standardized_world_sha256": "57aaf38010b74ef8ac1606b7b44c9e0fb7f9ee3b1f2a812abd54ba5630ff5b53",
+      "world_seed": 998953299745872446
+    },
+    {
+      "arms_exogenously_equal": true,
+      "block_index": 4,
+      "cost_policy_commitment_by_arm": {
+        "high": "efadb68e62e58a436db64c4c61f0ae6f0be11a4a9ebd6c9b2da4481c88b59900",
+        "low": "276d8ee406d9c0a01bee8dc4587ecf3a804e3f797e6787cfedc4b8475f65caeb",
+        "medium": "0aa2ae6828d44e16309a902f67a731fbf3bc0ccd02cdc0ffa96cb2826f020d01",
+        "zero": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42"
+      },
+      "customer_population_seed": 4808102754647311826,
+      "execution_order": [
+        "medium",
+        "high",
+        "zero",
+        "low"
+      ],
+      "exogenous_world_sha256": "b1a33dc416f1fefb55b53764ad82a1c497d3b08f8de384e5d7dcf49ab49363b0",
+      "period_index": 2,
+      "standardized_world_sha256": "c8c6f1c3ed326acca23c51077b49e1c340f67da4a85035ead8877830b3031b0e",
+      "world_seed": 5502166871043169242
+    },
+    {
+      "arms_exogenously_equal": true,
+      "block_index": 4,
+      "cost_policy_commitment_by_arm": {
+        "high": "efadb68e62e58a436db64c4c61f0ae6f0be11a4a9ebd6c9b2da4481c88b59900",
+        "low": "276d8ee406d9c0a01bee8dc4587ecf3a804e3f797e6787cfedc4b8475f65caeb",
+        "medium": "0aa2ae6828d44e16309a902f67a731fbf3bc0ccd02cdc0ffa96cb2826f020d01",
+        "zero": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42"
+      },
+      "customer_population_seed": 4808102754647311826,
+      "execution_order": [
+        "medium",
+        "high",
+        "zero",
+        "low"
+      ],
+      "exogenous_world_sha256": "2547d6fd6e66e5fc6882a9d33fe8e2f22b3d36f81ed00bda821a025440f4dc91",
+      "period_index": 3,
+      "standardized_world_sha256": "903d0c82ddc2b67fc6d802cd515fc211e92791e164ccb765c88856e4665ba3c5",
+      "world_seed": 16019676048861504051
+    }
+  ],
+  "maximum_budget": {
+    "cells": 48,
+    "per_cell_cost_cap_cents": 45,
+    "provider_cost_cap_cents": 2160
+  },
+  "preregistration_path": "experiments/sandbox/HOSTING_LIABILITY_TARIFF_REPLICATION_PREREG_v1.md",
+  "provider_calls_authorized": false,
+  "schema_version": "capage-hosting-liability-dose-response-plan-v1",
+  "seed_beacon": "728e8c533b2724ce0b5ff0de0942559ff0046623",
+  "seed_beacon_source": "PR #49 merge commit (preregistration into agent/claude-code-handoff-2026-08-19)",
+  "spend_authorized": false,
+  "workflow_present": false
+}

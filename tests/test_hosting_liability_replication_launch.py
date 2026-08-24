@@ -128,22 +128,36 @@ class HostingLiabilityLaunchGateTests(unittest.TestCase):
             "experiments/sandbox/HOSTING_LIABILITY_TARIFF_REPLICATION_AUTHORIZATION.md",
         )
 
-    def test_load_frozen_inputs_fails_closed_when_plan_not_yet_materialized(self):
-        # Expected current state, not a bug: this experiment's preregistration
-        # has not been merged into the active integration branch yet, so no
-        # seed_beacon exists to materialize a plan from (mirrors
-        # HOMEOSTASIS_V2_REPLICATION_MATERIALIZATION.md's approach -- the
-        # beacon must come from a real merge commit).
-        with self.assertRaisesRegex(FileNotFoundError, "does not exist yet"):
-            load_frozen_inputs(self.root)
+    def test_load_frozen_inputs_loads_the_real_materialized_plan(self):
+        # As of 2026-08-24: PR #49 (preregistration) and PR #47 (code) are
+        # both merged, and materialization has run against PR #49's own
+        # merge commit as the seed beacon -- mirrors
+        # HOMEOSTASIS_V2_REPLICATION_MATERIALIZATION.md's approach exactly.
+        # This is no longer the "not yet materialized" state.
+        plan = load_frozen_inputs(self.root)
+        self.assertFalse(plan["provider_calls_authorized"])
+        self.assertFalse(plan["spend_authorized"])
+        self.assertEqual(plan["maximum_budget"]["provider_cost_cap_cents"], 2_160)
+        self.assertEqual(plan["maximum_budget"]["per_cell_cost_cap_cents"], 45)
+        self.assertEqual(len(plan["matched_worlds"]), 12)
 
-    def test_validate_only_requires_missing_arguments_check_to_run_first(self):
-        # main() must reach load_frozen_inputs (and therefore fail closed on
-        # the not-yet-materialized plan) before it would ever get to
-        # argument-completeness checks for a real (non-validate-only) launch
-        # -- validate-only is reachable with no other flags at all.
-        with self.assertRaisesRegex(FileNotFoundError, "does not exist yet"):
-            launch.main(["--validate-only"])
+    def test_validate_only_returns_validated_unpaid_against_the_real_plan(self):
+        result = launch.main(["--validate-only"])
+        self.assertEqual(result, 0)
+
+    def test_real_factories_recompute_all_matched_worlds_without_provider(self):
+        from capage.hosting_liability_replication import materialize_matched_worlds
+
+        plan = load_frozen_inputs(self.root)
+        _, world_factory, runner_class, _, _ = launch.real_factories(plan)
+        recomputed = [
+            dict(r)
+            for r in materialize_matched_worlds(
+                plan["seed_beacon"], plan["frozen_config"], world_factory
+            )
+        ]
+        self.assertEqual(recomputed, plan["matched_worlds"])
+        self.assertIsNotNone(runner_class)
 
 
 if __name__ == "__main__":
