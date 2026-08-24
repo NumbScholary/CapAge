@@ -25,6 +25,7 @@ BEACON = "c" * 40
 class FakeTariffRunner:
     calls = []
     fail_cells = set()
+    malformed_action_cells = set()
 
     def __init__(self, config, client, *, audit_path, continuity_state):
         self.config = config
@@ -41,6 +42,27 @@ class FakeTariffRunner:
         )
         if self.config.run_name in FakeTariffRunner.fail_cells:
             raise RuntimeError("synthetic provider interruption")
+        if self.config.run_name in FakeTariffRunner.malformed_action_cells:
+            # Mirrors the exact shape LiveSandboxRunner.run() returns for an
+            # invalid_model_action stop (sandbox_runner.py's own
+            # "model requested unknown tool" path) -- .run() returns
+            # normally (no exception), but status != "completed", which is
+            # exactly the case _validate_result() correctly rejects and
+            # that the raw-result persistence fix exists to preserve.
+            serialized_config = asdict(self.config)
+            serialized_config["tariff"] = asdict(self.config.tariff)
+            return {
+                "schema_version": "capage-live-sandbox-result-v1",
+                "status": "failed",
+                "stop_reason": "invalid_model_action",
+                "failure": "model requested unknown tool: sandbox_delete_customer",
+                "config": serialized_config,
+                "decision_count": 3,
+                "actual_model_cost_units": 3_500_000,
+                "actual_model_cost_cents_unrounded": 3.5,
+                "actual_model_cost_cents_billed": 4,
+                "transcript": [],
+            }
         world = EconomicSandbox(
             self.config.seed,
             horizon_days=self.config.horizon_days,
@@ -139,6 +161,7 @@ class BlockedTariffReplicationRunnerTests(unittest.TestCase):
     def setUp(self):
         FakeTariffRunner.calls = []
         FakeTariffRunner.fail_cells = set()
+        FakeTariffRunner.malformed_action_cells = set()
         self.plan = _plan()
         self.tariff = TokenTariff("test-tariff", 200, 1000)
 
@@ -235,6 +258,49 @@ class BlockedTariffReplicationRunnerTests(unittest.TestCase):
         self.assertEqual(state["status"], "stopped")
         self.assertEqual(state["stop_reason"], "provider_or_runner_error")
         self.assertEqual(len(state["errors"]), 1)
+
+    def test_malformed_action_result_is_persisted_raw_before_validation_rejects_it(self):
+        # Synthetic reproduction of the real 2026-08-24 cell-6 failure class
+        # (block-01 period-02 zero, run 32710531510): the underlying
+        # sandbox run returns normally with status != "completed" rather
+        # than raising -- exercises the persistence fix without any real
+        # provider call. If this alone explains what a genuine
+        # invalid_model_action-shaped failure looks like end to end, that's
+        # useful confirmation on its own, independent of whatever the real
+        # cell 6 failure specifically was.
+        with tempfile.TemporaryDirectory() as directory:
+            runner = self.runner(directory)
+            block, period, arm = next(iter(ordered_cells(BEACON)))
+            failing_stem = f"hosting-liability-dose-response-b{block.block_index:02d}-p{period.period_index:02d}-{arm}"
+            FakeTariffRunner.malformed_action_cells = {failing_stem}
+            state = runner.run()
+            raw_path = Path(directory) / "cells" / f"{failing_stem}-raw.json"
+            official_path = Path(directory) / "cells" / f"{failing_stem}.json"
+            # Read everything needed before the temp directory is cleaned
+            # up on exiting this "with" block.
+            raw_exists = raw_path.exists()
+            official_exists = official_path.exists()
+            raw_content = json.loads(raw_path.read_text()) if raw_exists else None
+        self.assertEqual(state["status"], "stopped")
+        self.assertEqual(state["stop_reason"], "provider_or_runner_error")
+        self.assertEqual(len(state["errors"]), 1)
+        error = state["errors"][0]
+        self.assertEqual(error["error"], "cell did not complete")
+        self.assertEqual(error["raw_status"], "failed")
+        self.assertEqual(error["raw_stop_reason"], "invalid_model_action")
+        self.assertIn("unknown tool", error["raw_failure"])
+        self.assertEqual(error["raw_result_file"], f"{failing_stem}-raw.json")
+        # The key fix under test: the raw result actually exists on disk
+        # with the real diagnostic fields, not just referenced by name.
+        self.assertTrue(raw_exists)
+        self.assertEqual(raw_content["status"], "failed")
+        self.assertEqual(raw_content["stop_reason"], "invalid_model_action")
+        self.assertEqual(
+            raw_content["failure"], "model requested unknown tool: sandbox_delete_customer"
+        )
+        # The "official" result file must NOT exist -- only validated
+        # results belong there, unchanged from before this fix.
+        self.assertFalse(official_exists)
 
     def test_wrong_arm_set_in_plan_is_rejected(self):
         bad_plan = _plan()
