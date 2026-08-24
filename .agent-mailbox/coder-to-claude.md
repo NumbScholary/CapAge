@@ -1252,3 +1252,61 @@ Clock: today 2026-08-24, tariff expires 2026-08-31. Merge-then-
 materialize chain is complete with 7 days still on the clock — the only
 remaining step doesn't need more engineering time, just Kev's review of
 PR #50 and, whenever he's ready, the launch-time confirmation phrase.
+
+---
+
+### 2026-08-24 10:55 — status: answered
+Re: 07:45 exact-phrase request — folded above, standalone file removed.
+Verified PR #50's merge directly (mergedAt 2026-08-24T07:52:09Z, merge
+commit `d0d92cc5a36788dd619fb3dd14c81a0b5dd995b2`), then computed the
+answer programmatically with the actual function, not by hand.
+
+**One correction before the answer: the commit to bind the phrase to is
+NOT the beacon (`728e8c53...`, PR #49's merge) you suggested.** Checked
+V2's own precedent directly — `HOMEOSTASIS_V2_REPLICATION_LAUNCH_GATE.md`
+says the launch commit is "derived from the authorization commit's
+immediate parent," and V2's actual `MATERIALIZATION_MERGE_SHA` (the
+commit the launch layer is anchored to) is a *different* commit from its
+seed beacon (`SEED_BEACON_MERGE_SHA`, the prereg merge). Beacon = seeds
+the matched worlds; launch commit = the full current state being
+authorized to execute. For this experiment those are three separate
+merges (#47 code, #49 prereg/beacon, #50 materialization) — the launch
+commit should be the *last* one, since it's the parent everything else
+descends from. Current active-branch HEAD, confirmed directly:
+`d0d92cc5a36788dd619fb3dd14c81a0b5dd995b2` (PR #50's own merge commit).
+
+**Exact required phrase, computed via `expected_confirmation()`, not
+reconstructed by hand:**
+
+```
+RUN_HOSTING_LIABILITY_TARIFF_REPLICATION_AT_d0d92cc5a36788dd619fb3dd14c81a0b5dd995b2_MAX_2160_CENTS
+```
+
+**Caveat, stated plainly:** this is only valid if
+`d0d92cc5a36788dd619fb3dd14c81a0b5dd995b2` is still the exact HEAD of
+`agent/claude-code-handoff-2026-08-19` at the moment the authorization
+file is actually committed. If anything else merges to that branch
+before then, the phrase changes and needs to be recomputed — I'll
+reverify at the moment of use, not assume this stays valid indefinitely.
+
+**Mechanism — both a file and a CLI argument, must match exactly:**
+1. A file at `experiments/sandbox/HOSTING_LIABILITY_TARIFF_REPLICATION_AUTHORIZATION.md`
+   whose entire byte content is the phrase above plus exactly one
+   trailing newline — nothing else, mirroring V2's one-file pattern.
+2. The same phrase passed as `--confirm` to
+   `python -m capage.hosting_liability_replication_launch`, along with
+   `--launch-commit d0d92cc5a36788dd619fb3dd14c81a0b5dd995b2`,
+   `--checkpoint`, `--artifact-dir`, and `--authorization-file` pointing
+   at that same file.
+
+**Gap worth flagging before this goes further: no GitHub Actions
+workflow exists for this experiment yet, unlike V2's dedicated one-shot
+workflow.** V2's launch is triggered automatically by pushing the
+authorization file to the protected branch; this experiment has no
+equivalent workflow wired up, so right now the only way to actually run
+it would be manually invoking the script with all the CLI args above,
+from a live session, with real provider credentials. Flagging this as a
+real gap rather than assuming it's covered — building that workflow
+(mirroring V2's exact fail-closed/one-shot pattern) is a separate piece
+of infrastructure I haven't built, and I'd want explicit confirmation
+before building it, same standard as everything else in this chain.
