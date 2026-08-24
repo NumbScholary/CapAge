@@ -1,7 +1,9 @@
 # Hosting Liability Tariff Dose-Response Replication -- Preregistration v1
 
-Status: DRAFT for owner review. Not yet approved for launch. Nothing in this
-document authorizes spending, provider calls, or a paid run.
+Status: APPROVED by owner (Kev), 2026-08-24. Approval covers the
+preregistration design as written; it does NOT itself authorize spending,
+provider calls, or a paid run -- a separate, explicit, byte-exact owner
+authorization phrase is still required at actual launch time (Section 12).
 
 Repository: Numbscholar/CapAge
 Branch: PR #47 (code merged/ready, CI green 231/231 as of 2026-08-24)
@@ -92,14 +94,17 @@ disappear from totals and bias the category fractions.
 
 - Model: claude-sonnet-5, medium effort (consistent with prior CapAge
   frozen replications)
-- Per-cell cap: to be confirmed against the frozen tariff schedule in
-  effect at launch time (see Section 8 -- time sensitivity)
-- Aggregate cap: to be set explicitly before launch, not left implicit
-- Prior-based cost estimate: previously described by Coder as smaller in
-  scope than the original idle-days design, which itself fell within the
-  $14-22 range already approved in principle for this class of
-  experiment. A refreshed, exact estimate should be produced at
-  preregistration sign-off rather than relied on from memory.
+- Per-cell cap: $0.45, matching the V2 replication's own per-cell cap.
+  Confirmed owner decision (2026-08-24): the real provider-cost-generating
+  mechanism (same model, same effort level, same decision horizon) is
+  structurally unchanged from V2 -- only the synthetic hosting tariff
+  differs between arms, and that tariff is simulated ledger accounting,
+  not real provider spend, so it does not itself change real token costs.
+- Aggregate cap: $21.60 for 48 cells (48 x $0.45), matching V2's
+  aggregate-cap derivation exactly.
+- These caps assume the frozen tariff schedule in effect as of
+  2026-08-24; see Section 8 for the 2026-08-31 expiry and its
+  implications for anything that slips past that date.
 
 ## 7. What is already built and tested (per Coder, verified via CI)
 
@@ -112,28 +117,30 @@ disappear from totals and bias the category fractions.
   3 simulated days produced an exact 135-cent balance reduction).
 - `BlockedReplicationRunner` generalized for 4 tariff arms.
 - 4-arm balanced ordering scheme (Latin-square rotation).
-- All 23 experiment-specific tests passing; full suite 231/231 as of the
-  transfer_manifest_v1.json stale-hash fix landed 2026-08-24.
+- Launch/authorization script (`capage/hosting_liability_replication_launch.py`),
+  mirroring `homeostasis_v2_replication_launch.py`'s safety pattern:
+  byte-exact confirmation phrase, one-shot execution guard, pre-call
+  spend caps, fail-closed, `--validate-only` path. Built and pushed to
+  PR #47, CI green.
+- All experiment-specific tests passing; full suite 249/249 as of
+  2026-08-24, minus the same 10 pre-existing unrelated failures present
+  on the base branch.
 
-## 8. What is NOT yet built (explicitly, per Coder's own status report)
+## 8. What is NOT yet built / not yet in place
 
-- No `*AUTHORIZATION*.md` file or launch script exists for this
-  experiment. There is currently no mechanism to actually launch a paid
-  run, by design -- Coder deliberately did not bundle a launch/
-  authorization layer into the code build, treating preregistration and
-  launch authorization as requiring their own explicit review rather
-  than shipping alongside feature code.
-- This document is that missing preregistration. A separate launch
-  script mirroring `homeostasis_v2_replication_launch.py`'s pattern
-  (exact-byte confirmation phrase, spend caps enforced pre-call,
-  fail-closed) is the second remaining piece of infrastructure, to be
-  built only after this preregistration is reviewed and approved.
+- The launch script cannot yet materialize a real plan. Its seed beacon
+  (mirroring V2's own pattern) must derive from a real, tamper-evident
+  merge commit -- specifically, this preregistration document's own
+  merge commit into the active integration branch. Fabricating a seed
+  ahead of a real merge would defeat the tamper-evident point of the
+  beacon and was correctly declined by Coder rather than worked around.
+  This document is being merged via PR #49 for exactly that reason.
 - Time sensitivity: the previously frozen model tariff ($2/M input,
-  $10/M output) is valid only through 2026-08-31. If this experiment
-  preregisters and launches under that tariff, timing matters. If the
-  tariff schedule changes or renews, per-cell and aggregate caps in
-  Section 6 must be reconfirmed against whatever tariff is actually in
-  effect at launch, not assumed from this draft.
+  $10/M output) is valid only through 2026-08-31. The merge-then-
+  materialize chain (PR #49 merge -> beacon exists -> materialization ->
+  launch-ready) needs to complete inside that window, or the cost
+  assumptions in Section 6 must be reconfirmed against whatever tariff
+  is actually in effect at that later time.
 
 ## 9. Deferred, sequential second experiment (not part of this
 preregistration)
@@ -188,14 +195,23 @@ Constitution)
 - Full combined/factorial design (3x4 or 4x4) not ruled out long-term,
   but requires dedicated analysis before being adopted; not part of this
   preregistration.
+- Per-cell and aggregate spend caps confirmed as $0.45 / $21.60,
+  matching V2's own derivation (Section 6).
+- Preregistration approved as written for launch-track purposes (this
+  status line).
 
-## 12. Outstanding before this can be approved for launch
+## 12. Outstanding before an actual paid run can occur
 
-1. Owner sign-off on this preregistration document as written.
-2. Confirmed per-cell and aggregate spend caps against the tariff
-   actually in effect at the time of approval (Section 6, Section 8).
-3. Construction of the launch/authorization script (Section 8) --
-   separate work item, not part of this document.
-4. A new, explicit, byte-exact owner authorization phrase at launch time,
-   per standing CapAge protocol -- this preregistration alone does not
-   authorize spending.
+1. ~~Owner sign-off on this preregistration document as written.~~ DONE,
+   2026-08-24.
+2. ~~Confirmed per-cell and aggregate spend caps.~~ DONE, $0.45 / $21.60,
+   2026-08-24.
+3. ~~Construction of the launch/authorization script.~~ DONE, pushed to
+   PR #47, CI green.
+4. PR #49 (this document into the active integration branch) merged, so
+   a real merge-commit beacon exists for materialization.
+5. Materialization run against that beacon, producing the actual
+   experiment plan.
+6. A new, explicit, byte-exact owner authorization phrase at launch time,
+   per standing CapAge protocol -- nothing above, including this
+   approval, authorizes spending on its own.
