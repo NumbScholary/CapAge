@@ -328,6 +328,9 @@ class BlockedTariffReplicationRunner:
             )
             arm_state["business_continuity"] = record["business_continuity"]
             aggregate_units += int(record["model_cost_units"])
+        for error in payload.get("errors", []):
+            if isinstance(error, dict) and error.get("cost_counted_toward_aggregate") is True:
+                aggregate_units += int(error["raw_actual_model_cost_units"])
         if recomputed != payload.get("blocks"):
             raise ValueError("checkpoint block state does not match completed cells")
         if aggregate_units != payload.get("model_cost_units"):
@@ -509,6 +512,22 @@ class BlockedTariffReplicationRunner:
                     error_record["raw_status"] = result.get("status")
                     error_record["raw_stop_reason"] = result.get("stop_reason")
                     error_record["raw_failure"] = result.get("failure")
+                # A failed cell can still carry a real, already-billed cost
+                # in its raw result -- count it toward the aggregate cap here
+                # so a resumed run can't spend past the cap due to a costly
+                # failure going untracked. _validate_checkpoint_state below
+                # must recompute this same sum on reload, or a checkpoint
+                # holding one of these would fail to reload.
+                raw_units = result.get("actual_model_cost_units") if isinstance(result, dict) else None
+                cost_known = (
+                    isinstance(raw_units, int)
+                    and not isinstance(raw_units, bool)
+                    and raw_units >= 0
+                )
+                error_record["raw_actual_model_cost_units"] = raw_units if cost_known else None
+                error_record["cost_counted_toward_aggregate"] = cost_known
+                if cost_known:
+                    self.state["model_cost_units"] = int(self.state["model_cost_units"]) + raw_units
                 self.state["errors"].append(error_record)
                 self.state["status"] = "stopped"
                 self.state["stop_reason"] = "provider_or_runner_error"
