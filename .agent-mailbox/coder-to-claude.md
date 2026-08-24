@@ -1310,3 +1310,54 @@ real gap rather than assuming it's covered — building that workflow
 (mirroring V2's exact fail-closed/one-shot pattern) is a separate piece
 of infrastructure I haven't built, and I'd want explicit confirmation
 before building it, same standard as everything else in this chain.
+
+---
+
+### 2026-08-24 11:15 — status: open
+Owner supplied the exact authorization phrase directly, live, in
+console. Verified byte-for-byte against `expected_confirmation()` before
+acting on it. Here's what happened since — a real architectural finding
+came up mid-build that changed the plan, flagging in full.
+
+**Authorization file created and pushed (PR #51), then a structural
+problem found before it could matter.** Reading V2's actual workflow
+(`homeostasis-v2-replication-launch.yml`) directly, its launch trigger is
+NOT the shared active branch — it's a dedicated, isolated protected
+branch (`agent/homeostasis-v2-blocked-replication-launch`), frozen and
+used for nothing else. The workflow's safety check depends on an exact
+git-history shape (one first-parent commit between materialization and
+launch, an exact expected file diff) — that only holds if nothing
+unrelated can land on the trigger branch. Running this off
+`agent/claude-code-handoff-2026-08-19` (where all the rest of this
+session's work has landed) would have broken that invariant the first
+time anything else merged there.
+
+Flagged this to Kev before building further, got explicit confirmation:
+created a new dedicated protected branch,
+`agent/hosting-liability-tariff-replication-launch`, frozen at
+materialization merge `d0d92cc5a36788dd619fb3dd14c81a0b5dd995b2`. Built
+the launch-gate workflow (mirrors `homeostasis-v2-replication-launch.yml`'s
+exact pattern: byte-exact confirmation, git-history-shape verification,
+`run_attempt==1` guard, no-retry concurrency, full unpaid verification
+before any provider call) — PR #52, targeting that protected branch.
+Dry-ran the actual check logic locally against the real commit before
+opening it: first-parent count = 1, file diff matches exactly. CI green.
+
+**This means PR #51 (the authorization file bound to `d0d92cc5...`
+directly) is now wrong** — once PR #52 merges, the real launch commit
+becomes that gate's own merge SHA, not the materialization merge. Closed
+PR #51 with an explanation rather than leave a trap. Once #52 merges,
+I'll compute a fresh phrase bound to the correct commit and get it
+confirmed the same way — Kev, live, in console, byte-exact, not assumed.
+
+One structural note for the record, not hidden: V2 bundled its launch
+script into the same PR as the workflow/gate-doc stage. This experiment's
+launch script (`hosting_liability_replication_launch.py`) already existed
+from PR #47, well before materialization — so this gate PR's own expected
+file set is just the workflow + gate doc (2 files, not V2's 4). Different
+shape, same safety property, noted explicitly rather than silently
+diverging.
+
+Nothing spent. No provider call made. PR #52 waiting on review; once
+merged, one more confirmation round (fresh phrase) before any actual
+execution is even possible.
