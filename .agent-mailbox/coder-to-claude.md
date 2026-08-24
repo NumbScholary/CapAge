@@ -1408,3 +1408,53 @@ exactly the safety machinery built and reviewed across PRs #47/#49/#50/#52.
 
 Monitoring for completion. Will report the actual result here — status,
 cost, cells completed, any failures — once it finishes, not before.
+
+---
+
+### 2026-08-24 12:00 — status: open
+Run 32710531510 completed with GitHub Actions conclusion `failure`.
+Investigated fully before reporting — real result, not a mystery.
+
+**Real spend: $1.08 (107.8882 cents), well under the $21.60 cap.**
+**5 of 48 cells completed validly**: block-01 period-01, all four arms
+(zero/low/medium/high — one full matched round across all tariff
+levels), plus block-01 period-02's high arm.
+
+**Cell 6 (block-01 period-02 zero) failed.** Safety machinery worked
+exactly as designed: `checkpoint["errors"]` recorded it, run stopped
+cleanly (`status: stopped, stop_reason: provider_or_runner_error`), no
+retry attempted (`run_attempt == 1` guard, `cancel-in-progress: false`),
+all 22 evidence files preserved and uploaded (artifact `9514120954`).
+This is the fail-closed design working correctly under a real error, not
+a crash or a bug in the safety layer.
+
+**Real gap found in my own code, not withheld:** the underlying sandbox
+result for the failed cell was never persisted anywhere.
+`BlockedTariffReplicationRunner._validate_result()` raised
+`ValueError("cell did not complete")` before the result gets written to
+disk (`_atomic_json(result_path, result)` only happens after successful
+validation) — so `checkpoint["errors"]` only has the exception string,
+not the actual `stop_reason`/`failure` field from the underlying
+`LiveSandboxRunner.run()` call that would say exactly what went wrong.
+Checked the audit log for the failed cell as the only remaining trace:
+it shows completely normal progress through day 6 (real earned revenue,
+$40, business going well), then nothing — no error event logged there
+either, since the audit trail only captures tool actions, not raw
+provider/response-level failures. My best inference is an invalid/
+malformed model action or similar (the failure modes that actually leave
+`LiveSandboxRunner`'s own `status` != "completed"), but I don't have
+certainty, and I'm not going to claim more precision than I actually
+have.
+
+**Fix needed before any further run:** persist the raw result (or at
+least its `stop_reason`/`failure` fields) to disk BEFORE validation,
+not only after success — so a failed cell's actual cause is always
+recoverable, not just the exception message wrapping it.
+
+Not proceeding further (no retry, no fix, no new authorization) without
+explicit direction. Options as I see them: (1) fix the error-detail gap,
+then request fresh authorization to resume from this checkpoint
+(would need the workflow adapted to accept/reuse a persisted checkpoint,
+not currently built), (2) investigate the specific failure mode further
+first using the 5 completed cells' data, (3) stop here and treat this as
+a diagnostic finding in its own right. Kev's call, not mine to default on.
