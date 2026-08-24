@@ -1603,3 +1603,69 @@ PR #53 untouched by this work -- still open, still just the persistence
 fix, per your framing of them as separate review decisions.
 
 Ready for the debug-run step whenever you want to sequence it next.
+---
+
+### 2026-08-24 14:00 — status: open
+
+Re: your two messages that also landed on `main` (11:00 merge confirmation,
+11:30 Gate-1 greenlight) -- both found and folded into the canonical
+mailbox file. Same routing bug as before, noted, no action needed from me
+on it per your message.
+
+**Gate 1 deliverable (plan only, no code written, as instructed):**
+
+Used plan mode. Full plan is in this session's plan file; summary below.
+
+**1. `--max-cells` flag:** small additive change to
+`hosting_liability_replication_launch.py`'s `main()` --
+`BlockedTariffReplicationRunner.run()` already accepts and validates
+`max_cells`, already implements exactly the needed semantics (resume from
+first incomplete cell, stop after N attempts). Nothing else needs to change
+for this piece.
+
+**2. Checkpoint-seeding -- verified directly, not just designed:**
+re-downloaded the original run's checkpoint.json fresh from artifact
+`9514120954` (still available, not expired) and actually constructed a real
+`BlockedTariffReplicationRunner` against it under current code (both fixes
+applied, no client calls made). It loads clean with zero transformation:
+config_commitment and plan_sha256 both match current code exactly, full
+checkpoint reconciliation passes, `model_cost_units: 107888200` matches the
+$1.08 report exactly, and the correctly-identified next cell is
+`block-01:period-02:zero` -- the failing cell. Proposed mechanism: commit
+this exact file into the repo as a new tracked, reviewed artifact, so its
+exact starting state is visible in a PR diff before any run. No seeding
+script needed.
+
+**3. Open question I'm surfacing, not just building past:** neither of the
+two named items alone gets you an actual debug run -- something has to
+safely trigger it. I read the existing protected launch workflow directly
+and confirmed it can't be reused: its file-diff invariant
+(`MATERIALIZATION_MERGE..LAUNCH_COMMIT` must be exactly 2 specific files)
+would correctly reject any new commit adding the flag or a checkpoint before
+a fresh authorization -- it was built for exactly one full 48-cell launch,
+already consumed. Proposing a new, small, dedicated one-shot workflow +
+protected branch (own authorization path, own confirmation phrase bound to
+the per-cell 45-cent cap, same fail-closed invariants as the existing
+pattern) -- sized down since there's no new materialization step, but not
+skipping any of the safety machinery just because the action itself is
+small. This is more than the two literally-named items -- flagging it
+explicitly rather than quietly expanding scope, and holding off on any of
+it until you confirm.
+
+**Nothing built.** No code, no committed checkpoint file, no workflow, no
+branch, no authorization file. Per Gate 1's own terms.
+
+**Still-open item from before, unresolved:** PR #54's cost-accounting fix
+merged into `agent/hosting-liability-cell6-debug`, but PR #53 had already
+merged FROM that branch into the integration branch
+(`agent/claude-code-handoff-2026-08-19`) a minute earlier -- so #54's
+commit never propagated. Verified via `git merge-base --is-ancestor`
+(false) and the integration branch's copy of the runner file (zero
+occurrences of the new field name). I flagged this once already and
+haven't heard back on it -- still holding, not acting on it without
+direction, but noting it again since it's relevant context for whichever
+branch Gate 2's work should actually target.
+
+Waiting on: (a) direction on the still-open merge-propagation gap, and
+(b) Gate 2 approval, including a decision on item 3's proposed new
+workflow/branch before I build any of it.
