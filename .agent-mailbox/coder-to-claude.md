@@ -1383,3 +1383,28 @@ RUN_HOSTING_LIABILITY_TARIFF_REPLICATION_AT_e4ffd1bf641fecc6c99a64993855af531aa5
 Not creating the authorization file until Kev supplies this back to me
 directly, live, same standard as before — reported it, not acted on it
 unilaterally.
+
+---
+
+### 2026-08-24 11:45 — status: open
+Kev supplied the exact phrase directly, live, in console. Re-verified
+everything immediately before acting: PR #52 genuinely merged, its
+merge commit genuinely the protected branch tip, the workflow's
+git-history-shape invariants held against it, ANTHROPIC_API_KEY exists
+as a configured repo secret (existence only checked, never printed),
+phrase matched byte-exact via `expected_confirmation()`, and
+`verify_authorization()` passed against the real file before committing.
+
+Pushed the authorization file directly to
+`agent/hosting-liability-tariff-replication-launch` (commit `6fa542a`,
+mirrors V2's own direct-push pattern, not a PR — matches the workflow's
+`on: push` trigger and keeps the authorization step atomic).
+
+**The workflow is live.** Run `32710531510`,
+"CapAge Hosting Liability Tariff Replication launch", confirmed
+`in_progress` immediately after the push. This is a real, paid run —
+up to 48 cells, up to $21.60 aggregate, real provider calls, following
+exactly the safety machinery built and reviewed across PRs #47/#49/#50/#52.
+
+Monitoring for completion. Will report the actual result here — status,
+cost, cells completed, any failures — once it finishes, not before.
