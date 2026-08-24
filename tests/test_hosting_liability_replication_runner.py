@@ -26,6 +26,7 @@ class FakeTariffRunner:
     calls = []
     fail_cells = set()
     malformed_action_cells = set()
+    malformed_action_cost_units = 3_500_000
 
     def __init__(self, config, client, *, audit_path, continuity_state):
         self.config = config
@@ -58,8 +59,8 @@ class FakeTariffRunner:
                 "failure": "model requested unknown tool: sandbox_delete_customer",
                 "config": serialized_config,
                 "decision_count": 3,
-                "actual_model_cost_units": 3_500_000,
-                "actual_model_cost_cents_unrounded": 3.5,
+                "actual_model_cost_units": FakeTariffRunner.malformed_action_cost_units,
+                "actual_model_cost_cents_unrounded": FakeTariffRunner.malformed_action_cost_units / 1_000_000,
                 "actual_model_cost_cents_billed": 4,
                 "transcript": [],
             }
@@ -162,6 +163,7 @@ class BlockedTariffReplicationRunnerTests(unittest.TestCase):
         FakeTariffRunner.calls = []
         FakeTariffRunner.fail_cells = set()
         FakeTariffRunner.malformed_action_cells = set()
+        FakeTariffRunner.malformed_action_cost_units = 3_500_000
         self.plan = _plan()
         self.tariff = TokenTariff("test-tariff", 200, 1000)
 
@@ -258,6 +260,48 @@ class BlockedTariffReplicationRunnerTests(unittest.TestCase):
         self.assertEqual(state["status"], "stopped")
         self.assertEqual(state["stop_reason"], "provider_or_runner_error")
         self.assertEqual(len(state["errors"]), 1)
+        error = state["errors"][0]
+        # runner.run() raised before returning any result at all -- the
+        # cell's real cost is genuinely unrecoverable, not just zero, and
+        # must be marked as such rather than silently treated as free.
+        self.assertIsNone(error["raw_actual_model_cost_units"])
+        self.assertFalse(error["cost_counted_toward_aggregate"])
+        self.assertEqual(state["model_cost_units"], 0)
+
+    def test_checkpoint_with_failed_cell_cost_reloads_without_error(self):
+        with tempfile.TemporaryDirectory() as directory:
+            runner = self.runner(directory)
+            block, period, arm = next(iter(ordered_cells(BEACON)))
+            failing_stem = f"hosting-liability-dose-response-b{block.block_index:02d}-p{period.period_index:02d}-{arm}"
+            FakeTariffRunner.malformed_action_cells = {failing_stem}
+            runner.run()
+            # Constructing a second runner against the same checkpoint file
+            # forces _load_or_initialize -> _validate_checkpoint_state to
+            # recompute and compare the aggregate; this must not raise.
+            reloaded = self.runner(directory)
+        self.assertEqual(reloaded.state["model_cost_units"], 3_500_000)
+
+    def test_failed_cell_cost_can_trip_the_aggregate_cap_on_resume(self):
+        with tempfile.TemporaryDirectory() as directory:
+            runner = self.runner(directory)
+            block, period, arm = next(iter(ordered_cells(BEACON)))
+            failing_stem = f"hosting-liability-dose-response-b{block.block_index:02d}-p{period.period_index:02d}-{arm}"
+            FakeTariffRunner.malformed_action_cells = {failing_stem}
+            # A single failed cell whose real cost leaves less than one
+            # cent of headroom against the locked 2160-cent aggregate cap --
+            # this is the "failure cascade" scenario the fix closes: without
+            # counting this cost, a resumed run would still believe it has
+            # nearly the full cap left to spend.
+            FakeTariffRunner.malformed_action_cost_units = 2_159_500_000
+            state = runner.run()
+            self.assertEqual(state["model_cost_units"], 2_159_500_000)
+            calls_before = len(FakeTariffRunner.calls)
+            resumed = self.runner(directory)
+            state = resumed.run()
+        self.assertEqual(state["status"], "stopped")
+        self.assertEqual(state["stop_reason"], "aggregate_model_cost_cap_reached")
+        # No further provider call was attempted once the cap was tripped.
+        self.assertEqual(len(FakeTariffRunner.calls), calls_before)
 
     def test_malformed_action_result_is_persisted_raw_before_validation_rejects_it(self):
         # Synthetic reproduction of the real 2026-08-24 cell-6 failure class
@@ -290,6 +334,11 @@ class BlockedTariffReplicationRunnerTests(unittest.TestCase):
         self.assertEqual(error["raw_stop_reason"], "invalid_model_action")
         self.assertIn("unknown tool", error["raw_failure"])
         self.assertEqual(error["raw_result_file"], f"{failing_stem}-raw.json")
+        # The failed cell's own cost (real, already billed) must count
+        # toward the aggregate cap even though it never completed.
+        self.assertEqual(error["raw_actual_model_cost_units"], 3_500_000)
+        self.assertTrue(error["cost_counted_toward_aggregate"])
+        self.assertEqual(state["model_cost_units"], 3_500_000)
         # The key fix under test: the raw result actually exists on disk
         # with the real diagnostic fields, not just referenced by name.
         self.assertTrue(raw_exists)
