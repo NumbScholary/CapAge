@@ -122,6 +122,68 @@ class HostingLiabilityLaunchGateTests(unittest.TestCase):
                 )
         client_factory.assert_not_called()
 
+    def _run_main_capturing_runner(self, extra_argv):
+        """Drive main()'s paid path with authorization and the runner faked.
+
+        Returns the mock runner so callers can assert how run() was invoked.
+        Authorization is stubbed (validate is a no-op, mirroring the existing
+        rejection test) because main() checks the fixed path against the real
+        repository root, not a temp root; the runner is mocked so no provider
+        client is constructed.
+        """
+
+        fake_runner = Mock()
+        fake_runner.run.return_value = {
+            "status": "completed",
+            "stop_reason": "max_cells_reached",
+            "completed_cells": ["cell"],
+            "model_cost_units": 0,
+        }
+        client_factory = Mock(return_value=object())
+        fake_factories = (client_factory, object(), object(), object(), object())
+        with (
+            patch.object(launch, "real_factories", return_value=fake_factories),
+            patch.object(
+                launch,
+                "load_frozen_inputs",
+                return_value={"seed_beacon": "a" * 40},
+            ),
+            patch.object(launch.OneShotExecutionGuard, "validate", lambda self: None),
+            patch.object(
+                launch,
+                "BlockedTariffReplicationRunner",
+                return_value=fake_runner,
+            ),
+        ):
+            exit_code = launch.main(
+                [
+                    "--checkpoint",
+                    "/tmp/unused-checkpoint.json",
+                    "--artifact-dir",
+                    "/tmp/unused-cells",
+                    "--authorization-file",
+                    AUTHORIZATION_PATH,
+                    "--confirm",
+                    expected_confirmation(LAUNCH_COMMIT),
+                    "--launch-commit",
+                    LAUNCH_COMMIT,
+                ]
+                + extra_argv
+            )
+        self.assertEqual(exit_code, 0)
+        return fake_runner
+
+    def test_max_cells_flag_is_forwarded_to_runner_run(self):
+        fake_runner = self._run_main_capturing_runner(["--max-cells", "1"])
+        fake_runner.run.assert_called_once_with(max_cells=1)
+
+    def test_max_cells_defaults_to_none_running_the_full_set(self):
+        # Bound enforcement (1..CELL_COUNT) is the runner's contract, tested in
+        # test_hosting_liability_replication_runner.py; the launch CLI only
+        # forwards the value, including the None default.
+        fake_runner = self._run_main_capturing_runner([])
+        fake_runner.run.assert_called_once_with(max_cells=None)
+
     def test_authorization_path_is_fixed(self):
         self.assertEqual(
             AUTHORIZATION_PATH,

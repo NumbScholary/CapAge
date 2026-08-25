@@ -238,6 +238,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--authorization-file")
     parser.add_argument("--confirm", default="")
     parser.add_argument("--launch-commit", default="")
+    parser.add_argument("--max-cells", type=int, default=None)
     parser.add_argument("--validate-only", action="store_true")
     args = parser.parse_args(argv)
 
@@ -279,7 +280,9 @@ def main(argv: list[str] | None = None) -> int:
         empty_continuity_factory=continuity,
         execution_guard=guard,
     )
-    result = runner.run()
+    # Bounds (1 <= max_cells <= CELL_COUNT) are validated inside the runner's
+    # run(); a None value runs the full cell set exactly as before.
+    result = runner.run(max_cells=args.max_cells)
     summary = {
         "status": result["status"],
         "stop_reason": result["stop_reason"],

@@ -218,6 +218,15 @@ class BlockedTariffReplicationRunnerTests(unittest.TestCase):
         self.assertGreater(totals["low"], totals["medium"])
         self.assertGreater(totals["medium"], totals["high"])
 
+    def test_run_rejects_out_of_range_max_cells_before_any_cell(self):
+        with tempfile.TemporaryDirectory() as directory:
+            runner = self.runner(directory)
+            for invalid in (0, -1, CELL_COUNT + 1):
+                with self.assertRaisesRegex(ValueError, "max_cells must be between"):
+                    runner.run(max_cells=invalid)
+            # The guard is at the top of run(): no cell executes on rejection.
+            self.assertEqual(FakeTariffRunner.calls, [])
+
     def test_resume_never_repeats_a_completed_cell(self):
         with tempfile.TemporaryDirectory() as directory:
             first = self.runner(directory)
