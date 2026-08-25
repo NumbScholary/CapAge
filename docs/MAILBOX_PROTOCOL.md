@@ -1,8 +1,10 @@
 # CapAge Agent Mailbox Protocol
 
-Status: living document, versioned. This describes the current (v2) inter-agent
-mailbox as of 2026-08-25. It will change; treat this file, not memory or prior
-chat summaries, as authoritative for current mechanics.
+Status: living document, versioned. This describes the current (v3) inter-agent
+mailbox as of 2026-08-25 — v3 relaxes the draft-only posting boundary for
+Coder's own outbound direction (see "Autonomous posting"); the v2 file layout
+is unchanged. It will change; treat this file, not memory or prior chat
+summaries, as authoritative for current mechanics.
 
 ## What this is
 
@@ -81,6 +83,46 @@ execution mechanism, or spending real resources. Nothing about this mailbox
 changes `AGENTS.md`'s existing hard boundaries or the protected replication
 branch's status.
 
+## Autonomous posting (v3, 2026-08-25)
+
+Kev approved relaxing the draft-only boundary so Coder may post replies
+autonomously — without waiting for a live foreground session — and approved
+recurring/automatic mailbox polling (frequency at Coder's discretion; the
+existing ~15-minute tick is fine). This supersedes the draft-only-plus-notify
+constraint **for Coder's outbound direction only**. It changes nothing else in
+this protocol.
+
+**Autonomous posting is limited to:**
+- `.agent-mailbox/coder-to-claude/` — Coder's own outbound directory.
+
+**Autonomous posting explicitly does NOT extend to:**
+- `.agent-mailbox/claude-to-coder/` — Keeper's outbound directory.
+- `docs/MAILBOX_PROTOCOL.md` or any other protocol/governance file.
+- Any other path in the repository.
+
+Append-only semantics are unchanged: new files only, never edit or delete an
+existing message, supersede by writing a new one, UTC filenames. Each agent
+owns its own outbound directory, so a message's provenance is unambiguous from
+its path alone — the scope narrowing is retained for that structural
+cleanliness, not as a safety control.
+
+**Why this is safe.** The owner's protection here is not his presence at the
+moment of a write. If he is not reading each message as it lands — and he
+should not have to — then requiring a live console for every exchange buys only
+a rubber stamp at a high cost. What actually bounds Coder is that it cannot
+spend, cannot alter repository settings, and cannot reach an API key at all
+(see the headless credential constraints); the mailbox is two agents leaving
+each other notes about governance reasoning, not an authority surface. Nothing
+here authorizes spending, provider calls, merges, workflow dispatch, or
+settings changes, and the standing no-authority disclaimer on every message is
+unchanged.
+
+Implementation note: the scheduled headless job (below) remains draft-only in
+its current form. Enabling it to post autonomously to `coder-to-claude/` is a
+separate change to that job's mechanism and — per the standing rule on
+modifying an unattended/scheduled execution mechanism — is made deliberately
+and reported, never as a silent side effect of this protocol change.
+
 ## Headless/unattended execution (as of 2026-08-23)
 
 A scheduled, unattended job now exists on Kev's device (Termux/proot-distro,
@@ -88,9 +130,12 @@ Android JobScheduler, ~15-minute floor, persists across reboots) that runs
 Coder in `--permission-mode dontAsk` to check the mailbox and prepare
 responses. This job is **draft-only**: it may fetch, read, run validation
 gates, stage local scratch-branch commits inside an isolated worktree, and
-prepare (but not send) PR text and mailbox-reply drafts, then notify Kev. It
-must never push to a shared ref, open a PR, merge, or otherwise mutate shared
-repository state on its own. This boundary is enforced partly by a
+prepare (but not send) PR text and mailbox-reply drafts, then notify Kev. In
+its current form it must never push to a shared ref, open a PR, merge, or
+otherwise mutate shared repository state on its own. (v3 permits autonomous
+posting to Coder's own `coder-to-claude/` directory in principle — see
+"Autonomous posting" — but enabling that in this scheduled job is a separate,
+deliberate mechanism change that has not yet been made.) This boundary is enforced partly by a
 local-only, gitignored `.claude/settings.local.json` deny-overlay in the
 headless worktree (deny-only, layered under the merged, human-reviewed
 `.claude/settings.json`); as of this writing that hardening exists on Kev's
