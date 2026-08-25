@@ -1,7 +1,7 @@
 # CapAge Agent Mailbox Protocol
 
-Status: living document, versioned. This describes the current (v1) inter-agent
-mailbox as of 2026-08-23. It will change; treat this file, not memory or prior
+Status: living document, versioned. This describes the current (v2) inter-agent
+mailbox as of 2026-08-25. It will change; treat this file, not memory or prior
 chat summaries, as authoritative for current mechanics.
 
 ## What this is
@@ -16,47 +16,52 @@ in any mailbox entry, ever constitutes Kev's authorization for spending,
 provider calls, merges, deployment, or any action gated elsewhere (see
 `AGENTS.md`). Mailbox entries are not a substitute for Kev's explicit approval.
 
-## Location (v1)
+## Location (v2, current)
 
 Branch: `agent/mailbox-init`
 
-Files:
-- `.agent-mailbox/claude-to-coder.md` — Claude writes here; Coder reads.
-- `.agent-mailbox/coder-to-claude.md` — Coder writes here; Claude reads.
+Directories, one file per message:
+- `.agent-mailbox/claude-to-coder/` — Claude writes here; Coder reads.
+- `.agent-mailbox/coder-to-claude/` — Coder writes here; Claude reads.
 
-Both files are append-only: new entries are added at the bottom; nothing
-already written is edited or deleted. Entry format:
+Message files are named `YYYYMMDD-HHMM-slug.md` (UTC), e.g.
+`20260825-0259-mailbox-v2-adopted.md`. Every write is a pure file creation —
+append-only is structural rather than a behavioral promise. Never edit or
+delete an existing message file; to correct one, post a new message that
+references the old one by filename. Each directory has a README restating
+this and the standing no-authority disclaimer.
+
+Message body format (unchanged from v1 entries):
 
 ```
 ### YYYY-MM-DD HH:MM — status: open|answered|acknowledged
 <message>
 ```
 
-## Known fragility (v1) and why v2 is proposed
+## Why v2 (adopted 2026-08-25), and the v1 historical record
 
-Claude's GitHub connector can list files, read commit metadata, and read
-commit diffs as text, but cannot reliably read a file's full current body as
-text — only its blob SHA. Since appending to a single growing file requires
-submitting the complete new body, Claude cannot safely append without first
-reconstructing the current body (by replaying the file's commit history) and
-verifying the reconstruction's computed git blob SHA matches the SHA GitHub
-reports for the live file. Only after that hash match should a write proceed.
-This is slow and grows riskier as the file grows.
+v1 used two growing flat files (`.agent-mailbox/claude-to-coder.md` and
+`.agent-mailbox/coder-to-claude.md`), each append-only by convention.
 
-Coder does not share this limitation — Coder has direct git access and can
-read-then-append normally.
+The fragility that motivated v2: Claude's GitHub connector can list files,
+read commit metadata, and read commit diffs as text, but cannot reliably read
+a file's full current body as text — only its blob SHA. Since appending to a
+single growing file requires submitting the complete new body, Claude could
+not safely append without first reconstructing the current body (by replaying
+the file's commit history) and verifying the reconstruction's computed git
+blob SHA matched the SHA GitHub reported for the live file. This was slow and
+grew riskier as the file grew. Coder never shared this limitation, but under
+v2 both sides write the same way: every message is a new file creation, with
+nothing to reconstruct or overwrite.
 
-**Proposed v2** (not yet adopted as of this writing): one file per message
-instead of one growing file, e.g.
-`.agent-mailbox/claude-to-coder/YYYYMMDD-HHMM-slug.md` (mirrored for the other
-direction). This makes every write a pure file creation — nothing to
-reconstruct or overwrite — and append-only becomes structural rather than a
-behavioral promise. Coder has confirmed a directory-watch notification hook
-adapts cleanly to this shape and has no objection to freezing the two v1 files
-as historical record rather than migrating their content. Check the mailbox
-itself for whether v2 has since been adopted; if it has, this file should have
-been updated to reflect the new location and this section should be revised
-or removed.
+v2 was adopted 2026-08-25 on Kev's direct instruction. The two v1 flat files
+are frozen as historical record — each carries a final freeze entry pointing
+here — and their content was deliberately not migrated into the new format.
+Coder re-verified at adoption time that the directory-watch notification hook
+adapts cleanly: it already tracked the `claude-to-coder/` directory listing
+alongside the flat file's blob hash, so new per-message files are detected as
+new directory entries and the frozen flat file simply stops producing hash
+changes.
 
 ## Authority split under this protocol
 
@@ -102,9 +107,10 @@ scope must be explicit.
 
 If you are a new Claude instance: read this file from GitHub directly rather
 than relying on memory, prior chat summaries, or project-knowledge copies,
-since this file is the live authoritative version. Then read the current tail
-of both mailbox files for open items before assuming continuity from an
-earlier conversation.
+since this file is the live authoritative version. Then list both message
+directories and read the most recent message files for open items before
+assuming continuity from an earlier conversation. (The frozen v1 flat files
+are historical context only.)
 
 If you are a fresh Coder instance: you have no built-in awareness that this
 mailbox exists unless told, or unless a pointer to this file has been added to
