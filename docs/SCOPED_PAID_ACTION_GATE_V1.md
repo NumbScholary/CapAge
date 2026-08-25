@@ -1,6 +1,8 @@
 # Scoped Paid-Action Gate v1 — general launch mechanism (design proposal)
 
-Status: design proposal, 2026-08-24. Not adopted, not implemented. This
+Status: design proposal, 2026-08-24; amended 2026-08-25 to record decisions
+from owner review (see the cap-backstop, checklist-enforcement, and
+`ALLOWED_MODULES`-scope resolutions below). Not adopted, not implemented. This
 document grants no authority, authorizes no spending, no provider call, and no
 workflow execution. Nothing in it revises AGENTS.md, the Constitution, any
 frozen protocol, or any preregistration. Adoption, implementation, and every
@@ -78,7 +80,7 @@ hard-coded constants.
 | 6 | The authorization merge adds exactly the one authorization file and nothing else | `git diff --name-status LAUNCH_COMMIT HEAD` = `A <file>` | identical, filename from manifest |
 | 7 | The authorization file is absent at the launch commit (structural one-shot: once merged, no later push can satisfy this again) | `git cat-file -e` check | identical |
 | 8 | The launch branch head is bound to its audited base (ancestry + exact expected diff from the freeze point) | hard-coded `MATERIALIZATION_MERGE` + expected-file list | manifest records the freeze merge SHA and expected file list; gate verifies ancestry, first-parent distance, and diff exactness |
-| 9 | Spending caps are declared before authorization and enforced at runtime by the dependency-free runner, not by the workflow | plan JSON asserts + runner per-cell/aggregate cap logic | manifest caps cross-checked against phrase and against a gate-level hard ceiling; runtime metering stays in the runner |
+| 9 | Spending caps are declared before authorization and enforced at runtime by the dependency-free runner, not by the workflow | plan JSON asserts + runner per-cell/aggregate cap logic | the per-action cap is the byte-exact phrase's cents (proposed per run, made real only by Kev's phrase); manifest caps cross-checked to equal it; a single decimal-error backstop (`DECIMAL_ERROR_BACKSTOP_CENTS`, not an approved ceiling) rejects grossly malformed values; runtime metering stays in the runner |
 | 10 | Frozen inputs are validated unpaid before the paid step | `--validate-only` + full test suite in-workflow | identical; input hashes additionally pinned in the manifest |
 | 11 | Tariff/validity expiry is frozen and checkable | plan `valid_through` | manifest `expires_utc`, checked at preflight and again immediately before execution |
 | 12 | Evidence is preserved on every outcome, including failures | `upload-artifact` with `if: always()` | identical; artifact name from manifest |
@@ -188,9 +190,10 @@ Responsibilities:
   state at `GITHUB_SHA` — true merge commit, phrase byte-exactness against
   `HEAD^`, one-file diff, absence at parent, freeze ancestry and diff
   exactness, input hashes, expiry, run-record absence, caps consistency
-  (phrase cents == manifest `max_new_spend_cents` <= gate hard ceiling), and
-  module allowlist (below). Emits the provenance JSON. Exits nonzero on any
-  violation.
+  (phrase cents == manifest `max_new_spend_cents` <= `DECIMAL_ERROR_BACKSTOP_CENTS`),
+  the manifest's `provider_calls_authorized` and `spend_authorized` both being
+  `false`, and module allowlist (below). Emits the provenance JSON. Exits
+  nonzero on any violation.
 - **Execute** (`execute` subcommand): re-run preflight, re-check expiry, then
   perform the declared `pre_exec_copies` (after hash verification) and exec
   the manifest command as an argv list — no shell — substituting only the
@@ -201,15 +204,33 @@ Responsibilities:
   the working tree with no git-state requirements and no provider client, for
   CI and local unpaid verification.
 
+The operative per-action cap is the cents in Kev's byte-exact authorization
+phrase. There is no pre-blessed ceiling: each run proposes its own cap with
+reasoning, and only the phrase makes that cap real. The gate's job is to
+guarantee the phrase, the manifest, and the runner arguments all name the same
+number — not to hold a standing budget.
+
 Two frozen constants live in the gate code and change only by reviewed code
 change:
 
 - `ALLOWED_MODULES`: the set of entry points the manifest may name. Initially
   `{"capage.hosting_liability_replication_launch"}`. A manifest naming
-  anything else fails preflight regardless of review lapses.
-- `GATE_MAX_CENTS = 2160`: hard ceiling on `max_new_spend_cents`. No manifest
-  can authorize more than the largest cap ever individually approved
-  ($21.60), even if misreviewed. Raising it is a visible, reviewed code diff.
+  anything else fails preflight regardless of review lapses. This is not a
+  spending category; it is a whitelist of which code may touch money at all.
+  Whether the gate should also cover non-experimental developmental API spend
+  was raised in owner review and deliberately declined as premature: no real
+  second use case could be named, and leaving the allowlist open would make
+  review attention the only barrier to an unintended money-touching entry
+  point. The allowlist keeps its single entry and widens only by a reviewed
+  code diff if and when a genuine second use appears.
+- `DECIMAL_ERROR_BACKSTOP_CENTS = 5000`: a non-working typo backstop, not an
+  approved ceiling. It exists only to fail closed on a gross decimal-point
+  error (e.g. a cap written with a misplaced digit); it is set deliberately
+  above any plausible real cap so that in normal operation it never binds —
+  the phrase's cents is always the effective limit and is always smaller.
+  Preflight rejects any manifest whose `max_new_spend_cents` exceeds it. It is
+  emphatically not a statement that spend up to $50 is pre-authorized; nothing
+  is pre-authorized. Changing it is a visible, reviewed code diff.
 
 The gate verifies authorization and consistency; it does not meter spending
 at runtime. Runtime metering remains where it already is and already works:
@@ -348,8 +369,10 @@ force-pushes and deletions. Repo-settings change, Kev-only. Recommended.
   diff exactness (invariant 6).
 - **Squash/rebase merge of the authorization PR**: `HEAD` is not a two-parent
   merge; preflight fails closed rather than mis-binding `HEAD^`.
-- **Manifest names a wrong module or absurd cap**: `ALLOWED_MODULES` and
-  `GATE_MAX_CENTS` fail it in code even if review misses it.
+- **Manifest names a wrong module or a decimal-error cap**: `ALLOWED_MODULES`
+  and `DECIMAL_ERROR_BACKSTOP_CENTS` fail it in code even if review misses it.
+  (A merely-too-high but plausible cap is caught earlier by the phrase-cents
+  equality check, since the phrase is Kev's.)
 - **Workflow fires on the freeze merge**: it does not — the `paths` filter
   matches only authorization files; if a freeze PR ever touched one, that is
   itself a reviewable red flag and preflight fails it.
@@ -438,21 +461,42 @@ Ordered dependencies before this action could ever be authorized:
 
 ## Manifest-freeze review checklist (for the owner)
 
+Every mechanically decidable item below is enforced as a pass/fail check in
+`scoped_launch_gate` preflight, which fails the run closed on any violation; it
+is **not** something Kev must verify by eye (he reviews by voice on a phone, so
+hash comparison by ear is not a control). Such items are tagged
+**[gate-enforced: <check>]** and the human checklist keeps them only as a
+secondary, informational confirmation. Items that require the owner's judgment
+and cannot be decided mechanically are tagged **[human judgment]** and are the
+ones Kev actually has to weigh.
+
 - [ ] `action_id` unique; no run record exists for it anywhere.
-- [ ] `launch_branch` matches `launch/<action_id>` and was cut from the
-      intended integration head (containing all required fixes).
+      **[gate-enforced: run-record-absence]** for the run-record part;
+      **[human judgment]** for uniqueness across past actions.
+- [ ] `launch_branch` was cut from the intended integration head (containing
+      all required fixes). **[human judgment]** — the gate proves ancestry and
+      diff-exactness against the recorded `freeze_merge_sha`
+      **[gate-enforced: freeze-ancestry, freeze-diff-exactness]**, but that the
+      chosen freeze base is the *right* head is the owner's call.
 - [ ] `command.module` is in `ALLOWED_MODULES`; argv contains only frozen
       literals and the four fixed template variables.
-- [ ] Caps: `max_new_spend_cents` ≤ `GATE_MAX_CENTS`; matches the phrase
-      template's cents; `cap_enforcement` correctly describes the runtime
-      mechanism that bounds it (and that mechanism actually exists in the
-      named module).
+      **[gate-enforced: module-allowlist, argv-substitution]**
+- [ ] Caps: `max_new_spend_cents` equals the phrase's cents and does not exceed
+      `DECIMAL_ERROR_BACKSTOP_CENTS`. **[gate-enforced: caps-consistency]**.
+      That `cap_enforcement` prose correctly describes a runtime mechanism
+      which actually exists in the named module is **[human judgment]**.
 - [ ] Every `inputs[].sha256` matches the committed file; the freeze PR adds
       exactly `expected_freeze_files` and nothing else.
-- [ ] `expires_utc` ≤ the underlying frozen tariff's validity.
+      **[gate-enforced: input-hashes, freeze-diff-exactness]**
+- [ ] `expires_utc` ≤ the underlying frozen tariff's validity. **[human
+      judgment]** for the comparison to the tariff; that `expires_utc` has not
+      already passed is **[gate-enforced: expiry]** at both preflight and
+      immediately before execute.
 - [ ] `provider_calls_authorized` and `spend_authorized` are `false`.
+      **[gate-enforced: manifest-flags]**
 - [ ] Authorization filename matches the `*AUTHORIZATION*.md` glob the
       workflow watches, and is absent from the tree.
+      **[gate-enforced: authorization-path, absence-at-parent]**
 
 ## Open questions for review
 
@@ -461,8 +505,14 @@ Ordered dependencies before this action could ever be authorized:
    dispatchable workflows without editing their files. Kev-only settings
    change.)
 2. Branch protection rules for `launch/**`? (Recommended yes; Kev-only.)
-3. `GATE_MAX_CENTS` value — proposed 2160 (the largest cap ever individually
-   approved).
+3. **Resolved (owner review, 2026-08-25): no pre-blessed ceiling.** The earlier
+   `GATE_MAX_CENTS = 2160` proposal is rejected — hardwiring the largest cap
+   ever approved would quietly imply $21.60 is pre-authorized, the opposite of
+   this mechanism's premise that nothing is pre-authorized. The operative
+   per-action cap is the cents in Kev's byte-exact phrase, proposed per run
+   with reasoning. The only hard-coded number is `DECIMAL_ERROR_BACKSTOP_CENTS`
+   (5000¢): a non-working decimal-error backstop set above any plausible real
+   cap, not an approved ceiling. See "Architecture / 2. Generic gate module".
 4. Run-record location and format standardization
    (`experiments/sandbox/<ACTION_ID>_RUN_RECORD.md` proposed).
 5. `paid_run_ledger` integration in v1 or as a follow-up? (Proposed:
