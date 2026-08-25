@@ -1,8 +1,11 @@
 # Scoped Paid-Action Gate v1 — general launch mechanism (design proposal)
 
-Status: design proposal, 2026-08-24. Not adopted, not implemented. This
-document grants no authority, authorizes no spending, no provider call, and no
-workflow execution. Nothing in it revises AGENTS.md, the Constitution, any
+Status: design proposal, 2026-08-24; amended 2026-08-25 per the owner's review
+decisions (see PR #56 discussion / mailbox
+`claude-to-coder/20260825-0940-pr56-amend-before-gate-a.md`). Still a proposal:
+Gate A (design acceptance) is not yet given, and this document is neither
+adopted nor implemented. This document grants no authority, authorizes no
+spending, no provider call, and no workflow execution. Nothing in it revises AGENTS.md, the Constitution, any
 frozen protocol, or any preregistration. Adoption, implementation, and every
 future use each require their own explicit approvals (see "Adoption gates" at
 the end).
@@ -78,7 +81,7 @@ hard-coded constants.
 | 6 | The authorization merge adds exactly the one authorization file and nothing else | `git diff --name-status LAUNCH_COMMIT HEAD` = `A <file>` | identical, filename from manifest |
 | 7 | The authorization file is absent at the launch commit (structural one-shot: once merged, no later push can satisfy this again) | `git cat-file -e` check | identical |
 | 8 | The launch branch head is bound to its audited base (ancestry + exact expected diff from the freeze point) | hard-coded `MATERIALIZATION_MERGE` + expected-file list | manifest records the freeze merge SHA and expected file list; gate verifies ancestry, first-parent distance, and diff exactness |
-| 9 | Spending caps are declared before authorization and enforced at runtime by the dependency-free runner, not by the workflow | plan JSON asserts + runner per-cell/aggregate cap logic | manifest caps cross-checked against phrase and against a gate-level hard ceiling; runtime metering stays in the runner |
+| 9 | Spending caps are declared before authorization and enforced at runtime by the dependency-free runner, not by the workflow | plan JSON asserts + runner per-cell/aggregate cap logic | manifest cap cross-checked to equal the phrase's cents (the real per-action cap) and to not exceed the fixed decimal-error backstop; runtime metering stays in the runner |
 | 10 | Frozen inputs are validated unpaid before the paid step | `--validate-only` + full test suite in-workflow | identical; input hashes additionally pinned in the manifest |
 | 11 | Tariff/validity expiry is frozen and checkable | plan `valid_through` | manifest `expires_utc`, checked at preflight and again immediately before execution |
 | 12 | Evidence is preserved on every outcome, including failures | `upload-artifact` with `if: always()` | identical; artifact name from manifest |
@@ -188,8 +191,8 @@ Responsibilities:
   state at `GITHUB_SHA` — true merge commit, phrase byte-exactness against
   `HEAD^`, one-file diff, absence at parent, freeze ancestry and diff
   exactness, input hashes, expiry, run-record absence, caps consistency
-  (phrase cents == manifest `max_new_spend_cents` <= gate hard ceiling), and
-  module allowlist (below). Emits the provenance JSON. Exits nonzero on any
+  (phrase cents == manifest `max_new_spend_cents` <= `DECIMAL_ERROR_BACKSTOP_CENTS`),
+  and module allowlist (below). Emits the provenance JSON. Exits nonzero on any
   violation.
 - **Execute** (`execute` subcommand): re-run preflight, re-check expiry, then
   perform the declared `pre_exec_copies` (after hash verification) and exec
@@ -206,10 +209,26 @@ change:
 
 - `ALLOWED_MODULES`: the set of entry points the manifest may name. Initially
   `{"capage.hosting_liability_replication_launch"}`. A manifest naming
-  anything else fails preflight regardless of review lapses.
-- `GATE_MAX_CENTS = 2160`: hard ceiling on `max_new_spend_cents`. No manifest
-  can authorize more than the largest cap ever individually approved
-  ($21.60), even if misreviewed. Raising it is a visible, reviewed code diff.
+  anything else fails preflight regardless of review lapses. This allowlist is
+  deliberately not a spending category; it is the whitelist of which code may
+  touch money at all, so leaving it open would make review attention the only
+  barrier to an unintended paid entry point. Widening it to also cover
+  non-experimental developmental API spend was considered and **declined as
+  premature over-generalization** (2026-08-25) — no concrete second use case
+  exists yet — so it keeps its single entry and widens only by reviewed code
+  diff if and when a genuine second use appears.
+- `DECIMAL_ERROR_BACKSTOP_CENTS = 5000`: a fixed decimal-place-error backstop,
+  **not** a working spending cap and **not** an approved ceiling. There is no
+  pre-blessed working ceiling anywhere in the code. The real cap for any action
+  is decided per action: Coder proposes a specific cap with reasoning for that
+  run, Kev accepts it or pushes back, and Kev's fresh byte-exact phrase — which
+  encodes the cents — is what makes the cap real. This constant exists only so
+  a mis-typed manifest cannot turn e.g. 45 cents into an absurd or unbounded
+  number; its value ($50) is about a fifth of the ~$250 total capital, far
+  above anything planned, and it is named so it can never be misread as a
+  budget. The gate merely checks that the manifest's `max_new_spend_cents`
+  equals the phrase's cents and does not exceed this backstop. Changing the
+  backstop is a visible, reviewed code diff.
 
 The gate verifies authorization and consistency; it does not meter spending
 at runtime. Runtime metering remains where it already is and already works:
@@ -349,7 +368,9 @@ force-pushes and deletions. Repo-settings change, Kev-only. Recommended.
 - **Squash/rebase merge of the authorization PR**: `HEAD` is not a two-parent
   merge; preflight fails closed rather than mis-binding `HEAD^`.
 - **Manifest names a wrong module or absurd cap**: `ALLOWED_MODULES` and
-  `GATE_MAX_CENTS` fail it in code even if review misses it.
+  `DECIMAL_ERROR_BACKSTOP_CENTS` fail it in code even if review misses it (and
+  a cap that merely disagrees with the phrase's cents also fails, independent
+  of the backstop).
 - **Workflow fires on the freeze merge**: it does not — the `paths` filter
   matches only authorization files; if a freeze PR ever touched one, that is
   itself a reviewable red flag and preflight fails it.
@@ -438,21 +459,42 @@ Ordered dependencies before this action could ever be authorized:
 
 ## Manifest-freeze review checklist (for the owner)
 
+Items tagged **[machine-verified]** are enforced as pass/fail in the gate's
+preflight (which runs with no secret in scope); preflight fails closed if any
+of them does not hold, so the owner does not need to confirm them by eye — in
+particular not by reading or comparing hashes, which is not a reliable control
+over a voice/phone channel. Items tagged **[human judgment]** require a review
+decision the gate cannot make. Where an item mixes the two, the mechanical part
+is machine-verified and only the judgment part is left to the owner.
+
 - [ ] `action_id` unique; no run record exists for it anywhere.
-- [ ] `launch_branch` matches `launch/<action_id>` and was cut from the
-      intended integration head (containing all required fixes).
+      **[machine-verified: run-record-absent preflight check]**
+- [ ] `launch_branch` matches `launch/<action_id>`, and the freeze
+      ancestry/diff-exactness holds **[machine-verified: invariant 8]**;
+      whether the integration head it was cut from is the *intended* one
+      (contains all required fixes) is **[human judgment]**.
 - [ ] `command.module` is in `ALLOWED_MODULES`; argv contains only frozen
       literals and the four fixed template variables.
-- [ ] Caps: `max_new_spend_cents` ≤ `GATE_MAX_CENTS`; matches the phrase
-      template's cents; `cap_enforcement` correctly describes the runtime
-      mechanism that bounds it (and that mechanism actually exists in the
-      named module).
+      **[machine-verified: module-allowlist + argv-template preflight checks]**
+- [ ] Caps: `max_new_spend_cents` ≤ `DECIMAL_ERROR_BACKSTOP_CENTS` and equals
+      the phrase's cents **[machine-verified: caps-consistency preflight
+      check]**; `cap_enforcement` correctly describes the runtime mechanism that
+      bounds it, and that mechanism actually exists in the named module
+      **[human judgment]**.
 - [ ] Every `inputs[].sha256` matches the committed file; the freeze PR adds
       exactly `expected_freeze_files` and nothing else.
-- [ ] `expires_utc` ≤ the underlying frozen tariff's validity.
+      **[machine-verified: input-hash + freeze-diff-exactness preflight checks,
+      invariants 10 and 8 — the owner does not compare hashes by hand]**
+- [ ] `expires_utc` is present, well-formed, and not already passed
+      **[machine-verified: expiry preflight check + re-check before execute]**;
+      that it does not exceed the specific underlying tariff's validity is
+      **[human judgment]** unless that tariff validity is itself a pinned
+      manifest input.
 - [ ] `provider_calls_authorized` and `spend_authorized` are `false`.
+      **[machine-verified: manifest-field preflight check]**
 - [ ] Authorization filename matches the `*AUTHORIZATION*.md` glob the
       workflow watches, and is absent from the tree.
+      **[machine-verified: invariants 6 and 7]**
 
 ## Open questions for review
 
@@ -461,8 +503,15 @@ Ordered dependencies before this action could ever be authorized:
    dispatchable workflows without editing their files. Kev-only settings
    change.)
 2. Branch protection rules for `launch/**`? (Recommended yes; Kev-only.)
-3. `GATE_MAX_CENTS` value — proposed 2160 (the largest cap ever individually
-   approved).
+3. **Resolved (2026-08-25): no working spend ceiling in code.** The proposed
+   `GATE_MAX_CENTS = 2160` was rejected — hardwiring the largest cap ever
+   individually approved quietly implies $21.60 is pre-blessed, exactly the
+   wrong default for a mechanism whose point is that nothing is pre-authorized.
+   Replaced by a per-action proposed cap (Coder proposes with reasoning; Kev's
+   fresh byte-exact phrase, which encodes the cents, makes it real) plus a
+   single non-working decimal-error backstop `DECIMAL_ERROR_BACKSTOP_CENTS =
+   5000` that only catches decimal-place typos. See "Architecture / 2. Generic
+   gate module".
 4. Run-record location and format standardization
    (`experiments/sandbox/<ACTION_ID>_RUN_RECORD.md` proposed).
 5. `paid_run_ledger` integration in v1 or as a follow-up? (Proposed:
