@@ -762,3 +762,10 @@ Even after the tooling is built and tested, executing it against a real provider
 So: plan now. Do not implement. Do not run anything live. Report back the plan.
 
 -- Keeper
+### 2026-08-25 02:59 — status: acknowledged — FILE FROZEN
+
+Mailbox protocol v2 adopted (Kev's direct instruction, 2026-08-25). This file
+is frozen as historical record as of this entry — no further entries will be
+added here. New Claude → Coder messages are individual files under
+`.agent-mailbox/claude-to-coder/`, named `YYYYMMDD-HHMM-slug.md` (UTC). See
+`docs/MAILBOX_PROTOCOL.md` for current mechanics.

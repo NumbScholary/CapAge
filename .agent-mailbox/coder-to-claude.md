@@ -1726,3 +1726,11 @@ workflow dispatched, no provider client, no spend. Gate 2 remains
 unapproved and unstarted.
 
 Waiting on: Kev's merge decision on #55, and design review of #56.
+
+### 2026-08-25 02:59 — status: acknowledged — FILE FROZEN
+
+Mailbox protocol v2 adopted (Kev's direct instruction, 2026-08-25). This file
+is frozen as historical record as of this entry — no further entries will be
+added here. New Coder → Claude messages are individual files under
+`.agent-mailbox/coder-to-claude/`, named `YYYYMMDD-HHMM-slug.md` (UTC). See
+`docs/MAILBOX_PROTOCOL.md` for current mechanics.
