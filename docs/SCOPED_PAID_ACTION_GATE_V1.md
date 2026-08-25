@@ -94,6 +94,22 @@ the provider key is job-level `env`, visible to every step including unpaid
 verification. The generic workflow scopes the secret to the execute step only
 (and, if adopted, to a protected GitHub environment — see "Hardening").
 
+### Known cost: shared blast radius
+
+Consolidating two independently reviewed gates into one shared gate is a real
+trade-off, recorded here as a known cost rather than an unqualified win. The
+two hand-built gates could not fail together: a defect in one reached only its
+own action. A single shared gate removes that independent failure — one defect
+in `capage/scoped_launch_gate.py` or the generic workflow now reaches *every*
+future scoped paid action that passes through it. The design accepts this
+because the alternative (a third, fourth, … hand-copied gate) only trades the
+shared-blast-radius risk for near-certain drift between copies plus repeated
+separate review of the same safety-critical logic. But the cost is real, and
+it is what motivates the invariant-by-invariant review discipline, the frozen
+`ALLOWED_MODULES` allowlist, and the recommended `paid-runs` environment
+approval as an independent second control that does not share code with the
+gate.
+
 ## Architecture
 
 Three reviewed pieces, merged once through the normal PR path, plus one frozen
@@ -334,7 +350,24 @@ Per action:
    in-process `OneShotExecutionGuard` pattern is retained by the called
    launch modules.
 
-## Hardening (recommended, owner's decision)
+## Hardening (adopted 2026-08-25)
+
+**Status (2026-08-25): both measures below are now live**, per the owner's
+review decisions recorded in mailbox
+`claude-to-coder/20260825-1115-gate-b-approved.md`:
+
+- The `paid-runs` GitHub environment exists, with `numbscholar` as required
+  reviewer and admin bypass disabled; its only secret is `ANTHROPIC_API_KEY`,
+  and the repo-level copies of the provider secrets have been deleted.
+  Consequently every historical dispatchable spend-capable workflow has
+  structurally lost access to the key without any of its files being edited —
+  the "do not dispatch" rule is now enforced by configuration, not only by
+  discipline, and the historical workflow files remain byte-identical evidence.
+- Branch protection for `launch/**` is in force: PRs required (no direct
+  pushes), force-pushes and deletions forbidden.
+
+The original recommendations and their rationale are retained below unchanged,
+as the record of why each was adopted.
 
 **Environment-scoped secret with required reviewer.** Create a GitHub
 environment `paid-runs` whose only secret is `ANTHROPIC_API_KEY`, with Kev as
@@ -498,11 +531,14 @@ is machine-verified and only the judgment part is left to the owner.
 
 ## Open questions for review
 
-1. Adopt the `paid-runs` environment + required reviewer + environment-scoped
-   secret? (Recommended yes; also structurally disarms historical
-   dispatchable workflows without editing their files. Kev-only settings
-   change.)
-2. Branch protection rules for `launch/**`? (Recommended yes; Kev-only.)
+1. **Resolved (2026-08-25): adopted.** The `paid-runs` environment (required
+   reviewer `numbscholar`, admin bypass disabled, `ANTHROPIC_API_KEY` as its
+   only secret) is live, and the repo-level copies of the provider secrets have
+   been deleted — so the historical dispatchable spend-capable workflows are
+   structurally disarmed without any of their files being edited. See
+   "Hardening".
+2. **Resolved (2026-08-25): adopted.** Branch protection for `launch/**` is in
+   force (PRs required, force-pushes and deletions forbidden). See "Hardening".
 3. **Resolved (2026-08-25): no working spend ceiling in code.** The proposed
    `GATE_MAX_CENTS = 2160` was rejected — hardwiring the largest cap ever
    individually approved quietly implies $21.60 is pre-blessed, exactly the
