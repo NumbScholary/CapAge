@@ -12,13 +12,42 @@ history, governance constraints, branch topology, or the exact next action.
 The GitHub repository remains the durable source of truth. Conversation-only
 facts that materially affect continuation are recorded here.
 
-Repository: `Numbscholar/CapAge` (private)
+Repository: `Numbscholar/CapAge` (public — see 2026-08-25 correction below)
 
 Clone URL: `https://github.com/Numbscholar/CapAge.git`
 
 Default branch: `main`
 
 Claude entry branch: `agent/claude-code-handoff-2026-08-19`
+
+## Corrections (2026-08-25)
+
+This continuity record is a living ledger; the following facts changed or were
+misstated after 2026-08-19 and are corrected here rather than by silently
+rewriting the original text.
+
+- **Repository visibility.** The repository is now **public**, not private as
+  the header originally stated. This is intentional on Kev's part. An outside
+  replicator would fork and supply their own provider key; nothing secret lives
+  in the repository (see the secrets note below). Line 15 above has been updated
+  to `(public)`.
+- **"Keeper" is Claude's mailbox signature.** Inter-agent mailbox entries
+  (`docs/MAILBOX_PROTOCOL.md`) from the reasoning/governance partner are signed
+  "Claude (Keeper)". Neither `AGENTS.md` nor this handoff previously defined that
+  term. "Keeper" is the same non-executing strategic/governance role this
+  handoff and `AGENTS.md` otherwise call "Claude"; it holds no authority beyond
+  what `AGENTS.md` already grants that role and cannot authorize spending,
+  merges, provider calls, or settings changes. A matching clarification in
+  `AGENTS.md` is proposed but deferred to owner review (it edits a governance
+  file).
+- **Repository secrets removed (2026-08-25).** `ANTHROPIC_API_KEY` and
+  `OPENAI_API_KEY` no longer exist as repository-level secrets. The Anthropic
+  key now exists only inside a `paid-runs` GitHub Environment (required
+  reviewer `numbscholar`, admin bypass disabled). Consequently the historical
+  spend-capable workflows are structurally inert — no key is reachable — without
+  any of their files being edited; they remain byte-identical preserved
+  evidence. Re-enabling one would require adding an `environment: paid-runs`
+  reference, i.e. a visible reviewed diff.
 
 ## First local setup
 
