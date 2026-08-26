@@ -348,7 +348,17 @@ def preflight(
         _require(actual == entry["sha256"], f"input hash mismatch for {entry['path']}")
         input_hashes[entry["path"]] = actual
 
-    # One-shot: the run record must not yet exist.
+    # Defense-in-depth (design doc, layered one-shot #5): the run record must
+    # not yet exist. This is NOT the primary one-shot -- that is structural,
+    # via the phrase binding to HEAD^ and the authorization file's
+    # absence-at-parent (invariants 4/5/6/7), which reject any second execution
+    # on the same launch branch regardless of this check. The run record is
+    # written by the human-reviewed post-run PR (design doc, lifecycle step 7),
+    # not by this gate; it primarily catches a duplicate action_id re-run on a
+    # *fresh* branch once that record has merged to the integration line -- a
+    # case that already needs a fresh owner phrase. The gate does not commit
+    # anything back (every workflow here is contents: read); an automated
+    # write-back would require contents: write and is a separate owner decision.
     run_record = manifest["one_shot"]["run_record_path"]
     _require(
         _tree_mode(root, sha, run_record) is None,

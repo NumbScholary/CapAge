@@ -358,6 +358,36 @@ class PreflightGitTests(unittest.TestCase):
                 )
 
 
+class OneShotReExecutionTests(unittest.TestCase):
+    """The primary one-shot is structural (invariants 6/7 + phrase binding),
+    independent of the run-record file. The run-record-absent check is
+    defense-in-depth (design doc, layered one-shot #5) for a duplicate
+    action_id on a *fresh* branch, whose run record is written by the
+    human-reviewed post-run PR (design doc, lifecycle step 7). These tests
+    prove the structural protection holds without any run record.
+    """
+
+    def test_second_authorization_merge_on_same_branch_is_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            repo = _make_repo(directory)
+            root = repo["root"]
+            # A second merge stacked on the first. Its launch commit (HEAD^) is
+            # now the FIRST merge commit, not the original launch commit the
+            # phrase was bound to -- so the byte-exact phrase no longer matches
+            # (design doc layered one-shot #1: the phrase binds HEAD^, and any
+            # later merge has a different parent, needing a fresh Kev phrase).
+            # This rejects the re-execution with no run record involved.
+            _g(root, "checkout", "-q", "-b", "authpr2")
+            _write(root, "experiments/sandbox/retry_note.txt", "retry\n")
+            _g(root, "add", "-A")
+            _g(root, "commit", "-q", "-m", "second attempt")
+            _g(root, "checkout", "-q", "main")
+            _g(root, "merge", "--no-ff", "-q", "-m", "second merge", "authpr2")
+            second_head = _g(root, "rev-parse", "HEAD")
+            with self.assertRaisesRegex(GateViolation, "byte-exact"):
+                gate.preflight(root, sha=second_head, manifest_path=repo["manifest_path"])
+
+
 class ExecuteTests(unittest.TestCase):
     def test_execute_reverifies_then_runs_substituted_argv_without_provider(self):
         calls = {}
