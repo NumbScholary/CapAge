@@ -258,6 +258,18 @@ class ManifestShapeTests(unittest.TestCase):
         with self.assertRaisesRegex(GateViolation, "unknown template variable"):
             gate.validate_manifest_shape(manifest)
 
+    def test_artifacts_block_required(self):
+        for bad in (
+            {"name": "x"},  # missing retention_days
+            {"name": "", "retention_days": 30},  # empty name
+            {"name": "x", "retention_days": 0},  # non-positive retention
+            {"name": "x", "retention_days": True},  # bool is not a valid int
+        ):
+            manifest = self._valid_manifest()
+            manifest["artifacts"] = bad
+            with self.assertRaisesRegex(GateViolation, "artifacts"):
+                gate.validate_manifest_shape(manifest)
+
     def test_bool_cap_is_not_accepted_as_int(self):
         manifest = self._valid_manifest()
         manifest["caps"]["max_new_spend_cents"] = True

@@ -238,6 +238,21 @@ def validate_manifest_shape(manifest: Any) -> None:
         "one_shot.run_record_path must be present",
     )
 
+    # The evidence artifact name/retention are driven by the manifest (design
+    # doc invariant 12). Validate them here so preflight (secretless) fails
+    # closed on a malformed artifacts block, rather than the paid execute job's
+    # resolve step failing later.
+    artifacts = manifest.get("artifacts")
+    _require(
+        isinstance(artifacts, dict)
+        and isinstance(artifacts.get("name"), str)
+        and artifacts.get("name")
+        and isinstance(artifacts.get("retention_days"), int)
+        and not isinstance(artifacts.get("retention_days"), bool)
+        and artifacts["retention_days"] > 0,
+        "artifacts.name (non-empty str) and artifacts.retention_days (positive int) are required",
+    )
+
     _require(manifest.get("provider_calls_authorized") is False,
              "provider_calls_authorized must be false in the manifest")
     _require(manifest.get("spend_authorized") is False,
