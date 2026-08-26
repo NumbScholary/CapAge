@@ -264,6 +264,26 @@ class ManifestShapeTests(unittest.TestCase):
         with self.assertRaisesRegex(GateViolation, "positive integer"):
             gate.validate_manifest_shape(manifest)
 
+    def test_artifacts_block_required(self):
+        manifest = self._valid_manifest()
+        del manifest["artifacts"]
+        with self.assertRaisesRegex(GateViolation, "artifacts must be an object"):
+            gate.validate_manifest_shape(manifest)
+
+    def test_artifacts_name_must_be_non_empty_string(self):
+        for bad in ("", 123, None):
+            manifest = self._valid_manifest()
+            manifest["artifacts"]["name"] = bad
+            with self.assertRaisesRegex(GateViolation, "artifacts.name must be a non-empty string"):
+                gate.validate_manifest_shape(manifest)
+
+    def test_artifacts_retention_days_must_be_positive_int(self):
+        for bad in (0, -1, "30", 30.0, True):
+            manifest = self._valid_manifest()
+            manifest["artifacts"]["retention_days"] = bad
+            with self.assertRaisesRegex(GateViolation, "artifacts.retention_days must be a positive integer"):
+                gate.validate_manifest_shape(manifest)
+
 
 class PreflightGitTests(unittest.TestCase):
     def test_happy_path_provenance(self):

@@ -238,6 +238,27 @@ def validate_manifest_shape(manifest: Any) -> None:
         "one_shot.run_record_path must be present",
     )
 
+    # The workflow's evidence-upload step reads artifacts.name / retention_days
+    # from this frozen manifest (design doc invariant 12: "artifact name from
+    # manifest"). Validating them here means a malformed or missing artifacts
+    # block fails closed at preflight -- in the secretless job -- rather than
+    # only surfacing later in the paid execute job's resolve step. Charset
+    # validity of the name as a GitHub artifact name (no "/", etc.) stays a
+    # human freeze-review item; the example "cell6-debug-restricted" is fine.
+    artifacts = manifest.get("artifacts")
+    _require(isinstance(artifacts, dict), "artifacts must be an object")
+    _require(
+        isinstance(artifacts.get("name"), str) and artifacts.get("name"),
+        "artifacts.name must be a non-empty string",
+    )
+    retention_days = artifacts.get("retention_days")
+    _require(
+        isinstance(retention_days, int)
+        and not isinstance(retention_days, bool)
+        and retention_days > 0,
+        "artifacts.retention_days must be a positive integer",
+    )
+
     _require(manifest.get("provider_calls_authorized") is False,
              "provider_calls_authorized must be false in the manifest")
     _require(manifest.get("spend_authorized") is False,
