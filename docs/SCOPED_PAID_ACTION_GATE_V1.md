@@ -334,11 +334,16 @@ Per action:
    in-process `OneShotExecutionGuard` pattern is retained by the called
    launch modules.
 
-## Hardening (recommended, owner's decision)
+## Hardening (adopted 2026-08-25)
 
-**Environment-scoped secret with required reviewer.** Create a GitHub
-environment `paid-runs` whose only secret is `ANTHROPIC_API_KEY`, with Kev as
-required reviewer, and remove the repo-level copy of the key. Effects:
+Both measures below are now **live** in the repository (Kev completed the
+settings changes on 2026-08-25); they are no longer open recommendations.
+
+**Environment-scoped secret with required reviewer — ADOPTED.** The GitHub
+environment `paid-runs` exists, with required reviewer `numbscholar`, admin
+bypass disabled, and its only secret `ANTHROPIC_API_KEY`. The repository-level
+secrets `ANTHROPIC_API_KEY` and `OPENAI_API_KEY` have both been deleted, so the
+Anthropic key now exists only inside `paid-runs`. Effects:
 
 - The execute job pauses after a correct authorization merge until Kev
   approves it in the GitHub UI — a second, cheap, out-of-band confirmation
@@ -350,13 +355,18 @@ required reviewer, and remove the repo-level copy of the key. Effects:
   configuration rather than by discipline, and the historical files remain
   byte-identical evidence.
 
-Cost: one extra click per authorized run, and a one-time repo-settings change
-only Kev can make. Recommendation: adopt. This is the single largest risk
-reduction in this document and is valuable even if nothing else here is
-adopted.
+Cost: one extra click per authorized run. This was the single largest risk
+reduction in this document and is now in force. Structural consequence
+(2026-08-25): with the repo-level key deleted, every historical spend-capable
+workflow is inert — no key is reachable — without any of their files being
+edited, and re-enabling any of them would require adding an
+`environment: paid-runs` reference, i.e. a visible reviewed code diff.
 
-**Branch protection for `launch/**`.** Require PRs (no direct pushes), forbid
-force-pushes and deletions. Repo-settings change, Kev-only. Recommended.
+**Branch protection for `launch/**` — ADOPTED.** A classic branch-protection
+rule is live: PR required before merging, force-pushes forbidden, deletions
+forbidden. (Required approvals are set to 0 because GitHub does not count the
+sole owner's self-approval; the required-reviewer control lives in the
+`paid-runs` environment instead.)
 
 ## Failure and threat analysis
 
@@ -389,6 +399,22 @@ force-pushes and deletions. Repo-settings change, Kev-only. Recommended.
   admin rights plus the owner's approval channels. The gate narrows the paid
   path to "Kev merges a byte-exact file, and (if adopted) Kev approves the
   environment" — it does not and cannot replace GitHub account security.
+
+### Cost of consolidation (blast radius)
+
+Consolidating the two hand-built gates into one shared, reused mechanism is the
+central design choice, and it carries a real cost worth stating plainly beside
+its benefit. The benefit is a single reviewed enforcement path, so the copies
+cannot silently drift apart or be individually weakened. The cost is the mirror
+image: two independently reviewed gates also *fail* independently, whereas one
+shared gate means a single defect — a logic error in an invariant check, a
+manifest mis-parse, a substitution bug — reaches every future scoped paid action
+at once. This is not an argument against consolidation (drift across diverging
+copies is the worse failure mode, and per action the phrase/commit binding and
+the `paid-runs` environment approval still fail independently of the gate code).
+It is a known, accepted cost, and it is exactly why this module warrants
+disproportionate review attention, exhaustive negative-case tests, and the
+fail-closed-on-any-doubt posture the rest of this document requires.
 
 ## Relation to the CapAge authority model
 
@@ -498,11 +524,13 @@ is machine-verified and only the judgment part is left to the owner.
 
 ## Open questions for review
 
-1. Adopt the `paid-runs` environment + required reviewer + environment-scoped
-   secret? (Recommended yes; also structurally disarms historical
-   dispatchable workflows without editing their files. Kev-only settings
-   change.)
-2. Branch protection rules for `launch/**`? (Recommended yes; Kev-only.)
+1. **Resolved (2026-08-25): adopted.** The `paid-runs` environment (required
+   reviewer `numbscholar`, admin bypass disabled, environment-scoped
+   `ANTHROPIC_API_KEY`) is live and the repo-level secrets are deleted. This
+   also structurally disarmed the historical dispatchable workflows without
+   editing their files. See "Hardening".
+2. **Resolved (2026-08-25): adopted.** Branch protection on `launch/**` is live
+   (PR required, force-pushes and deletions forbidden). See "Hardening".
 3. **Resolved (2026-08-25): no working spend ceiling in code.** The proposed
    `GATE_MAX_CENTS = 2160` was rejected — hardwiring the largest cap ever
    individually approved quietly implies $21.60 is pre-blessed, exactly the
