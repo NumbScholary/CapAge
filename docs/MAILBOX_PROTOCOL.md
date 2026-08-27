@@ -8,7 +8,7 @@ summaries, as authoritative for current mechanics.
 
 ## What this is
 
-A shared, append-only communication channel between Claude (governance/reasoning
+A shared, append-only communication channel between Keeper (governance/reasoning
 partner, no direct repo execution access) and Coder (Claude Code, running
 locally with real repo/filesystem access) so the two can coordinate without
 Kev manually relaying every message.
@@ -23,8 +23,8 @@ provider calls, merges, deployment, or any action gated elsewhere (see
 Branch: `agent/mailbox-init`
 
 Directories, one file per message:
-- `.agent-mailbox/claude-to-coder/` — Claude writes here; Coder reads.
-- `.agent-mailbox/coder-to-claude/` — Coder writes here; Claude reads.
+- `.agent-mailbox/claude-to-coder/` — Keeper writes here; Coder reads.
+- `.agent-mailbox/coder-to-claude/` — Coder writes here; Keeper reads.
 
 Message files are named `YYYYMMDD-HHMM-slug.md` (UTC), e.g.
 `20260825-0259-mailbox-v2-adopted.md`. Every write is a pure file creation —
@@ -45,10 +45,10 @@ Message body format (unchanged from v1 entries):
 v1 used two growing flat files (`.agent-mailbox/claude-to-coder.md` and
 `.agent-mailbox/coder-to-claude.md`), each append-only by convention.
 
-The fragility that motivated v2: Claude's GitHub connector can list files,
+The fragility that motivated v2: Keeper's GitHub connector can list files,
 read commit metadata, and read commit diffs as text, but cannot reliably read
 a file's full current body as text — only its blob SHA. Since appending to a
-single growing file requires submitting the complete new body, Claude could
+single growing file requires submitting the complete new body, Keeper could
 not safely append without first reconstructing the current body (by replaying
 the file's commit history) and verifying the reconstruction's computed git
 blob SHA matched the SHA GitHub reported for the live file. This was slow and
@@ -67,13 +67,13 @@ changes.
 
 ## Authority split under this protocol
 
-Both Claude and Coder may, without needing Kev's approval each time:
+Both Keeper and Coder may, without needing Kev's approval each time:
 reading files, running the existing test suite and reporting results,
 describing dependency graphs or repo state, committing to a feature branch,
 and opening a pull request.
 
 Any pull request either agent opens must still be reported to Kev promptly.
-That reporting duty belongs to Claude in conversation with Kev.
+That reporting duty belongs to Keeper in conversation with Kev.
 
 Kev's explicit, direct approval is still required, every time, for: merging
 into `main`, touching configuration/policy/executor/accounting/governance
@@ -150,7 +150,7 @@ scope must be explicit.
 
 ## For a fresh instance orienting itself
 
-If you are a new Claude instance: read this file from GitHub directly rather
+If you are a new Keeper instance: read this file from GitHub directly rather
 than relying on memory, prior chat summaries, or project-knowledge copies,
 since this file is the live authoritative version. Then list both message
 directories and read the most recent message files for open items before
@@ -159,5 +159,5 @@ are historical context only.)
 
 If you are a fresh Coder instance: you have no built-in awareness that this
 mailbox exists unless told, or unless a pointer to this file has been added to
-`AGENTS.md` (check `AGENTS.md` for that pointer; if absent, ask Kev or Claude).
+`AGENTS.md` (check `AGENTS.md` for that pointer; if absent, ask Kev or Keeper).
 Once oriented, read the mailbox files directly via git.
