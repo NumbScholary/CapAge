@@ -12,7 +12,7 @@ history, governance constraints, branch topology, or the exact next action.
 The GitHub repository remains the durable source of truth. Conversation-only
 facts that materially affect continuation are recorded here.
 
-Repository: `Numbscholar/CapAge` (private)
+Repository: `Numbscholar/CapAge` (public; organization-owned, GitHub free tier)
 
 Clone URL: `https://github.com/Numbscholar/CapAge.git`
 
