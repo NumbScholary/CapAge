@@ -12,9 +12,9 @@ history, governance constraints, branch topology, or the exact next action.
 The GitHub repository remains the durable source of truth. Conversation-only
 facts that materially affect continuation are recorded here.
 
-Repository: `Numbscholar/CapAge` (private)
+Repository: `NumbScholary/CapAge` (public)
 
-Clone URL: `https://github.com/Numbscholar/CapAge.git`
+Clone URL: `https://github.com/NumbScholary/CapAge.git`
 
 Default branch: `main`
 
@@ -28,7 +28,7 @@ API billing instead of the intended Claude account login.
 
 ```bash
 git clone --branch agent/claude-code-handoff-2026-08-19 \
-  --single-branch https://github.com/Numbscholar/CapAge.git
+  --single-branch https://github.com/NumbScholary/CapAge.git
 cd CapAge
 git fetch origin '+refs/heads/*:refs/remotes/origin/*'
 git status -sb
