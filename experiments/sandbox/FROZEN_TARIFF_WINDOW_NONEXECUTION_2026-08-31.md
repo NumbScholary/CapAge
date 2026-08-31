@@ -23,6 +23,12 @@ Lapse of a frozen tariff window is not a failure and is not INCONCLUSIVE about
 any experiment. It means only that these manifests may not be executed as-is
 after 2026-08-31 without a fresh, explicitly recorded tariff verification.
 
+This record concerns the tariff-window lapse only. Where a manifest also has a
+dedicated design-disposition record — for example the frozen 48-cell blocked
+replication's closure in `HOMEOSTASIS_V2_REPLICATION_NONEXECUTION_2026-08-31.md`
+— that record governs the design question; this table cross-references it and
+does not restate or override it.
+
 ## Price context (shared by all fourteen)
 
 Every listed window freezes the same Sonnet 5 rate: $2.00 / MTok input,
@@ -37,8 +43,8 @@ passed), not a price change.
 | Manifest (`experiments/sandbox/`) | Window | Disposition — why it did not execute in-window |
 |---|---|---|
 | `hosting_liability_tariff_replication_plan_v1.json` | 2026-08-31 | Partial paid run only: run `32710531510`, 5/48 cells, then stopped (cell 6 failed). Remaining 43 cells not executed. Window **renewed** to 2027-08-31 by the companion note. |
-| `economic_homeostasis_v2_replication_plan_v1.json` | 2026-08-31 | **Retired** by owner decision 2026-08-23 (`HOMEOSTASIS_V2_REPLICATION_RETIRED.md`). Never launched; not renewed. |
-| `economic_homeostasis_v2_replication_prereg_v1.json` | 2026-08-31 | Preregistration for the retired blocked replication above; retired with it. |
+| `economic_homeostasis_v2_replication_plan_v1.json` | 2026-08-31 | Frozen 48-cell V1-vs-V2 blocked replication. Retired by owner 2026-08-23 (`HOMEOSTASIS_V2_REPLICATION_RETIRED.md`) and closed 2026-08-31 as **superseded by the broader 128-condition two-axis sweep** (deliberate redundancy, not error). Never authorized; no cell executed; not renewed. Its dedicated closure artifact — authoritative for that design's closure, the permanently-void authorization phrase, and the preserved 28.9156c aborted-run cost — is `HOMEOSTASIS_V2_REPLICATION_NONEXECUTION_2026-08-31.md` (on the `agent/mailbox-init` records line). |
+| `economic_homeostasis_v2_replication_prereg_v1.json` | 2026-08-31 | Preregistration for the closed 48-cell blocked replication above; see its dedicated closure record `HOMEOSTASIS_V2_REPLICATION_NONEXECUTION_2026-08-31.md`. |
 | `economic_homeostasis_v2_prereg_v1.json` | 2026-08-31 | Frozen design / unpaid implementation. The three-arm diagnostic (run `32304273201`) completed but failed its advancement gate; that lineage was retired. No further paid run in-window. |
 | `economic_homeostasis_active_plan_v1.json` | 2026-08-31 | V1 active matched experiment, executed historically (its authorization record is present; V1 final capital $442.50). No new paid run in-window. |
 | `pilot_manifest_v1.json` | 2026-08-31 | Sonnet sandbox pilot v1, executed historically (seed 001; ~6.36c provider usage). Preserved partial transcript; not rerun. |
