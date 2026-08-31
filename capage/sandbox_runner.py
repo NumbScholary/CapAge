@@ -642,6 +642,15 @@ class LiveSandboxRunner:
             if not quote["affordable"]:
                 stop_reason = "insufficient_synthetic_capital_for_next_call"
                 break
+            # ANALYSIS HAZARD (item (e), Keeper review 2026-08-31): this pre-call
+            # cap break leaves run_status == "completed" and only sets stop_reason.
+            # A cost-truncated cell therefore reports status="completed", the same
+            # as a full run. Valid-cell selection MUST key on
+            # stop_reason in {"decision_limit", "horizon_reached"} and NEVER on
+            # status alone -- otherwise capped cells are silently admitted as valid
+            # observations, and because cap-binding correlates with the high-tariff
+            # treatment cells the study exists to measure, that bias is systematic,
+            # not random. Same note repeated at the result dict below.
             if _ceil_div(projected_units, _COST_UNITS_PER_CENT) > self.config.max_run_cost_cents:
                 stop_reason = "external_model_cost_cap_reached"
                 break
@@ -750,6 +759,15 @@ class LiveSandboxRunner:
             stop_reason = "decision_limit"
 
         self._advance_environment_to_horizon()
+        # Valid-cell selection rule (item (e)): "status" == "completed" covers BOTH
+        # a clean finish AND a pre-call cost-cap truncation
+        # (stop_reason="external_model_cost_cap_reached"), so a truncated cell is
+        # indistinguishable from a full one on status alone. Downstream analysis
+        # must select valid cells by stop_reason in {"decision_limit",
+        # "horizon_reached"} and never by status. This also links to the Overseer's
+        # decision to raise the per-cell cap to >= the analytic ceiling: a cap that
+        # can silently truncate treatment cells is a measurement hazard, not a
+        # budget control, so the cap is sized as a runaway detector, not a limiter.
         result = {
             "schema_version": "capage-live-sandbox-result-v1",
             "status": run_status,

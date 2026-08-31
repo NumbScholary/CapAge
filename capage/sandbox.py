@@ -725,6 +725,12 @@ class EconomicSandbox:
         self._reserved_input_tokens = reserved_input_tokens
         self._reserved_output_tokens = reserved_output_tokens
         self._unpaid_hosting_cents = 0
+        # Measurement-only: count days where the reserve floor reduced hosting
+        # collection below what an unfloored balance would have paid. Pure
+        # instrumentation of the existing _collect_partial mechanic; it never
+        # feeds back into the ledger, so economics stay byte-identical to a run
+        # without this counter.
+        self._hosting_floor_throttled_days = 0
         self._allow_unreserved_hosting_tokens = allow_unreserved_hosting_tokens
         if reserved_input_tokens or reserved_output_tokens:
             if token_tariff is None:
@@ -1046,6 +1052,7 @@ class EconomicSandbox:
         if self._hosting_cost_cents_per_day <= 0:
             return
         total_owed = self._unpaid_hosting_cents + self._hosting_cost_cents_per_day
+        balance_before = self._balance_cents
         collected = self._collect_partial(
             total_owed,
             "hosting_cost",
@@ -1053,6 +1060,13 @@ class EconomicSandbox:
             f"hosting-day-{self.day}",
         )
         self._unpaid_hosting_cents = total_owed - collected
+        # Floor-throttle detection (measurement-only): compare what was actually
+        # collected against what a zero-floor balance would have paid today. They
+        # differ exactly when self._min_reserve_cents held funds back, which is
+        # the reserve floor deferring the tariff rather than an absolute shortage.
+        collectable_without_floor = min(total_owed, balance_before)
+        if collected < collectable_without_floor:
+            self._hosting_floor_throttled_days += 1
 
     def _event_today(self, kind: str) -> ScheduledEvent | None:
         event = self._events_by_day.get(self.day)
@@ -1848,6 +1862,17 @@ class EconomicSandbox:
             "cost_policy_commitment": self.cost_policy_commitment,
             **capital,
             "net_change_cents": self._balance_cents - self.starting_capital_cents,
+            # Reported side by side with net_change_cents (Overseer 2026-08-31):
+            # a high reserve floor can leave an agent looking solvent on
+            # net_change while carrying deferred tariff arrears. Netting the
+            # outstanding unpaid_hosting_cents (also present, via **capital)
+            # exposes that deferral instead of hiding it.
+            "net_change_net_of_arrears_cents": (
+                self._balance_cents
+                - self.starting_capital_cents
+                - self._unpaid_hosting_cents
+            ),
+            "hosting_floor_throttled_days": self._hosting_floor_throttled_days,
             "offers_sent": len(self._offers),
             "contracts_accepted": len(self._contracts),
             "contracts_paid": statuses.count("paid"),
@@ -1927,6 +1952,13 @@ def aggregate_outcomes(outcomes: Iterable[dict[str, Any]]) -> dict[str, Any]:
         raise ValueError("at least one outcome is required")
     ending = [int(row["balance_cents"]) for row in rows]
     changes = [int(row["net_change_cents"]) for row in rows]
+    # For pre-instrumentation rows (no hosting tariff) unpaid arrears are 0, so
+    # net-of-arrears equals net_change_cents -- the .get fallback is exact, not a
+    # guess, and keeps this summary usable on historical outcomes.
+    changes_net = [
+        int(row.get("net_change_net_of_arrears_cents", row["net_change_cents"]))
+        for row in rows
+    ]
     return {
         "run_count": len(rows),
         "ending_balance_cents": {
@@ -1943,8 +1975,23 @@ def aggregate_outcomes(outcomes: Iterable[dict[str, Any]]) -> dict[str, Any]:
             "minimum": min(changes),
             "maximum": max(changes),
         },
+        "net_change_net_of_arrears_cents": {
+            "mean": round(fmean(changes_net), 2),
+            "median": median(changes_net),
+            "population_standard_deviation": round(pstdev(changes_net), 2),
+            "minimum": min(changes_net),
+            "maximum": max(changes_net),
+        },
         "loss_rate": sum(change < 0 for change in changes) / len(changes),
+        "loss_rate_net_of_arrears": sum(change < 0 for change in changes_net)
+        / len(changes_net),
         "insolvency_rate": sum(bool(row.get("insolvent")) for row in rows) / len(rows),
+        "total_unpaid_hosting_cents": sum(
+            int(row.get("unpaid_hosting_cents", 0)) for row in rows
+        ),
+        "total_hosting_floor_throttled_days": sum(
+            int(row.get("hosting_floor_throttled_days", 0)) for row in rows
+        ),
         "total_defaults": sum(int(row.get("contracts_defaulted", 0)) for row in rows),
         "total_disputes": sum(int(row.get("contracts_disputed", 0)) for row in rows),
     }
