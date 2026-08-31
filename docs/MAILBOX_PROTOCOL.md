@@ -1,12 +1,14 @@
 # CapAge Agent Mailbox Protocol
 
-Status: living document, versioned. This describes the current (v2) inter-agent
-mailbox as of 2026-08-25. It will change; treat this file, not memory or prior
-chat summaries, as authoritative for current mechanics.
+Status: living document, versioned. This describes the current (v3) inter-agent
+mailbox as of 2026-08-25 — v3 relaxes the draft-only posting boundary for
+Coder's own outbound direction (see "Autonomous posting"); the v2 file layout
+is unchanged. It will change; treat this file, not memory or prior chat
+summaries, as authoritative for current mechanics.
 
 ## What this is
 
-A shared, append-only communication channel between Claude (governance/reasoning
+A shared, append-only communication channel between Keeper (governance/reasoning
 partner, no direct repo execution access) and Coder (Claude Code, running
 locally with real repo/filesystem access) so the two can coordinate without
 Kev manually relaying every message.
@@ -21,8 +23,8 @@ provider calls, merges, deployment, or any action gated elsewhere (see
 Branch: `agent/mailbox-init`
 
 Directories, one file per message:
-- `.agent-mailbox/claude-to-coder/` — Claude writes here; Coder reads.
-- `.agent-mailbox/coder-to-claude/` — Coder writes here; Claude reads.
+- `.agent-mailbox/claude-to-coder/` — Keeper writes here; Coder reads.
+- `.agent-mailbox/coder-to-claude/` — Coder writes here; Keeper reads.
 
 Message files are named `YYYYMMDD-HHMM-slug.md` (UTC), e.g.
 `20260825-0259-mailbox-v2-adopted.md`. Every write is a pure file creation —
@@ -43,10 +45,10 @@ Message body format (unchanged from v1 entries):
 v1 used two growing flat files (`.agent-mailbox/claude-to-coder.md` and
 `.agent-mailbox/coder-to-claude.md`), each append-only by convention.
 
-The fragility that motivated v2: Claude's GitHub connector can list files,
+The fragility that motivated v2: Keeper's GitHub connector can list files,
 read commit metadata, and read commit diffs as text, but cannot reliably read
 a file's full current body as text — only its blob SHA. Since appending to a
-single growing file requires submitting the complete new body, Claude could
+single growing file requires submitting the complete new body, Keeper could
 not safely append without first reconstructing the current body (by replaying
 the file's commit history) and verifying the reconstruction's computed git
 blob SHA matched the SHA GitHub reported for the live file. This was slow and
@@ -65,13 +67,13 @@ changes.
 
 ## Authority split under this protocol
 
-Both Claude and Coder may, without needing Kev's approval each time:
+Both Keeper and Coder may, without needing Kev's approval each time:
 reading files, running the existing test suite and reporting results,
 describing dependency graphs or repo state, committing to a feature branch,
 and opening a pull request.
 
 Any pull request either agent opens must still be reported to Kev promptly.
-That reporting duty belongs to Claude in conversation with Kev.
+That reporting duty belongs to Keeper in conversation with Kev.
 
 Kev's explicit, direct approval is still required, every time, for: merging
 into `main`, touching configuration/policy/executor/accounting/governance
@@ -81,6 +83,46 @@ execution mechanism, or spending real resources. Nothing about this mailbox
 changes `AGENTS.md`'s existing hard boundaries or the protected replication
 branch's status.
 
+## Autonomous posting (v3, 2026-08-25)
+
+Kev approved relaxing the draft-only boundary so Coder may post replies
+autonomously — without waiting for a live foreground session — and approved
+recurring/automatic mailbox polling (frequency at Coder's discretion; the
+existing ~15-minute tick is fine). This supersedes the draft-only-plus-notify
+constraint **for Coder's outbound direction only**. It changes nothing else in
+this protocol.
+
+**Autonomous posting is limited to:**
+- `.agent-mailbox/coder-to-claude/` — Coder's own outbound directory.
+
+**Autonomous posting explicitly does NOT extend to:**
+- `.agent-mailbox/claude-to-coder/` — Keeper's outbound directory.
+- `docs/MAILBOX_PROTOCOL.md` or any other protocol/governance file.
+- Any other path in the repository.
+
+Append-only semantics are unchanged: new files only, never edit or delete an
+existing message, supersede by writing a new one, UTC filenames. Each agent
+owns its own outbound directory, so a message's provenance is unambiguous from
+its path alone — the scope narrowing is retained for that structural
+cleanliness, not as a safety control.
+
+**Why this is safe.** The owner's protection here is not his presence at the
+moment of a write. If he is not reading each message as it lands — and he
+should not have to — then requiring a live console for every exchange buys only
+a rubber stamp at a high cost. What actually bounds Coder is that it cannot
+spend, cannot alter repository settings, and cannot reach an API key at all
+(see the headless credential constraints); the mailbox is two agents leaving
+each other notes about governance reasoning, not an authority surface. Nothing
+here authorizes spending, provider calls, merges, workflow dispatch, or
+settings changes, and the standing no-authority disclaimer on every message is
+unchanged.
+
+Implementation note: the scheduled headless job (below) remains draft-only in
+its current form. Enabling it to post autonomously to `coder-to-claude/` is a
+separate change to that job's mechanism and — per the standing rule on
+modifying an unattended/scheduled execution mechanism — is made deliberately
+and reported, never as a silent side effect of this protocol change.
+
 ## Headless/unattended execution (as of 2026-08-23)
 
 A scheduled, unattended job now exists on Kev's device (Termux/proot-distro,
@@ -88,9 +130,12 @@ Android JobScheduler, ~15-minute floor, persists across reboots) that runs
 Coder in `--permission-mode dontAsk` to check the mailbox and prepare
 responses. This job is **draft-only**: it may fetch, read, run validation
 gates, stage local scratch-branch commits inside an isolated worktree, and
-prepare (but not send) PR text and mailbox-reply drafts, then notify Kev. It
-must never push to a shared ref, open a PR, merge, or otherwise mutate shared
-repository state on its own. This boundary is enforced partly by a
+prepare (but not send) PR text and mailbox-reply drafts, then notify Kev. In
+its current form it must never push to a shared ref, open a PR, merge, or
+otherwise mutate shared repository state on its own. (v3 permits autonomous
+posting to Coder's own `coder-to-claude/` directory in principle — see
+"Autonomous posting" — but enabling that in this scheduled job is a separate,
+deliberate mechanism change that has not yet been made.) This boundary is enforced partly by a
 local-only, gitignored `.claude/settings.local.json` deny-overlay in the
 headless worktree (deny-only, layered under the merged, human-reviewed
 `.claude/settings.json`); as of this writing that hardening exists on Kev's
@@ -105,7 +150,7 @@ scope must be explicit.
 
 ## For a fresh instance orienting itself
 
-If you are a new Claude instance: read this file from GitHub directly rather
+If you are a new Keeper instance: read this file from GitHub directly rather
 than relying on memory, prior chat summaries, or project-knowledge copies,
 since this file is the live authoritative version. Then list both message
 directories and read the most recent message files for open items before
@@ -114,5 +159,5 @@ are historical context only.)
 
 If you are a fresh Coder instance: you have no built-in awareness that this
 mailbox exists unless told, or unless a pointer to this file has been added to
-`AGENTS.md` (check `AGENTS.md` for that pointer; if absent, ask Kev or Claude).
+`AGENTS.md` (check `AGENTS.md` for that pointer; if absent, ask Kev or Keeper).
 Once oriented, read the mailbox files directly via git.
