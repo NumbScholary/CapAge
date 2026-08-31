@@ -16,6 +16,16 @@ and to make the authorization phrase's status explicit beyond doubt. Per cl.
 belongs in a durably recorded, non-deleted document rather than only in
 mailbox or chat history.
 
+The lapse of this manifest's frozen tariff window on 2026-08-31 is separately
+enumerated in `FROZEN_TARIFF_WINDOW_NONEXECUTION_2026-08-31.md`, which lists
+`economic_homeostasis_v2_replication_plan_v1.json` and
+`economic_homeostasis_v2_replication_prereg_v1.json` among the fourteen
+windows ending that day and cross-references this record. That tariff-window
+record concerns the window lapse only; **this record is authoritative for the
+design's closure**, the permanently-void authorization phrase (section 4), and
+the preserved 28.9156-cent aborted-run cost (section 5). The two records cite
+each other and neither restates or overrides the other.
+
 ## 1. Never authorized, never executed
 
 The frozen 48-cell V1-vs-unchanged-V2 blocked replication -- preregistered in
