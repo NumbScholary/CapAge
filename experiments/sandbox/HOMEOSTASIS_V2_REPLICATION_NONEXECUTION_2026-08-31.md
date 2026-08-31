@@ -82,6 +82,14 @@ This is append-only evidence per cl. 83 (durable ledger) and cl. 84 (failure
 preservation): a closed, non-executed design is preserved as a record, not
 deleted or rewritten merely because it will never run.
 
+Separately, a dated tariff-window non-execution record,
+`FROZEN_TARIFF_WINDOW_NONEXECUTION_2026-08-31.md`, records that this design's
+frozen plan and preregistration -- along with every other
+`experiments/sandbox` manifest whose `token_tariff` window ends 2026-08-31 --
+lapse their tariff window today. That record addresses the tariff-window
+question only and points back to this closure for the design question; the two
+are complementary, and neither restates or overrides the other.
+
 ## 4. Authorization phrase: permanently void
 
 The only authorization phrase template that could ever have triggered a paid
