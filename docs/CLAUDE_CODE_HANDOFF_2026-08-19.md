@@ -28,12 +28,23 @@ API billing instead of the intended Claude account login.
 
 ```bash
 git clone --branch agent/claude-code-handoff-2026-08-19 \
-  --single-branch https://github.com/NumbScholary/CapAge.git
+  https://github.com/NumbScholary/CapAge.git
 cd CapAge
-git fetch origin '+refs/heads/*:refs/remotes/origin/*'
+# Do not use --single-branch. It scopes remote.origin.fetch to the entry
+# branch only, so a later `git fetch --all` updates FETCH_HEAD but never
+# advances refs/remotes/origin/* for other branches (e.g. agent/mailbox-init).
+# A stale tracking ref then reads as a missing message even though the commit
+# exists on the remote. Set the wildcard refspec persistently before fetching
+# so every subsequent fetch keeps all tracking refs current.
+git config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
+git fetch origin
 git status -sb
 claude
 ```
+
+A one-shot `git fetch origin '+refs/heads/*:...'` is not a substitute for the
+`git config` line above: it advances tracking refs once but leaves the
+persistent refspec narrow, so the next `git fetch --all` silently lags again.
 
 Inside Claude Code:
 
