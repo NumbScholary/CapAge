@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import date, datetime, time, timedelta, timezone
 import json
 from pathlib import Path
 import tempfile
@@ -14,14 +14,22 @@ from capage.homeostasis_active_runner import (
 from capage.homeostasis_experiment import make_treatment_runner_class
 
 
-# The frozen tariff is valid through 2026-08-31. Pin a deterministic instant
-# inside that window so the suite no longer depends on the real wall clock,
-# and a separate instant past expiry to exercise the frozen_tariff_expired gate.
-_WITHIN_TARIFF = datetime(2026, 8, 15, tzinfo=timezone.utc)
-_PAST_TARIFF = datetime(2026, 9, 30, tzinfo=timezone.utc)
+def _clock_for(plan, *, expired=False):
+    """Inject "today" derived from the manifest the runner itself reads.
 
+    Within-window tests pin the manifest's own valid_through (the last valid
+    day), the boundary where an off-by-one in the expiry comparison would
+    surface. Expiry tests pin the first expired day. Deriving both from the
+    same manifest keeps the suite deterministic and self-adjusting if the
+    frozen valid_through ever legitimately moves; it does not, and is not
+    meant to, validate that the frozen date is correct.
+    """
 
-def _fixed_clock(moment):
+    valid_through = date.fromisoformat(
+        plan["frozen_config"]["token_tariff"]["valid_through"]
+    )
+    day = valid_through + timedelta(days=1) if expired else valid_through
+    moment = datetime.combine(day, time(), tzinfo=timezone.utc)
     return lambda: moment
 
 
@@ -133,7 +141,7 @@ class ActiveRunnerGateTests(unittest.TestCase):
                 treatment_runner_factory=treatment,
                 run_config_factory=fake_config_factory,
                 empty_continuity_factory=lambda: {"schema_version": "test"},
-                clock=_fixed_clock(_WITHIN_TARIFF),
+                clock=_clock_for(self.plan),
             )
             result = runner.run(max_cells=12)
 
@@ -168,7 +176,7 @@ class ActiveRunnerGateTests(unittest.TestCase):
                 treatment_runner_factory=treatment,
                 run_config_factory=fake_config_factory,
                 empty_continuity_factory=lambda: {"schema_version": "test"},
-                clock=_fixed_clock(_PAST_TARIFF),
+                clock=_clock_for(self.plan, expired=True),
             )
             result = runner.run(max_cells=12)
 
