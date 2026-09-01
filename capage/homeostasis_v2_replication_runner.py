@@ -84,6 +84,13 @@ def _atomic_json(path: Path, payload: dict[str, Any]) -> None:
     _atomic_text(path, json.dumps(payload, indent=2, sort_keys=True) + "\n")
 
 
+def _utc_now() -> datetime:
+    """Wall-clock seam. Injectable so the frozen-tariff guard is testable
+    without depending on the day the test runs; production uses this default,
+    which is exactly datetime.now(timezone.utc)."""
+    return datetime.now(timezone.utc)
+
+
 def runtime_commitments(root: str | Path) -> dict[str, str]:
     return path_commitments(_ORCHESTRATION_PATHS, root=root)
 
@@ -184,6 +191,7 @@ class BlockedReplicationRunner:
         empty_continuity_factory: Callable[[], dict[str, Any]],
         execution_guard: ExecutionGuard,
         root: str | Path | None = None,
+        now: Callable[[], datetime] | None = None,
     ) -> None:
         if set(runner_factories) != set(ARMS):
             raise ValueError("runner_factories must contain exactly v1 and v2")
@@ -202,6 +210,7 @@ class BlockedReplicationRunner:
         self.world_factory = world_factory
         self.empty_continuity_factory = empty_continuity_factory
         self.execution_guard = execution_guard
+        self._now = now or _utc_now
         self._matched_worlds = {
             (int(record["block_index"]), int(record["period_index"])): record
             for record in self.plan["matched_worlds"]
@@ -588,7 +597,7 @@ class BlockedReplicationRunner:
             raise ValueError("max_cells must be between 1 and 48")
         if self.state["status"] == "completed":
             return self.state
-        if datetime.now(timezone.utc).date() > date.fromisoformat(
+        if self._now().date() > date.fromisoformat(
             self.config.tariff_valid_through
         ):
             self.state["status"] = "stopped"
