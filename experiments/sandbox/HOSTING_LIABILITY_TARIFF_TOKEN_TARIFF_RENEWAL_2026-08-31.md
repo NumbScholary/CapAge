@@ -50,9 +50,18 @@ diverging its bytes from that executed-run evidence and making run
 `32710531510`'s checkpoint non-resumable under the runner's `plan_sha256`
 guard. To keep the frozen plan's byte-correspondence to the paid run intact,
 the owner (Kev, 2026-08-31) directed that the renewal be recorded here as an
-append-only note, leaving the plan file unchanged. Where the renewed window
-and the in-file `valid_through` differ, **this record is authoritative for the
-renewed window.**
+append-only note, leaving the plan file unchanged.
+
+The plan file therefore remains byte-unchanged at `valid_through: 2026-08-31`.
+The runner reads `valid_through` from the plan file's own bytes and refuses
+execution once the wall-clock date passes it: as of 2026-09-01 a run of this
+plan stops with `frozen_tariff_expired` (the same fail-closed guard that
+surfaced in CI at the date rollover). This record is therefore authoritative
+only as the **owner's recorded decision** about the renewed window; it is
+**not** a mechanism that makes the renewed window effective at execution time.
+Giving the renewed window execution effect would require a separately
+authorized mechanism, which this record does not propose, choose, or
+authorize.
 
 ## Scope and non-authority
 
