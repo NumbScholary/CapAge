@@ -106,6 +106,13 @@ class ActiveConfig:
         return _digest(asdict(self))
 
 
+def _utc_now() -> datetime:
+    """Wall-clock seam. Injectable so the frozen-tariff guard is testable
+    without depending on the day the test runs; production uses this default,
+    which is exactly datetime.now(timezone.utc)."""
+    return datetime.now(timezone.utc)
+
+
 RunnerFactory = Callable[..., Any]
 RunConfigFactory = Callable[..., Any]
 
@@ -124,6 +131,7 @@ class ActiveHomeostasisRunner:
         treatment_runner_factory: RunnerFactory,
         run_config_factory: RunConfigFactory,
         empty_continuity_factory: Callable[[], dict[str, Any]],
+        now: Callable[[], datetime] | None = None,
     ) -> None:
         self.plan = json.loads(_canonical_json(plan))
         self.config = ActiveConfig.from_plan(self.plan)
@@ -134,6 +142,7 @@ class ActiveHomeostasisRunner:
         self.treatment_runner_factory = treatment_runner_factory
         self.run_config_factory = run_config_factory
         self.empty_continuity_factory = empty_continuity_factory
+        self._now = now or _utc_now
         self.state = self._load_or_initialize()
 
     def _initial_state(self) -> dict[str, Any]:
@@ -234,7 +243,7 @@ class ActiveHomeostasisRunner:
             raise ValueError("max_cells must be between 1 and 12")
         if self.state["status"] == "completed":
             return self.state
-        if datetime.now(timezone.utc).date() > date.fromisoformat(
+        if self._now().date() > date.fromisoformat(
             self.config.tariff_valid_through
         ):
             self.state["status"] = "stopped"

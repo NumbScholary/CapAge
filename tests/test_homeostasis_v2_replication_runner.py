@@ -1,5 +1,6 @@
 from copy import deepcopy
 from dataclasses import asdict
+from datetime import datetime, timezone
 import json
 from pathlib import Path
 import tempfile
@@ -17,6 +18,16 @@ from capage.sandbox import (
     empty_continuity_state,
 )
 from capage.sandbox_runner import SandboxRunConfig
+
+
+def _manifest_clock(plan):
+    # Freeze "now" to the manifest's own token_tariff valid-through date (the last
+    # valid day) so the frozen-tariff guard runs deterministically, independent of
+    # the wall-clock day the test executes. Derived from the same manifest the
+    # runner reads, so these tests do not validate the manifest date itself.
+    valid_through = plan["frozen_config"]["token_tariff"]["valid_through"]
+    frozen = datetime.fromisoformat(valid_through).replace(tzinfo=timezone.utc)
+    return lambda: frozen
 
 
 class FakeCellRunner:
@@ -176,6 +187,7 @@ class BlockedReplicationRunnerTests(unittest.TestCase):
             empty_continuity_factory=empty_continuity_state,
             execution_guard=guard,
             root=self.root,
+            now=_manifest_clock(self.plan),
         )
 
     def test_budget_is_exact_and_materialization_remains_unpaid(self):
