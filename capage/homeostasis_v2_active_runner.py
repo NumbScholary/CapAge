@@ -131,6 +131,13 @@ class ActiveConfig:
         return _digest(asdict(self))
 
 
+def _utc_now() -> datetime:
+    """Wall-clock seam. Injectable so the frozen-tariff guard is testable
+    without depending on the day the test runs; production uses this default,
+    which is exactly datetime.now(timezone.utc)."""
+    return datetime.now(timezone.utc)
+
+
 RunnerFactory = Callable[..., Any]
 RunConfigFactory = Callable[..., Any]
 
@@ -148,6 +155,7 @@ class ThreeArmHomeostasisRunner:
         runner_factories: dict[str, RunnerFactory],
         run_config_factory: RunConfigFactory,
         empty_continuity_factory: Callable[[], dict[str, Any]],
+        now: Callable[[], datetime] | None = None,
     ) -> None:
         if set(runner_factories) != set(ARMS):
             raise ValueError("runner_factories must contain control, v1, and v2")
@@ -166,6 +174,7 @@ class ThreeArmHomeostasisRunner:
         self.empty_continuity_factory = empty_continuity_factory
         self.prior_model_cost_units = ABORTED_RUN_MODEL_COST_UNITS
         self.prior_cost_reference = ABORTED_RUN_COST_REFERENCE
+        self._now = now or _utc_now
         self.state = self._load_or_initialize()
 
     def _initial_state(self) -> dict[str, Any]:
@@ -476,7 +485,7 @@ class ThreeArmHomeostasisRunner:
             raise ValueError("max_cells must be between 1 and 18")
         if self.state["status"] == "completed":
             return self.state
-        if datetime.now(timezone.utc).date() > date.fromisoformat(
+        if self._now().date() > date.fromisoformat(
             self.config.tariff_valid_through
         ):
             self.state["status"] = "stopped"

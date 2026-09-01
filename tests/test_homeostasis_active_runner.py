@@ -1,4 +1,5 @@
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 import tempfile
 from types import SimpleNamespace
@@ -11,6 +12,16 @@ from capage.homeostasis_active_runner import (
     CONFIRMATION,
 )
 from capage.homeostasis_experiment import make_treatment_runner_class
+
+
+def _manifest_clock(plan):
+    # Freeze "now" to the manifest's own token_tariff valid-through date (the last
+    # valid day) so the frozen-tariff guard runs deterministically, independent of
+    # the wall-clock day the test executes. Derived from the same manifest the
+    # runner reads, so these tests do not validate the manifest date itself.
+    valid_through = plan["frozen_config"]["token_tariff"]["valid_through"]
+    frozen = datetime.fromisoformat(valid_through).replace(tzinfo=timezone.utc)
+    return lambda: frozen
 
 
 class FakeCellRunner:
@@ -121,6 +132,7 @@ class ActiveRunnerGateTests(unittest.TestCase):
                 treatment_runner_factory=treatment,
                 run_config_factory=fake_config_factory,
                 empty_continuity_factory=lambda: {"schema_version": "test"},
+                now=_manifest_clock(self.plan),
             )
             result = runner.run(max_cells=12)
 
