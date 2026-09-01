@@ -110,6 +110,17 @@ RunnerFactory = Callable[..., Any]
 RunConfigFactory = Callable[..., Any]
 
 
+def _system_clock() -> datetime:
+    """Default injectable clock: the real wall clock, UTC.
+
+    Tariff-expiry checks read the current time through an injected clock so
+    tests can pin a deterministic instant without monkey-patching module
+    globals. The frozen default preserves prior production behaviour exactly.
+    """
+
+    return datetime.now(timezone.utc)
+
+
 class ActiveHomeostasisRunner:
     """Run frozen cells serially, checkpointing after every completed result."""
 
@@ -124,6 +135,7 @@ class ActiveHomeostasisRunner:
         treatment_runner_factory: RunnerFactory,
         run_config_factory: RunConfigFactory,
         empty_continuity_factory: Callable[[], dict[str, Any]],
+        clock: Callable[[], datetime] | None = None,
     ) -> None:
         self.plan = json.loads(_canonical_json(plan))
         self.config = ActiveConfig.from_plan(self.plan)
@@ -134,6 +146,7 @@ class ActiveHomeostasisRunner:
         self.treatment_runner_factory = treatment_runner_factory
         self.run_config_factory = run_config_factory
         self.empty_continuity_factory = empty_continuity_factory
+        self._clock = clock if clock is not None else _system_clock
         self.state = self._load_or_initialize()
 
     def _initial_state(self) -> dict[str, Any]:
@@ -234,7 +247,7 @@ class ActiveHomeostasisRunner:
             raise ValueError("max_cells must be between 1 and 12")
         if self.state["status"] == "completed":
             return self.state
-        if datetime.now(timezone.utc).date() > date.fromisoformat(
+        if self._clock().date() > date.fromisoformat(
             self.config.tariff_valid_through
         ):
             self.state["status"] = "stopped"

@@ -135,6 +135,17 @@ RunnerFactory = Callable[..., Any]
 RunConfigFactory = Callable[..., Any]
 
 
+def _system_clock() -> datetime:
+    """Default injectable clock: the real wall clock, UTC.
+
+    Tariff-expiry checks read the current time through an injected clock so
+    tests can pin a deterministic instant without monkey-patching module
+    globals. The frozen default preserves prior production behaviour exactly.
+    """
+
+    return datetime.now(timezone.utc)
+
+
 class ThreeArmHomeostasisRunner:
     """Run frozen cells serially and fail closed around every paid attempt."""
 
@@ -148,6 +159,7 @@ class ThreeArmHomeostasisRunner:
         runner_factories: dict[str, RunnerFactory],
         run_config_factory: RunConfigFactory,
         empty_continuity_factory: Callable[[], dict[str, Any]],
+        clock: Callable[[], datetime] | None = None,
     ) -> None:
         if set(runner_factories) != set(ARMS):
             raise ValueError("runner_factories must contain control, v1, and v2")
@@ -166,6 +178,7 @@ class ThreeArmHomeostasisRunner:
         self.empty_continuity_factory = empty_continuity_factory
         self.prior_model_cost_units = ABORTED_RUN_MODEL_COST_UNITS
         self.prior_cost_reference = ABORTED_RUN_COST_REFERENCE
+        self._clock = clock if clock is not None else _system_clock
         self.state = self._load_or_initialize()
 
     def _initial_state(self) -> dict[str, Any]:
@@ -476,7 +489,7 @@ class ThreeArmHomeostasisRunner:
             raise ValueError("max_cells must be between 1 and 18")
         if self.state["status"] == "completed":
             return self.state
-        if datetime.now(timezone.utc).date() > date.fromisoformat(
+        if self._clock().date() > date.fromisoformat(
             self.config.tariff_valid_through
         ):
             self.state["status"] = "stopped"

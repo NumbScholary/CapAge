@@ -1,5 +1,6 @@
 from copy import deepcopy
 from dataclasses import asdict
+from datetime import datetime, timezone
 import json
 from pathlib import Path
 import tempfile
@@ -17,6 +18,17 @@ from capage.sandbox import (
     empty_continuity_state,
 )
 from capage.sandbox_runner import SandboxRunConfig
+
+
+# The frozen tariff is valid through 2026-08-31. Pin a deterministic instant
+# inside that window so the suite no longer depends on the real wall clock,
+# and a separate instant past expiry to exercise the frozen_tariff_expired gate.
+_WITHIN_TARIFF = datetime(2026, 8, 15, tzinfo=timezone.utc)
+_PAST_TARIFF = datetime(2026, 9, 30, tzinfo=timezone.utc)
+
+
+def _fixed_clock(moment):
+    return lambda: moment
 
 
 class FakeCellRunner:
@@ -147,7 +159,7 @@ class BlockedReplicationRunnerTests(unittest.TestCase):
         FakeCellRunner.fail_arms = set()
         FakeCellRunner.extra_search_arms = set()
 
-    def runner(self, directory, *, guard=lambda: None):
+    def runner(self, directory, *, guard=lambda: None, clock=None):
         frozen = self.plan["frozen_config"]
         tariff_data = frozen["token_tariff"]
         tariff = TokenTariff(
@@ -176,6 +188,7 @@ class BlockedReplicationRunnerTests(unittest.TestCase):
             empty_continuity_factory=empty_continuity_state,
             execution_guard=guard,
             root=self.root,
+            clock=clock if clock is not None else _fixed_clock(_WITHIN_TARIFF),
         )
 
     def test_budget_is_exact_and_materialization_remains_unpaid(self):
@@ -196,6 +209,17 @@ class BlockedReplicationRunnerTests(unittest.TestCase):
                 runner.run(max_cells=1)
             self.assertFalse((Path(directory) / "checkpoint.json").exists())
             self.assertEqual(FakeCellRunner.calls, [])
+
+    def test_expired_tariff_stops_before_any_paid_cell(self):
+        with tempfile.TemporaryDirectory() as directory:
+            result = self.runner(
+                directory, clock=_fixed_clock(_PAST_TARIFF)
+            ).run(max_cells=48)
+
+        self.assertEqual(result["status"], "stopped")
+        self.assertEqual(result["stop_reason"], "frozen_tariff_expired")
+        self.assertEqual(result["completed_cells"], {})
+        self.assertEqual(FakeCellRunner.calls, [])
 
     def test_full_run_resets_blocks_and_preserves_only_own_arm_state(self):
         with tempfile.TemporaryDirectory() as directory:

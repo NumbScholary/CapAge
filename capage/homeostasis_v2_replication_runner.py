@@ -167,6 +167,17 @@ RunConfigFactory = Callable[..., Any]
 ExecutionGuard = Callable[[], None]
 
 
+def _system_clock() -> datetime:
+    """Default injectable clock: the real wall clock, UTC.
+
+    Tariff-expiry checks read the current time through an injected clock so
+    tests can pin a deterministic instant without monkey-patching module
+    globals. The frozen default preserves prior production behaviour exactly.
+    """
+
+    return datetime.now(timezone.utc)
+
+
 class BlockedReplicationRunner:
     """Run the frozen 48-cell prefix serially and fail closed on ambiguity."""
 
@@ -184,6 +195,7 @@ class BlockedReplicationRunner:
         empty_continuity_factory: Callable[[], dict[str, Any]],
         execution_guard: ExecutionGuard,
         root: str | Path | None = None,
+        clock: Callable[[], datetime] | None = None,
     ) -> None:
         if set(runner_factories) != set(ARMS):
             raise ValueError("runner_factories must contain exactly v1 and v2")
@@ -202,6 +214,7 @@ class BlockedReplicationRunner:
         self.world_factory = world_factory
         self.empty_continuity_factory = empty_continuity_factory
         self.execution_guard = execution_guard
+        self._clock = clock if clock is not None else _system_clock
         self._matched_worlds = {
             (int(record["block_index"]), int(record["period_index"])): record
             for record in self.plan["matched_worlds"]
@@ -588,7 +601,7 @@ class BlockedReplicationRunner:
             raise ValueError("max_cells must be between 1 and 48")
         if self.state["status"] == "completed":
             return self.state
-        if datetime.now(timezone.utc).date() > date.fromisoformat(
+        if self._clock().date() > date.fromisoformat(
             self.config.tariff_valid_through
         ):
             self.state["status"] = "stopped"

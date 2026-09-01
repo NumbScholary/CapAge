@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 import json
 from pathlib import Path
 import tempfile
@@ -11,6 +12,17 @@ from capage.homeostasis_active_runner import (
     CONFIRMATION,
 )
 from capage.homeostasis_experiment import make_treatment_runner_class
+
+
+# The frozen tariff is valid through 2026-08-31. Pin a deterministic instant
+# inside that window so the suite no longer depends on the real wall clock,
+# and a separate instant past expiry to exercise the frozen_tariff_expired gate.
+_WITHIN_TARIFF = datetime(2026, 8, 15, tzinfo=timezone.utc)
+_PAST_TARIFF = datetime(2026, 9, 30, tzinfo=timezone.utc)
+
+
+def _fixed_clock(moment):
+    return lambda: moment
 
 
 class FakeCellRunner:
@@ -121,6 +133,7 @@ class ActiveRunnerGateTests(unittest.TestCase):
                 treatment_runner_factory=treatment,
                 run_config_factory=fake_config_factory,
                 empty_continuity_factory=lambda: {"schema_version": "test"},
+                clock=_fixed_clock(_WITHIN_TARIFF),
             )
             result = runner.run(max_cells=12)
 
@@ -138,6 +151,31 @@ class ActiveRunnerGateTests(unittest.TestCase):
         self.assertEqual(len(treatment_requests), 6)
         self.assertEqual(len(control_requests), 6)
         self.assertIn("productive_urgency: high", treatment_requests[1]["system"])
+
+    def test_expired_tariff_stops_before_any_paid_cell(self):
+        FakeCellRunner.requests = []
+        treatment = make_treatment_runner_class(FakeCellRunner)
+        with tempfile.TemporaryDirectory() as directory, patch(
+            "capage.homeostasis_active_runner.implementation_commitments",
+            return_value={"test": "frozen"},
+        ):
+            runner = ActiveHomeostasisRunner(
+                self.plan,
+                object(),
+                checkpoint_path=Path(directory) / "checkpoint.json",
+                artifact_dir=Path(directory) / "cells",
+                control_runner_factory=FakeCellRunner,
+                treatment_runner_factory=treatment,
+                run_config_factory=fake_config_factory,
+                empty_continuity_factory=lambda: {"schema_version": "test"},
+                clock=_fixed_clock(_PAST_TARIFF),
+            )
+            result = runner.run(max_cells=12)
+
+        self.assertEqual(result["status"], "stopped")
+        self.assertEqual(result["stop_reason"], "frozen_tariff_expired")
+        self.assertEqual(result["completed_cells"], {})
+        self.assertEqual(FakeCellRunner.requests, [])
 
 
 if __name__ == "__main__":

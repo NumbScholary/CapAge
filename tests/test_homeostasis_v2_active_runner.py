@@ -1,4 +1,5 @@
 from copy import deepcopy
+from datetime import datetime, timezone
 import json
 from pathlib import Path
 from types import SimpleNamespace
@@ -17,6 +18,17 @@ from capage.homeostasis_v2_active_runner import (
     main,
 )
 from capage.sandbox import TokenTariff
+
+
+# The frozen tariff is valid through 2026-08-31. Pin a deterministic instant
+# inside that window so the suite no longer depends on the real wall clock,
+# and a separate instant past expiry to exercise the frozen_tariff_expired gate.
+_WITHIN_TARIFF = datetime(2026, 8, 15, tzinfo=timezone.utc)
+_PAST_TARIFF = datetime(2026, 9, 30, tzinfo=timezone.utc)
+
+
+def _fixed_clock(moment):
+    return lambda: moment
 
 
 class FakeCellRunner:
@@ -187,7 +199,7 @@ class ThreeArmActiveRunnerGateTests(unittest.TestCase):
         FakeCellRunner.calls = []
         FakeCellRunner.fail_arms = set()
 
-    def runner(self, directory):
+    def runner(self, directory, *, clock=None):
         return ThreeArmHomeostasisRunner(
             self.plan,
             object(),
@@ -196,6 +208,7 @@ class ThreeArmActiveRunnerGateTests(unittest.TestCase):
             runner_factories=fake_factories(),
             run_config_factory=fake_config_factory,
             empty_continuity_factory=lambda: {"history": []},
+            clock=clock if clock is not None else _fixed_clock(_WITHIN_TARIFF),
         )
 
     def test_confirmation_and_budget_are_exact(self):
@@ -228,6 +241,20 @@ class ThreeArmActiveRunnerGateTests(unittest.TestCase):
         self.assertFalse(self.plan["provider_calls_authorized"])
         self.assertFalse(self.plan["spend_authorized"])
         self.assertFalse(self.plan["workflow_present"])
+
+    def test_expired_tariff_stops_before_any_paid_cell(self):
+        with tempfile.TemporaryDirectory() as directory, patch(
+            "capage.homeostasis_v2_active_runner.implementation_commitments",
+            return_value={"test": "frozen"},
+        ):
+            result = self.runner(
+                directory, clock=_fixed_clock(_PAST_TARIFF)
+            ).run(max_cells=18)
+
+        self.assertEqual(result["status"], "stopped")
+        self.assertEqual(result["stop_reason"], "frozen_tariff_expired")
+        self.assertEqual(result["completed_cells"], {})
+        self.assertEqual(FakeCellRunner.calls, [])
 
     def test_full_run_is_balanced_isolated_and_checkpointed(self):
         with tempfile.TemporaryDirectory() as directory, patch(
