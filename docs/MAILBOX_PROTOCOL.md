@@ -123,24 +123,43 @@ separate change to that job's mechanism and — per the standing rule on
 modifying an unattended/scheduled execution mechanism — is made deliberately
 and reported, never as a silent side effect of this protocol change.
 
-## Headless/unattended execution (as of 2026-08-23)
+## Headless/unattended execution (stood down 2026-09-03; corrected 2026-09-06)
 
-A scheduled, unattended job now exists on Kev's device (Termux/proot-distro,
-Android JobScheduler, ~15-minute floor, persists across reboots) that runs
-Coder in `--permission-mode dontAsk` to check the mailbox and prepare
-responses. This job is **draft-only**: it may fetch, read, run validation
-gates, stage local scratch-branch commits inside an isolated worktree, and
-prepare (but not send) PR text and mailbox-reply drafts, then notify Kev. In
-its current form it must never push to a shared ref, open a PR, merge, or
-otherwise mutate shared repository state on its own. (v3 permits autonomous
-posting to Coder's own `coder-to-claude/` directory in principle — see
-"Autonomous posting" — but enabling that in this scheduled job is a separate,
-deliberate mechanism change that has not yet been made.) This boundary is enforced partly by a
-local-only, gitignored `.claude/settings.local.json` deny-overlay in the
-headless worktree (deny-only, layered under the merged, human-reviewed
-`.claude/settings.json`); as of this writing that hardening exists on Kev's
-device only and has not been merged into the shared, committed settings file.
-Check the mailbox for whether that decision has since been made either way.
+**Correction note (2026-09-06).** The scheduled unattended job described in
+earlier versions of this section is no longer running, and one claim it made
+about isolation was wrong. Both are corrected below and the prior description is
+preserved as history rather than deleted, so the record stays legible.
+
+What existed (2026-08-23 to 2026-09-03): a scheduled, unattended job on Kev's
+device (Termux/proot-distro, Android JobScheduler, ~15-minute floor, persisting
+across reboots) that ran Coder in `--permission-mode dontAsk` to check the
+mailbox and prepare responses. It was draft-only — it could fetch, read, run
+validation gates, stage local scratch-branch commits, and prepare (but not
+send) PR text and mailbox-reply drafts, then notify Kev — and it never pushed to
+a shared ref, opened a PR, merged, or otherwise mutated shared repository state
+on its own. A local-only, gitignored `.claude/settings.local.json` deny-overlay
+on Kev's device layered additional deny-only restrictions under the reviewed
+`.claude/settings.json`; it was never merged into the shared committed settings
+and applied only to that job.
+
+Current status: **stood down.** The Android JobScheduler job was cancelled
+2026-09-03; the inner script was neutralized by rename on 2026-09-01. Nothing
+was deleted. The job is not to be restored, re-enabled, or rebuilt in place.
+
+Correction to the isolation claim: the linked worktree at `/root/CapAge-headless`
+was **not** an isolation boundary. It shared the foreground repo's git object
+store, refs, and locks — which is precisely what made two agents operating in
+one repository a race condition. The earlier phrasing ("a local scratch-branch
+commit inside an isolated worktree") overstated the separation that actually
+existed.
+
+Any future unattended helper is to be stood up on the new machine as one
+bundle, per the separate-disposable-clone design: a disposable clone per helper,
+reserved and reaped `refs/heads/headless/*`, wrapper-level timeout and teardown,
+a git-dir-free courier, and credentials scoped under identity separation. That
+credential scoping is the standing constraint the "headless credential
+constraints" elsewhere in this file refer to: an unattended helper is bounded by
+not being able to reach an API key at all, not by its presence in any worktree.
 
 The permission classifier that governs Coder's actions requires the
 unattended/scheduled/`dontAsk` mechanism to be named explicitly by Kev before
