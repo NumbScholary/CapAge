@@ -9,12 +9,14 @@ the ledger is not quietly incomplete.**
 
 Fourteen frozen manifests under `experiments/sandbox/` carry a `token_tariff`
 (or `tariff_valid_through`) with `valid_through: 2026-08-31`. That window ends
-today. Only one of them — the hosting-liability tariff replication plan — has
-its window renewed (see
-`HOSTING_LIABILITY_TARIFF_TOKEN_TARIFF_RENEWAL_2026-08-31.md`, renewed to
-2027-08-31 with prices unchanged). The owner (Kev, 2026-08-31) deliberately
-did **not** renew the other thirteen; renewing manifests not individually
-considered would authorize plan changes by side effect. Their windows
+today. Only one of them — the hosting-liability tariff replication plan — has a
+companion owner-decision record (see
+`HOSTING_LIABILITY_TARIFF_NO_EXPIRY_2026-08-31.md`), which records that its
+frozen tariff has **no expiry**: the $2 / $10 rate was made the standard
+permanent price, so there is no window to renew. The owner (Kev, 2026-08-31)
+deliberately made no such individual record for the other thirteen; treating
+manifests not individually considered as renewed or extended would authorize
+plan changes by side effect. Their windows
 therefore lapse today. Documenting one manifest while others lapse unrecorded
 would leave the record silently incomplete, so all fourteen are enumerated
 here with their disposition.
@@ -42,7 +44,7 @@ passed), not a price change.
 
 | Manifest (`experiments/sandbox/`) | Window | Disposition — why it did not execute in-window |
 |---|---|---|
-| `hosting_liability_tariff_replication_plan_v1.json` | 2026-08-31 | Partial paid run only: run `32710531510`, 5/48 cells, then stopped (cell 6 failed). Remaining 43 cells not executed. Window **renewed** to 2027-08-31 by the companion note. |
+| `hosting_liability_tariff_replication_plan_v1.json` | 2026-08-31 | Partial paid run only: run `32710531510`, 5/48 cells, then stopped (cell 6 failed). Remaining 43 cells not executed. Its companion record notes the frozen tariff has **no expiry** (permanent price); the plan file is unchanged and still reads `valid_through: 2026-08-31`. |
 | `economic_homeostasis_v2_replication_plan_v1.json` | 2026-08-31 | Frozen 48-cell V1-vs-V2 blocked replication. Retired by owner 2026-08-23 (`HOMEOSTASIS_V2_REPLICATION_RETIRED.md`) and closed 2026-08-31 as **superseded by the broader 128-condition two-axis sweep** (deliberate redundancy, not error). Never authorized; no cell executed; not renewed. Its dedicated closure artifact — authoritative for that design's closure, the permanently-void authorization phrase, and the preserved 28.9156c aborted-run cost — is `HOMEOSTASIS_V2_REPLICATION_NONEXECUTION_2026-08-31.md`, currently in draft PR #70 (branch `agent/homeostasis-v2-nonexecution-record`), not yet merged — PR #68 was closed in its favour. Once it lands it governs the design closure; this table neither restates nor overrides it. |
 | `economic_homeostasis_v2_replication_prereg_v1.json` | 2026-08-31 | Preregistration for the closed 48-cell blocked replication above; see its dedicated closure record `HOMEOSTASIS_V2_REPLICATION_NONEXECUTION_2026-08-31.md`. |
 | `economic_homeostasis_v2_prereg_v1.json` | 2026-08-31 | Frozen design / unpaid implementation. The three-arm diagnostic (run `32304273201`) completed but failed its advancement gate; that lineage was retired. No further paid run in-window. |
