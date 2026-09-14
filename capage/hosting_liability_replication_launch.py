@@ -37,7 +37,7 @@ from capage.hosting_liability_replication_runner import (
 )
 
 
-PLAN_PATH = "experiments/sandbox/hosting_liability_tariff_replication_plan_v1.json"
+PLAN_PATH = "experiments/sandbox/hosting_liability_tariff_replication_plan_v2.json"
 PREREGISTRATION_PATH = (
     "experiments/sandbox/HOSTING_LIABILITY_TARIFF_REPLICATION_PREREG_v1.md"
 )
