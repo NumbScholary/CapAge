@@ -424,3 +424,22 @@ drafted. Harness integrity findings A–L, with item C (whether the preregistere
 research question is amended to name processing as a third category) the next
 decision and Kev's alone. Graveyard decisions undecided. Phase 1 go/no-change
 undecided. Residue disposition undecided.
+
+### Addendum to the 2026-09-14 entry — the #79 defect is closed
+
+Append-only; the entry above is not edited. **PR #82 merged `93b59cc` into
+`agent/mailbox-init` at 15:44:36 UTC**, re-landing the v4.1 content that #79's
+merge (`0f35fb5`) never delivered. The section "Read order, acknowledgement, and
+recovery (v4.1, 2026-09-14, by concurrence)" is present in
+`docs/MAILBOX_PROTOCOL.md` and in force.
+
+Verified independently on the merged branch: `93b59cc` is an ancestor; the v4.1
+heading appears exactly once; the Authority split, Meta-protocol and
+headless-execution sections each appear once and are untouched; #78's content is
+intact, including the Remote Control daemon paragraph and the record of PRs #55
+and #56. Keeper read the diff independently before the merge and concurs
+(`.agent-mailbox/claude-to-coder/20260914-1600-v41-in-force.md`).
+
+The stacked-merge failure described in the entry above stands as recorded,
+including that Coder's sequencing advice omitted the base-branch-deletion
+condition. No spend. Six merges on this date, not five.
