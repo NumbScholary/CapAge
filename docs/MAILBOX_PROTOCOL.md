@@ -131,11 +131,13 @@ reasoning, not an authority surface. Nothing here authorizes spending, provider
 calls, merges, workflow dispatch, or settings changes, and the standing
 no-authority disclaimer on every message is unchanged.
 
-Implementation note: the scheduled headless job (below) remains draft-only in
-its current form. Enabling it to post autonomously is a separate change to that
-job's mechanism and — per the standing rule on modifying an
-unattended/scheduled execution mechanism — is made deliberately by Kev and
-reported, never as a silent side effect of a protocol change.
+Implementation note (corrected 2026-09-14): no scheduled job exists. The job
+that existed was stood down (see "Headless/unattended execution") and never
+posted autonomously. Coder has no poller and reads the mailbox when prompted.
+Enabling any future unattended helper to post autonomously is a separate
+mechanism change — per the standing rule on modifying an unattended/scheduled
+execution mechanism — made deliberately by Kev and reported, never as a silent
+side effect of a protocol change.
 
 ## Meta-protocol (v4, 2026-09-12)
 
@@ -180,25 +182,69 @@ a message recording that the edit was made and by whose concurrence. Absent
 concurrence, the file is unchanged. A proposal is not an amendment; silence is
 not concurrence (Cl. 37).
 
-## Headless/unattended execution (as of 2026-08-23)
+## Headless/unattended execution (stood down 2026-09-03; corrected 2026-09-06 and 2026-09-14)
 
-A scheduled, unattended job now exists on Kev's device (Termux/proot-distro,
-Android JobScheduler, ~15-minute floor, persists across reboots) that runs
-Coder in `--permission-mode dontAsk` to check the mailbox and prepare
-responses. This job is **draft-only**: it may fetch, read, run validation
-gates, stage local scratch-branch commits inside an isolated worktree, and
-prepare (but not send) PR text and mailbox-reply drafts, then notify Kev. In
-its current form it must never push to a shared ref, open a PR, merge, or
-otherwise mutate shared repository state on its own. (v3/v4 permit autonomous
-posting to an agent's own outbound directory in principle — see "Autonomous
-posting" — but enabling that in this scheduled job is a separate, deliberate
-mechanism change that has not yet been made, and is Kev's alone under
-"Meta-protocol.") This boundary is enforced partly by a
-local-only, gitignored `.claude/settings.local.json` deny-overlay in the
-headless worktree (deny-only, layered under the merged, human-reviewed
-`.claude/settings.json`); as of this writing that hardening exists on Kev's
-device only and has not been merged into the shared, committed settings file.
-Check the mailbox for whether that decision has since been made either way.
+**Correction notes (2026-09-06; extended 2026-09-14).** The scheduled unattended
+job described in earlier versions of this section is no longer running; one
+claim it made about isolation was wrong; and this section was not a complete
+account of unattended mechanisms. All three are corrected below. The prior
+description is preserved as history rather than deleted, so the record stays
+legible. The facts here were verified from the device on 2026-09-14
+(`coder-to-claude/20260914-0915-headless-inventory-0904.md`).
+
+What existed (2026-08-23 to 2026-09-03): a scheduled, unattended job on Kev's
+device (Termux/proot-distro, Android JobScheduler job id 1, ~15-minute floor,
+persisting across reboots) that ran Coder in `--permission-mode dontAsk` inside
+the linked worktree `/root/CapAge-headless` to check the mailbox and prepare
+responses. It was draft-only: it could fetch, read, run validation gates, stage
+local scratch-branch commits, and prepare (but not send) PR text and
+mailbox-reply drafts, then notify Kev. It never pushed to a shared ref, opened
+a PR, merged, or posted to the mailbox. It did, however, create branches in the
+**shared** ref namespace (`agent/clock-injection-phase-one`,
+`agent/clock-injection-verify-fix`), and on 2026-09-01 the first of those was
+sent to origin by a bare `git push` from the foreground clone — the collision
+that led to the stop. The committed `.claude/settings.json` on the branch the
+worktree sat on **allowed** `git push origin agent/*` and `gh pr create*`; what
+held the job back from pushing was a local-only, gitignored
+`.claude/settings.local.json` deny-overlay on Kev's device, never merged into
+the shared committed settings, plus the draft-only prompt text.
+
+Current status: **stood down, in two stages.** 2026-09-01: the inner script was
+neutralized by rename on Kev's direct instruction to Coder. 2026-09-03: Kev
+cancelled the JobScheduler job in Termux. Nothing was deleted. The residue
+(the registered worktree, still checked out on `agent/clock-injection-verify-fix`;
+the Termux-side bridge script; the stub and the preserved script; the run log
+and drafts) is **frozen in place pending Kev's word** — not live, since nothing
+wakes it, and not inert, since the shared-git-dir and settings posture above is
+unchanged. The job is not to be restored, re-enabled, or rebuilt in place.
+
+Correction to the isolation claim: the linked worktree at `/root/CapAge-headless`
+was **not** an isolation boundary. It shared the foreground repo's git object
+store, refs, and locks — which is precisely what made two agents operating in
+one repository a race condition. The earlier phrasing ("a local scratch-branch
+commit inside an isolated worktree") overstated the separation that actually
+existed.
+
+**A second unattended mechanism existed and is recorded nowhere else in this
+repository.** From 2026-08-22 21:32 UTC to 2026-08-27, Claude Code's Remote
+Control daemon (paired to the claude.ai app via `/web-setup`) ran on Kev's
+device and spawned one separate Claude Code session per incoming app message —
+nine sessions, sequential, each with its own transcript and no thread to the
+foreground session, running with `auto` or `acceptEdits` permissions under the
+committed `settings.json`. One of them opened PRs #55 and #56 from its own
+worktree on 2026-08-24, on Kev's instruction through the app. Kev asked for the
+pairing to be disconnected on 2026-08-22 22:11 UTC; the daemon's last logged
+activity is 2026-08-27, and Remote Control is disabled in Claude Code's
+configuration now (the setting carries no date). This is the mechanism that
+wrote to shared state; the scheduled job above never did.
+
+Any future unattended helper is to be stood up on the new machine as one
+bundle, per the separate-disposable-clone design: a disposable clone per helper,
+reserved and reaped `refs/heads/headless/*`, wrapper-level timeout and teardown,
+a git-dir-free courier, and credentials scoped under identity separation. That
+credential scoping is the standing constraint the "headless credential
+constraints" elsewhere in this file refer to: an unattended helper is bounded by
+not being able to reach an API key at all, not by its presence in any worktree.
 
 The permission classifier that governs Coder's actions requires the
 unattended/scheduled/`dontAsk` mechanism to be named explicitly by Kev before
