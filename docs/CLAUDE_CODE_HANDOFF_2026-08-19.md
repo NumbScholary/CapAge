@@ -312,3 +312,115 @@ touch authorization files, use provider credentials, or spend funds.
 
 After that orientation, continue from the user's current instruction rather
 than reviving older proposed work automatically.
+
+## Ledger entry — 2026-09-14
+
+Append-only, per Cl. 85 and Cl. 103. Nothing above this line is edited. Recorded
+under the standing rule of 2026-09-14 (Keeper handoff §3): money, actions,
+decisions and their authorization only. This entry supersedes, on the points it
+names, the sections "Open draft PRs requiring deliberate disposition",
+"Launch audit and present authorization state", and "Validation baseline".
+
+### Authorization transition — the tariff expiry no longer blocks a run
+
+**Owner decision, Kev, 2026-09-14, by voice, relayed in
+`.agent-mailbox/claude-to-coder/20260914-1245-sentinel-kev-authorizes-route-b.md`
+and recorded in `docs/keeper-sessions/2026-09-14-keeper-handoff.md` §1:** Route B
+for the tariff sentinel. A new plan file, value `9999-12-31`. The completed run's
+frozen input is not edited. The guard is not softened.
+
+| artifact | sha256 | `valid_through` |
+|---|---|---|
+| `hosting_liability_tariff_replication_plan_v1.json` | `382001b101df3ac676ab99e661a6b113fd26f7f561340ae9d1bbfc2377218b79` | `2026-08-31` |
+| `hosting_liability_tariff_replication_plan_v2.json` | `bca619372278a6e1eea5816fe1b000e9c7c017e7b242293e29a00a57a0fedc0c` | `9999-12-31` |
+
+- `ReplicationConfig.plan_sha256` `7ee04ce7…753421` → `9112e0a8…4a682d`;
+  `config_commitment` `60ba8529…f6ed3d` → `fbf418ca…ee07cb`.
+- Unchanged and measured: `seed_beacon`
+  `728e8c533b2724ce0b5ff0de0942559ff0046623`; all twelve `matched_worlds`
+  records byte-for-byte including every `cost_policy_commitment_by_arm`;
+  `--validate-only` output.
+- Recorded, not worked around: a v1 checkpoint cannot resume under v2. The only
+  v1 checkpoint belongs to retired run `32710531510`.
+- Section 6 caps unchanged: 45¢ per cell, 2160¢ aggregate. Prereg Section 13
+  addendum records the Section 8 reconfirmation, the tariff having been made
+  permanent 2026-09-06.
+
+**Present authorization state:** the byte-exact owner authorization phrase is
+now the only remaining barrier to a 48-cell paid run. No
+`HOSTING_LIABILITY_TARIFF_REPLICATION_AUTHORIZATION.md` exists, no phrase has
+been issued, and none was requested.
+
+### Merges — five, all by Kev
+
+| PR | merge commit | into | subject |
+|---|---|---|---|
+| #80 | `934fbe2` | `agent/mailbox-init` | forward-port of the injectable-clock seam |
+| #78 | `627f1c3` | `agent/mailbox-init` | headless section correction, daemon recorded |
+| #79 | `0f35fb5` | `coder/mailbox-protocol-headless-correction` | mailbox v4.1 conventions — **did not reach `agent/mailbox-init`, see below** |
+| #73 | `498d048` | `agent/hosting-liability-cell6-debug` | injectable-clock seam, three runners |
+| #81 | `dd70543` | `agent/hosting-liability-cell6-debug` | tariff sentinel, plan v2 |
+
+Branch heads after: `agent/hosting-liability-cell6-debug` at `dd70543`.
+
+**Recorded as an override:** #81 was merged over a red check. The red was
+diagnosed beforehand as inherited from the base branch, which lacked #73 at the
+time, but it was an override and not a passing check.
+
+### Validation baseline — the gate was red for thirteen days by calendar
+
+The dependency-free gate failed from **2026-09-01 00:00 UTC**, when the frozen
+`valid_through` of `2026-08-31` passed and the runners' guard,
+`datetime.now(timezone.utc).date() > valid_through`, began firing. **No commit
+caused it**; the last commit touching `capage/` or `tests/` before the repair was
+`30aff14`, 2026-08-21. Established by running the suite with the clock pinned to
+2026-08-31, which produced zero failures on the same tree. Code and tests were
+both correct; a frozen input expired against a live clock.
+
+Repaired on both branches by the injectable-clock seam, #80 and #73. Current
+state on `agent/hosting-liability-cell6-debug` at `dd70543`: 253 tests, **0
+failures**. Ten `test_transfer` errors appear on the local device only, from
+Python 3.13 against the manifest's 3.12 pin; CI runs 3.12 and passed all eleven.
+
+CI identifiers: run `34840766700` (#80, success), run `34846012443` (#81,
+failure, the inherited red described above).
+
+### Defect found while writing this entry — #79 is stranded
+
+`0f35fb5` is **not an ancestor of `agent/mailbox-init`**, and the v4.1 section is
+absent from the protocol file on that branch. #79 was stacked on #78's branch and
+merged 31 seconds after #78 merged that branch upward, so its base was already
+consumed and GitHub's automatic retarget never applied. The content is intact on
+`coder/mailbox-protocol-v4-1-read-order`. A fresh PR against the current branch
+is required; Coder's earlier sequencing advice omitted that the retarget depends
+on the base branch being deleted.
+
+### Spend
+
+**No spend, no provider call, no workflow dispatch this date.** No authorization
+file was created, edited, or merged.
+
+### Governance and mechanism, recorded
+
+- **Repository visibility corrected:** `NumbScholary/CapAge` is and has been
+  **public**. Prior handoffs describing it as private were wrong in the record,
+  not in the settings.
+- **Headless/unattended inventory completed** from device evidence
+  (`.agent-mailbox/coder-to-claude/20260914-0915-headless-inventory-0904.md`).
+  The scheduled job stopped in two stages: inner script neutralized 2026-09-01 on
+  Kev's instruction to Coder; Android JobScheduler job cancelled by Kev
+  2026-09-03. A second unattended mechanism, the Claude Code Remote Control
+  daemon active 2026-08-22 to 2026-08-27, is now recorded in
+  `docs/MAILBOX_PROTOCOL.md`; it opened PRs #55 and #56 on Kev's instruction. No
+  unattended mechanism is running.
+- **Residue frozen** pending Kev's word: the `/root/CapAge-headless` worktree,
+  the Termux bridge script, `.claude/worktrees/scoped-gate-design`, and six
+  scratchpad worktrees. Nothing removed.
+
+### Open at the close of this entry
+
+PRs #66, #67, #69, #70, #71 unmerged. The byte-exact authorization phrase, not
+drafted. Harness integrity findings A–L, with item C (whether the preregistered
+research question is amended to name processing as a third category) the next
+decision and Kev's alone. Graveyard decisions undecided. Phase 1 go/no-change
+undecided. Residue disposition undecided.
