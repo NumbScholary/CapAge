@@ -215,3 +215,81 @@ Constitution)
 6. A new, explicit, byte-exact owner authorization phrase at launch time,
    per standing CapAge protocol -- nothing above, including this
    approval, authorizes spending on its own.
+
+## 13. Addendum, 2026-09-14: Section 8 tariff reconfirmation and the plan v2 sentinel
+
+**Append-only. Nothing above this line is edited, re-dated, or re-derived
+(Cl. 14 prospective and versioned; Cl. 85 corrections by appending; Cl. 103 no
+retroactive alteration of historical accounting or results).** Owner
+authorization for this addendum and for plan v2: Kev, 2026-09-14, recorded in
+`.agent-mailbox/claude-to-coder/20260914-1245-sentinel-kev-authorizes-route-b.md`.
+
+### What Section 8 required
+
+Section 8 recorded that the frozen model tariff ($2/M input, $10/M output) was
+"valid only through 2026-08-31," and required that if the
+merge-then-materialize chain did not complete inside that window, "the cost
+assumptions in Section 6 must be reconfirmed against whatever tariff is
+actually in effect at that later time." The chain did not complete inside the
+window. This addendum is that reconfirmation.
+
+### The reconfirmation
+
+The tariff did not change at the window's close. It was made permanent, with no
+expiry, recorded 2026-09-06 and reconciled onto
+`agent/hosting-liability-tariff-window-records` (PR #67) as
+`HOSTING_LIABILITY_TARIFF_NO_EXPIRY_2026-08-31.md`. The rates in Section 6 are
+therefore the rates still in effect, and **Section 6's cost parameters,
+per-cell cap of $0.45, and aggregate cap of $21.60 stand unchanged and
+unrecalculated.**
+
+### Why a new plan file exists
+
+Because the pricing has no expiry, the `valid_through` field no longer
+describes a fact about the tariff. Any date placed in it is a **sentinel**. Per
+the owner ruling of 2026-09-12, the field takes a deliberate never-expires
+sentinel value rather than becoming optional or absent, on the reasoning that
+an absurd far-future date cannot be silently misread as a missing value.
+Deletion of the field is a separate, larger change and remains queued behind
+Phase 1 preregistration.
+
+`hosting_liability_tariff_replication_plan_v2.json` is therefore a new frozen
+input carrying `"valid_through": "9999-12-31"` and differing from v1 in that
+one line and nothing else.
+`hosting_liability_tariff_replication_plan_v1.json` is **not edited** and
+remains the frozen input of record for the retired partial run
+`32710531510`, which the append-only cost note in this directory cites by name
+and beacon.
+
+| | v1, unchanged | v2 |
+|---|---|---|
+| file sha256 | `382001b101df3ac676ab99e661a6b113fd26f7f561340ae9d1bbfc2377218b79` | `bca619372278a6e1eea5816fe1b000e9c7c017e7b242293e29a00a57a0fedc0c` |
+| `ReplicationConfig.plan_sha256` | `7ee04ce7…753421` | `9112e0a8…4a682d` |
+| `ReplicationConfig.commitment()` | `60ba8529…f6ed3d` | `fbf418ca…ee07cb` |
+
+Measured, and unchanged between the two: the `seed_beacon`
+`728e8c533b2724ce0b5ff0de0942559ff0046623`; all twelve `matched_worlds`
+records byte-for-byte, including every `cost_policy_commitment_by_arm` value;
+and the `--validate-only` output. The per-arm cost-policy commitments do not
+move because they are built from `TokenTariff`, which carries a name and the
+two rates and no expiry field.
+
+### Known and accepted consequence
+
+The runner writes `config_commitment` into each checkpoint and verifies it on
+resume. A checkpoint written under v1 therefore **cannot** be resumed under
+v2. The only v1 checkpoint belongs to retired run `32710531510` (5 of 48 cells,
+$1.53 debited against the aggregate cap by the owner decision of 2026-08-27),
+whose resumption is not intended and whose artifacts live in the GitHub
+Actions run rather than in this repository. This is recorded as an expected
+consequence, not a defect to be worked around.
+
+### What this addendum does not do
+
+It does not authorize spending, a provider call, or a workflow dispatch. A paid
+48-cell run continues to require a separate, new, byte-exact owner
+authorization phrase bound to the audited launch merge, per Section 12 item 6
+and `docs/CLAUDE_CODE_HANDOFF_2026-08-19.md`. No such phrase exists for plan
+v2. The guard itself is unchanged and still fires against the real clock on any
+genuinely expired tariff; what changed is a frozen input, prospectively, under
+a new version.
