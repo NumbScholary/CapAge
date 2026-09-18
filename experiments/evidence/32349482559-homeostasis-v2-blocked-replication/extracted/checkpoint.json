@@ -1,0 +1,3835 @@
+{
+  "blocks": {
+    "block-01": {
+      "arms": {
+        "v1": {
+          "balance_cents": 24858,
+          "business_continuity": {
+            "customers": {
+              "customer-catalog-cleanup-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-customer-research-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-data-cleanup-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 3,
+                "reputation_points": 0
+              },
+              "customer-data-cleanup-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-lead-qualification-01": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 1,
+                "contracts_paid": 0,
+                "deliveries_assessed": 1,
+                "feedback_responses": 1,
+                "last_outcome": "feedback_dissatisfied",
+                "offers_sent": 1,
+                "reputation_points": -18
+              },
+              "customer-service-clarity-01": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 1,
+                "contracts_paid": 0,
+                "deliveries_assessed": 1,
+                "feedback_responses": 0,
+                "last_outcome": "delivery_disputed",
+                "offers_sent": 1,
+                "reputation_points": -18
+              },
+              "customer-service-clarity-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-supplier-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-supplier-research-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              }
+            },
+            "global_reputation_points": -36,
+            "schema_version": "capage-business-continuity-v1"
+          },
+          "model_cost_units": 73558000
+        },
+        "v2": {
+          "balance_cents": 32857,
+          "business_continuity": {
+            "customers": {
+              "customer-catalog-cleanup-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-data-cleanup-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 3,
+                "reputation_points": 0
+              },
+              "customer-lead-qualification-01": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 1,
+                "deliveries_assessed": 1,
+                "feedback_responses": 0,
+                "last_outcome": "paid",
+                "offers_sent": 3,
+                "reputation_points": 12
+              },
+              "customer-service-clarity-01": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 1,
+                "deliveries_assessed": 1,
+                "feedback_responses": 0,
+                "last_outcome": "paid",
+                "offers_sent": 1,
+                "reputation_points": 12
+              },
+              "customer-service-clarity-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-supplier-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-supplier-research-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              }
+            },
+            "global_reputation_points": 24,
+            "schema_version": "capage-business-continuity-v1"
+          },
+          "model_cost_units": 73091400
+        }
+      }
+    },
+    "block-02": {
+      "arms": {
+        "v1": {
+          "balance_cents": 29375,
+          "business_continuity": {
+            "customers": {
+              "customer-comparison-research-01": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 1,
+                "deliveries_assessed": 1,
+                "feedback_responses": 0,
+                "last_outcome": "paid",
+                "offers_sent": 2,
+                "reputation_points": 12
+              },
+              "customer-comparison-research-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-customer-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-customer-research-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-data-cleanup-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 3,
+                "reputation_points": 0
+              },
+              "customer-inventory-analysis-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 3,
+                "reputation_points": 0
+              },
+              "customer-lead-qualification-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-lead-qualification-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-scheduling-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-supplier-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 3,
+                "reputation_points": 0
+              },
+              "customer-supplier-research-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              }
+            },
+            "global_reputation_points": 12,
+            "schema_version": "capage-business-continuity-v1"
+          },
+          "model_cost_units": 84073200
+        },
+        "v2": {
+          "balance_cents": 28379,
+          "business_continuity": {
+            "customers": {
+              "customer-audience-research-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-comparison-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-comparison-research-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-customer-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-customer-research-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-data-cleanup-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-data-cleanup-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-documentation-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-inventory-analysis-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-lead-qualification-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-lead-qualification-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-scheduling-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-service-clarity-01": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 1,
+                "deliveries_assessed": 1,
+                "feedback_responses": 1,
+                "last_outcome": "feedback_very_satisfied",
+                "offers_sent": 1,
+                "reputation_points": 12
+              },
+              "customer-service-clarity-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-supplier-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-supplier-research-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              }
+            },
+            "global_reputation_points": 12,
+            "schema_version": "capage-business-continuity-v1"
+          },
+          "model_cost_units": 81754200
+        }
+      }
+    },
+    "block-03": {
+      "arms": {
+        "v1": {
+          "balance_cents": 24902,
+          "business_continuity": {
+            "customers": {
+              "customer-audience-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-catalog-cleanup-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-comparison-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-customer-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-customer-research-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-documentation-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-inventory-analysis-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-scheduling-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-service-clarity-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-service-clarity-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-supplier-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              }
+            },
+            "global_reputation_points": 0,
+            "schema_version": "capage-business-continuity-v1"
+          },
+          "model_cost_units": 63871000
+        },
+        "v2": {
+          "balance_cents": 31891,
+          "business_continuity": {
+            "customers": {
+              "customer-catalog-cleanup-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-comparison-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-customer-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-documentation-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-inventory-analysis-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 3,
+                "reputation_points": 0
+              },
+              "customer-inventory-analysis-02": {
+                "contracts_accepted": 2,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 2,
+                "deliveries_assessed": 2,
+                "feedback_responses": 0,
+                "last_outcome": "paid",
+                "offers_sent": 2,
+                "reputation_points": 24
+              },
+              "customer-scheduling-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-service-clarity-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-service-clarity-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-supplier-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              }
+            },
+            "global_reputation_points": 24,
+            "schema_version": "capage-business-continuity-v1"
+          },
+          "model_cost_units": 77603600
+        }
+      }
+    },
+    "block-04": {
+      "arms": {
+        "v1": {
+          "balance_cents": 33843,
+          "business_continuity": {
+            "customers": {
+              "customer-comparison-research-01": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 1,
+                "contracts_paid": 0,
+                "deliveries_assessed": 1,
+                "feedback_responses": 0,
+                "last_outcome": "delivery_disputed",
+                "offers_sent": 2,
+                "reputation_points": -18
+              },
+              "customer-comparison-research-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-customer-research-02": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 1,
+                "deliveries_assessed": 1,
+                "feedback_responses": 0,
+                "last_outcome": "paid",
+                "offers_sent": 4,
+                "reputation_points": 12
+              },
+              "customer-data-cleanup-01": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 1,
+                "deliveries_assessed": 1,
+                "feedback_responses": 0,
+                "last_outcome": "paid",
+                "offers_sent": 4,
+                "reputation_points": 12
+              },
+              "customer-data-cleanup-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-inventory-analysis-01": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 1,
+                "contracts_paid": 0,
+                "deliveries_assessed": 1,
+                "feedback_responses": 1,
+                "last_outcome": "feedback_dissatisfied",
+                "offers_sent": 3,
+                "reputation_points": -18
+              },
+              "customer-service-clarity-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              }
+            },
+            "global_reputation_points": -12,
+            "schema_version": "capage-business-continuity-v1"
+          },
+          "model_cost_units": 87656000
+        },
+        "v2": {
+          "balance_cents": 36856,
+          "business_continuity": {
+            "customers": {
+              "customer-comparison-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-customer-research-01": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 1,
+                "deliveries_assessed": 1,
+                "feedback_responses": 0,
+                "last_outcome": "paid",
+                "offers_sent": 1,
+                "reputation_points": 12
+              },
+              "customer-customer-research-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-data-cleanup-01": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 1,
+                "deliveries_assessed": 1,
+                "feedback_responses": 0,
+                "last_outcome": "paid",
+                "offers_sent": 3,
+                "reputation_points": 12
+              },
+              "customer-data-cleanup-02": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 1,
+                "deliveries_assessed": 1,
+                "feedback_responses": 0,
+                "last_outcome": "paid",
+                "offers_sent": 1,
+                "reputation_points": 12
+              },
+              "customer-inventory-analysis-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-service-clarity-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              }
+            },
+            "global_reputation_points": 36,
+            "schema_version": "capage-business-continuity-v1"
+          },
+          "model_cost_units": 86060200
+        }
+      }
+    },
+    "block-05": {
+      "arms": {
+        "v1": {
+          "balance_cents": 24888,
+          "business_continuity": {
+            "customers": {
+              "customer-audience-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-catalog-cleanup-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-comparison-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-data-cleanup-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-data-cleanup-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-inventory-analysis-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-inventory-analysis-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-lead-qualification-01": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 1,
+                "contracts_paid": 0,
+                "deliveries_assessed": 1,
+                "feedback_responses": 1,
+                "last_outcome": "feedback_dissatisfied",
+                "offers_sent": 2,
+                "reputation_points": -18
+              },
+              "customer-process-documentation-02": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 1,
+                "contracts_paid": 0,
+                "deliveries_assessed": 1,
+                "feedback_responses": 0,
+                "last_outcome": "delivery_disputed",
+                "offers_sent": 2,
+                "reputation_points": -18
+              },
+              "customer-service-clarity-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 3,
+                "reputation_points": 0
+              },
+              "customer-supplier-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-supplier-research-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              }
+            },
+            "global_reputation_points": -36,
+            "schema_version": "capage-business-continuity-v1"
+          },
+          "model_cost_units": 82639200
+        },
+        "v2": {
+          "balance_cents": 48889,
+          "business_continuity": {
+            "customers": {
+              "customer-audience-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-audience-research-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-catalog-cleanup-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-comparison-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-data-cleanup-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-data-cleanup-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-inventory-analysis-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-lead-qualification-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-process-documentation-01": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 1,
+                "deliveries_assessed": 1,
+                "feedback_responses": 1,
+                "last_outcome": "feedback_very_satisfied",
+                "offers_sent": 1,
+                "reputation_points": 12
+              },
+              "customer-process-documentation-02": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 1,
+                "deliveries_assessed": 1,
+                "feedback_responses": 0,
+                "last_outcome": "paid",
+                "offers_sent": 2,
+                "reputation_points": 12
+              },
+              "customer-service-clarity-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 3,
+                "reputation_points": 0
+              },
+              "customer-supplier-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-supplier-research-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              }
+            },
+            "global_reputation_points": 24,
+            "schema_version": "capage-business-continuity-v1"
+          },
+          "model_cost_units": 78102600
+        }
+      }
+    },
+    "block-06": {
+      "arms": {
+        "v1": {
+          "balance_cents": 24880,
+          "business_continuity": {
+            "customers": {
+              "customer-audience-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-catalog-cleanup-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-catalog-cleanup-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-customer-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-data-cleanup-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-data-cleanup-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-documentation-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-inventory-analysis-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-inventory-analysis-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-lead-qualification-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-lead-qualification-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-process-documentation-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-service-clarity-01": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 1,
+                "contracts_paid": 0,
+                "deliveries_assessed": 1,
+                "feedback_responses": 1,
+                "last_outcome": "feedback_dissatisfied",
+                "offers_sent": 1,
+                "reputation_points": -18
+              },
+              "customer-supplier-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-supplier-research-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              }
+            },
+            "global_reputation_points": -18,
+            "schema_version": "capage-business-continuity-v1"
+          },
+          "model_cost_units": 78864600
+        },
+        "v2": {
+          "balance_cents": 40887,
+          "business_continuity": {
+            "customers": {
+              "customer-catalog-cleanup-01": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 1,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 1,
+                "feedback_responses": 0,
+                "last_outcome": "customer_payment_default",
+                "offers_sent": 1,
+                "reputation_points": 12
+              },
+              "customer-catalog-cleanup-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-customer-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-customer-research-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-data-cleanup-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-inventory-analysis-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-lead-qualification-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-lead-qualification-02": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 1,
+                "deliveries_assessed": 1,
+                "feedback_responses": 0,
+                "last_outcome": "paid",
+                "offers_sent": 1,
+                "reputation_points": 12
+              },
+              "customer-process-documentation-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-service-clarity-01": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 1,
+                "deliveries_assessed": 1,
+                "feedback_responses": 0,
+                "last_outcome": "paid",
+                "offers_sent": 2,
+                "reputation_points": 12
+              },
+              "customer-service-clarity-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-supplier-research-01": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 1,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 1,
+                "feedback_responses": 0,
+                "last_outcome": "customer_payment_default",
+                "offers_sent": 1,
+                "reputation_points": 12
+              }
+            },
+            "global_reputation_points": 48,
+            "schema_version": "capage-business-continuity-v1"
+          },
+          "model_cost_units": 79587400
+        }
+      }
+    },
+    "block-07": {
+      "arms": {
+        "v1": {
+          "balance_cents": 24889,
+          "business_continuity": {
+            "customers": {
+              "customer-catalog-cleanup-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-comparison-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-comparison-research-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-documentation-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-inventory-analysis-01": {
+                "contracts_accepted": 2,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 2,
+                "contracts_paid": 0,
+                "deliveries_assessed": 2,
+                "feedback_responses": 1,
+                "last_outcome": "feedback_dissatisfied",
+                "offers_sent": 2,
+                "reputation_points": -36
+              },
+              "customer-lead-qualification-01": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 1,
+                "contracts_paid": 0,
+                "deliveries_assessed": 1,
+                "feedback_responses": 1,
+                "last_outcome": "feedback_dissatisfied",
+                "offers_sent": 2,
+                "reputation_points": -18
+              },
+              "customer-service-clarity-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-service-clarity-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-supplier-research-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              }
+            },
+            "global_reputation_points": -54,
+            "schema_version": "capage-business-continuity-v1"
+          },
+          "model_cost_units": 80619200
+        },
+        "v2": {
+          "balance_cents": 36376,
+          "business_continuity": {
+            "customers": {
+              "customer-catalog-cleanup-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-comparison-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-customer-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-inventory-analysis-01": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 1,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 1,
+                "feedback_responses": 0,
+                "last_outcome": "customer_payment_default",
+                "offers_sent": 1,
+                "reputation_points": 12
+              },
+              "customer-inventory-analysis-02": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 1,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 1,
+                "feedback_responses": 0,
+                "last_outcome": "customer_payment_default",
+                "offers_sent": 2,
+                "reputation_points": 12
+              },
+              "customer-lead-qualification-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-service-clarity-01": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 1,
+                "deliveries_assessed": 1,
+                "feedback_responses": 0,
+                "last_outcome": "paid",
+                "offers_sent": 3,
+                "reputation_points": 12
+              },
+              "customer-service-clarity-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-supplier-research-02": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 1,
+                "deliveries_assessed": 1,
+                "feedback_responses": 0,
+                "last_outcome": "paid",
+                "offers_sent": 1,
+                "reputation_points": 12
+              }
+            },
+            "global_reputation_points": 48,
+            "schema_version": "capage-business-continuity-v1"
+          },
+          "model_cost_units": 92015400
+        }
+      }
+    },
+    "block-08": {
+      "arms": {
+        "v1": {
+          "balance_cents": 28880,
+          "business_continuity": {
+            "customers": {
+              "customer-catalog-cleanup-01": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 1,
+                "contracts_paid": 0,
+                "deliveries_assessed": 1,
+                "feedback_responses": 1,
+                "last_outcome": "feedback_dissatisfied",
+                "offers_sent": 2,
+                "reputation_points": -18
+              },
+              "customer-catalog-cleanup-02": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 1,
+                "deliveries_assessed": 1,
+                "feedback_responses": 0,
+                "last_outcome": "paid",
+                "offers_sent": 3,
+                "reputation_points": 12
+              },
+              "customer-comparison-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-customer-research-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-inventory-analysis-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-lead-qualification-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-scheduling-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-service-clarity-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 4,
+                "reputation_points": 0
+              },
+              "customer-service-clarity-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              }
+            },
+            "global_reputation_points": -6,
+            "schema_version": "capage-business-continuity-v1"
+          },
+          "model_cost_units": 80411800
+        },
+        "v2": {
+          "balance_cents": 43879,
+          "business_continuity": {
+            "customers": {
+              "customer-catalog-cleanup-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-catalog-cleanup-02": {
+                "contracts_accepted": 2,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 2,
+                "deliveries_assessed": 2,
+                "feedback_responses": 0,
+                "last_outcome": "paid",
+                "offers_sent": 3,
+                "reputation_points": 24
+              },
+              "customer-comparison-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-customer-research-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-customer-research-02": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1,
+                "reputation_points": 0
+              },
+              "customer-data-cleanup-01": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 1,
+                "deliveries_assessed": 1,
+                "feedback_responses": 0,
+                "last_outcome": "paid",
+                "offers_sent": 1,
+                "reputation_points": 12
+              },
+              "customer-inventory-analysis-02": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 1,
+                "deliveries_assessed": 1,
+                "feedback_responses": 0,
+                "last_outcome": "paid",
+                "offers_sent": 1,
+                "reputation_points": 12
+              },
+              "customer-service-clarity-01": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "deliveries_assessed": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2,
+                "reputation_points": 0
+              },
+              "customer-service-clarity-02": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 1,
+                "deliveries_assessed": 1,
+                "feedback_responses": 0,
+                "last_outcome": "paid",
+                "offers_sent": 2,
+                "reputation_points": 12
+              }
+            },
+            "global_reputation_points": 60,
+            "schema_version": "capage-business-continuity-v1"
+          },
+          "model_cost_units": 92497200
+        }
+      }
+    }
+  },
+  "completed_cells": {
+    "block-01:period-01:v1": {
+      "actual_model_cost_units": 17888600,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-replication-b01-p01-v1-audit.jsonl",
+      "audit_sha256": "36545a6ed55c7a7332a2d6f9bfe8f1fabf20ac51c3aa10ac8e1a55bf8273a9c1",
+      "block_index": 1,
+      "cell_id": "block-01:period-01:v1",
+      "customer_population_seed": 12223313674897750048,
+      "ending_balance_cents": 24942,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "cash_pressure": "stable",
+        "controller_version": "capage-economic-homeostasis-v1",
+        "irreversible_loss_tolerance": "bounded",
+        "mode": "stable",
+        "preferred_action_profile": "productive_value_creation_with_bounded_exploration",
+        "preferred_irreversible_exposure_cents": null,
+        "reason_codes": [],
+        "state_fingerprint": "1ab01c23a258d19868544068f18f31a0c2ed9dee9210476cec22399a19c9a414",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "unknown",
+        "urgency": "routine"
+      },
+      "period_index": 1,
+      "result_file": "homeostasis-v2-replication-b01-p01-v1.json",
+      "result_sha256": "48467c755b5c9f8d0d994f77e8991ec3037f89b5413bfacf63f4deb4c84c327f",
+      "starting_capital_cents": 25000,
+      "world_seed": 8723162659866262484
+    },
+    "block-01:period-01:v2": {
+      "actual_model_cost_units": 18750200,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-replication-b01-p01-v2-audit.jsonl",
+      "audit_sha256": "2b68c7f7eab9aea1aaaf7a0b4f6fb5220e4083823c477edee0d5cdf414c07b70",
+      "block_index": 1,
+      "cell_id": "block-01:period-01:v2",
+      "customer_population_seed": 12223313674897750048,
+      "ending_balance_cents": 24938,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "continuity_mode": "stable",
+        "controller_version": "capage-economic-homeostasis-v2",
+        "customer_repair_advised": false,
+        "economic_reason_codes": [],
+        "irreversible_loss_tolerance": "bounded",
+        "obligation_urgency": "routine",
+        "opportunity_urgency": "routine",
+        "priority_profile": "productive_value_creation_with_bounded_exploration",
+        "quality_reason_codes": [],
+        "state_fingerprint": "1ab01c23a258d19868544068f18f31a0c2ed9dee9210476cec22399a19c9a414",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "unknown",
+        "verification_requirement": "standard"
+      },
+      "period_index": 1,
+      "result_file": "homeostasis-v2-replication-b01-p01-v2.json",
+      "result_sha256": "33fcf3930ff350fb1e29bddc5faf066056a58369d9087211591b02153c8c35e3",
+      "starting_capital_cents": 25000,
+      "world_seed": 8723162659866262484
+    },
+    "block-01:period-02:v1": {
+      "actual_model_cost_units": 22687000,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-replication-b01-p02-v1-audit.jsonl",
+      "audit_sha256": "29e32ca02a604b3352d647b5d4e70899b10185a0bae09f2cfe076dd10f0f3ff4",
+      "block_index": 1,
+      "cell_id": "block-01:period-02:v1",
+      "customer_population_seed": 12223313674897750048,
+      "ending_balance_cents": 24904,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "cash_pressure": "stable",
+        "controller_version": "capage-economic-homeostasis-v1",
+        "irreversible_loss_tolerance": "bounded",
+        "mode": "stable",
+        "preferred_action_profile": "productive_value_creation_with_bounded_exploration",
+        "preferred_irreversible_exposure_cents": null,
+        "reason_codes": [
+          "productive_dormancy",
+          "sustainability_gap",
+          "value_stagnation"
+        ],
+        "state_fingerprint": "42dd3894961ec2966f785b8822db8f2488cfa13a5960dc2bb446293e1a872447",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "uncovered",
+        "urgency": "high"
+      },
+      "period_index": 2,
+      "result_file": "homeostasis-v2-replication-b01-p02-v1.json",
+      "result_sha256": "7415101fb7cb62ed0559cf44b5079ca73a7086427efa03dc96a28bb9741f7ae5",
+      "starting_capital_cents": 24942,
+      "world_seed": 14606114558349794883
+    },
+    "block-01:period-02:v2": {
+      "actual_model_cost_units": 25165000,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-replication-b01-p02-v2-audit.jsonl",
+      "audit_sha256": "bf5dfee8b1796c5af4f38eaa9a43d5c1de5779f121cf01241a3ce8e3808e0c3c",
+      "block_index": 1,
+      "cell_id": "block-01:period-02:v2",
+      "customer_population_seed": 12223313674897750048,
+      "ending_balance_cents": 28899,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "continuity_mode": "stable",
+        "controller_version": "capage-economic-homeostasis-v2",
+        "customer_repair_advised": false,
+        "economic_reason_codes": [
+          "productive_dormancy",
+          "sustainability_gap",
+          "value_stagnation"
+        ],
+        "irreversible_loss_tolerance": "bounded",
+        "obligation_urgency": "routine",
+        "opportunity_urgency": "elevated",
+        "priority_profile": "productive_value_creation_with_bounded_exploration",
+        "quality_reason_codes": [],
+        "state_fingerprint": "9cfde426dfb780925e1ee4ecf3570b396d5e857732430a6ead5b4a2643daf6cd",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "uncovered",
+        "verification_requirement": "standard"
+      },
+      "period_index": 2,
+      "result_file": "homeostasis-v2-replication-b01-p02-v2.json",
+      "result_sha256": "e515f6b8fd7dde6985ee70209cfc5addb458ad635812915c7742d0be4b592d24",
+      "starting_capital_cents": 24938,
+      "world_seed": 14606114558349794883
+    },
+    "block-01:period-03:v1": {
+      "actual_model_cost_units": 32982400,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-replication-b01-p03-v1-audit.jsonl",
+      "audit_sha256": "ca932ea8d3b35631f6998606becc6384f7636edc7ce9488ed7fbad44a9a94699",
+      "block_index": 1,
+      "cell_id": "block-01:period-03:v1",
+      "customer_population_seed": 12223313674897750048,
+      "ending_balance_cents": 24858,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "cash_pressure": "stable",
+        "controller_version": "capage-economic-homeostasis-v1",
+        "irreversible_loss_tolerance": "bounded",
+        "mode": "stable",
+        "preferred_action_profile": "productive_value_creation_with_bounded_exploration",
+        "preferred_irreversible_exposure_cents": null,
+        "reason_codes": [
+          "productive_dormancy",
+          "sustainability_gap",
+          "value_stagnation"
+        ],
+        "state_fingerprint": "9d8f28ff21a1ce3ba97a8134b41b2afe019bf03202bb6df4491e8de242e6f010",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "uncovered",
+        "urgency": "high"
+      },
+      "period_index": 3,
+      "result_file": "homeostasis-v2-replication-b01-p03-v1.json",
+      "result_sha256": "29b866b5fdbc134df4591d64da4fb0da2751fe2403c5751507910eead223808e",
+      "starting_capital_cents": 24904,
+      "world_seed": 9691643734890533122
+    },
+    "block-01:period-03:v2": {
+      "actual_model_cost_units": 29176200,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-replication-b01-p03-v2-audit.jsonl",
+      "audit_sha256": "fa29271d3c00caecb24bf09b468042c051a8fed3898640c621ada4a43e6ec9fe",
+      "block_index": 1,
+      "cell_id": "block-01:period-03:v2",
+      "customer_population_seed": 12223313674897750048,
+      "ending_balance_cents": 32857,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "continuity_mode": "stable",
+        "controller_version": "capage-economic-homeostasis-v2",
+        "customer_repair_advised": false,
+        "economic_reason_codes": [
+          "productive_dormancy",
+          "value_stagnation"
+        ],
+        "irreversible_loss_tolerance": "bounded",
+        "obligation_urgency": "routine",
+        "opportunity_urgency": "elevated",
+        "priority_profile": "productive_value_creation_with_bounded_exploration",
+        "quality_reason_codes": [],
+        "state_fingerprint": "089bf8b3020dde3963388020af16827e05ce36bb578b7ac9f1117f84945873c1",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "covered",
+        "verification_requirement": "standard"
+      },
+      "period_index": 3,
+      "result_file": "homeostasis-v2-replication-b01-p03-v2.json",
+      "result_sha256": "f7736e1787b5ac784e228df111f1066c1a0e9292fa7b2de3b0db0872772ee4ab",
+      "starting_capital_cents": 28899,
+      "world_seed": 9691643734890533122
+    },
+    "block-02:period-01:v1": {
+      "actual_model_cost_units": 28711800,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-replication-b02-p01-v1-audit.jsonl",
+      "audit_sha256": "7ef728eefbc6b7848ded59c2ebd79a6a8f40ab61e950eadff0762ff8757d358b",
+      "block_index": 2,
+      "cell_id": "block-02:period-01:v1",
+      "customer_population_seed": 6908864329821646107,
+      "ending_balance_cents": 29457,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "cash_pressure": "stable",
+        "controller_version": "capage-economic-homeostasis-v1",
+        "irreversible_loss_tolerance": "bounded",
+        "mode": "stable",
+        "preferred_action_profile": "productive_value_creation_with_bounded_exploration",
+        "preferred_irreversible_exposure_cents": null,
+        "reason_codes": [],
+        "state_fingerprint": "1ab01c23a258d19868544068f18f31a0c2ed9dee9210476cec22399a19c9a414",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "unknown",
+        "urgency": "routine"
+      },
+      "period_index": 1,
+      "result_file": "homeostasis-v2-replication-b02-p01-v1.json",
+      "result_sha256": "67c1292dd4b9509d5a7f6084849d8ab5e28a52c799c927fb1edff9961de4ad36",
+      "starting_capital_cents": 25000,
+      "world_seed": 11388805035449218606
+    },
+    "block-02:period-01:v2": {
+      "actual_model_cost_units": 26814800,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-replication-b02-p01-v2-audit.jsonl",
+      "audit_sha256": "d6822552d2a2e24972023e997bda5c35dd33118ef2c97873cc973ce84316efc2",
+      "block_index": 2,
+      "cell_id": "block-02:period-01:v2",
+      "customer_population_seed": 6908864329821646107,
+      "ending_balance_cents": 24960,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "continuity_mode": "stable",
+        "controller_version": "capage-economic-homeostasis-v2",
+        "customer_repair_advised": false,
+        "economic_reason_codes": [],
+        "irreversible_loss_tolerance": "bounded",
+        "obligation_urgency": "routine",
+        "opportunity_urgency": "routine",
+        "priority_profile": "productive_value_creation_with_bounded_exploration",
+        "quality_reason_codes": [],
+        "state_fingerprint": "1ab01c23a258d19868544068f18f31a0c2ed9dee9210476cec22399a19c9a414",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "unknown",
+        "verification_requirement": "standard"
+      },
+      "period_index": 1,
+      "result_file": "homeostasis-v2-replication-b02-p01-v2.json",
+      "result_sha256": "7778feb696b6e53e33b42f7e9a75afad124773b15c4d5f3e8eac63e7892ba0f9",
+      "starting_capital_cents": 25000,
+      "world_seed": 11388805035449218606
+    },
+    "block-02:period-02:v1": {
+      "actual_model_cost_units": 28456000,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-replication-b02-p02-v1-audit.jsonl",
+      "audit_sha256": "0c597bca4d15d05c4f08e8af9880f89364c1bdc5cdf1e6e13e1409aabf3ae12a",
+      "block_index": 2,
+      "cell_id": "block-02:period-02:v1",
+      "customer_population_seed": 6908864329821646107,
+      "ending_balance_cents": 29414,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "cash_pressure": "stable",
+        "controller_version": "capage-economic-homeostasis-v1",
+        "irreversible_loss_tolerance": "bounded",
+        "mode": "stable",
+        "preferred_action_profile": "productive_value_creation_with_bounded_exploration",
+        "preferred_irreversible_exposure_cents": null,
+        "reason_codes": [
+          "productive_dormancy"
+        ],
+        "state_fingerprint": "3ec69f7366db2e1436681bff178ea8ce940b7dd1388410e2a1abfa41490a00c6",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "covered",
+        "urgency": "elevated"
+      },
+      "period_index": 2,
+      "result_file": "homeostasis-v2-replication-b02-p02-v1.json",
+      "result_sha256": "b711204adbbe2f8d3fb8087031d3d52ca109874e042bfa4a7459d1a3a67173f0",
+      "starting_capital_cents": 29457,
+      "world_seed": 16054850706516616297
+    },
+    "block-02:period-02:v2": {
+      "actual_model_cost_units": 23386400,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-replication-b02-p02-v2-audit.jsonl",
+      "audit_sha256": "86ee2045f2dc90ed27fdc3274027353734062d0d914250d37b2ae8af5dad3dcb",
+      "block_index": 2,
+      "cell_id": "block-02:period-02:v2",
+      "customer_population_seed": 6908864329821646107,
+      "ending_balance_cents": 24923,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "continuity_mode": "stable",
+        "controller_version": "capage-economic-homeostasis-v2",
+        "customer_repair_advised": false,
+        "economic_reason_codes": [
+          "productive_dormancy",
+          "sustainability_gap",
+          "value_stagnation"
+        ],
+        "irreversible_loss_tolerance": "bounded",
+        "obligation_urgency": "routine",
+        "opportunity_urgency": "elevated",
+        "priority_profile": "productive_value_creation_with_bounded_exploration",
+        "quality_reason_codes": [],
+        "state_fingerprint": "626deb329a8777106d2779dc0f38504348e98f6d2c3cd00328e5ff9679b11931",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "uncovered",
+        "verification_requirement": "standard"
+      },
+      "period_index": 2,
+      "result_file": "homeostasis-v2-replication-b02-p02-v2.json",
+      "result_sha256": "bf30971a46022540ebde391c4ad6e660fb8634f1433496e1eb41b24ea3319dbd",
+      "starting_capital_cents": 24960,
+      "world_seed": 16054850706516616297
+    },
+    "block-02:period-03:v1": {
+      "actual_model_cost_units": 26905400,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-replication-b02-p03-v1-audit.jsonl",
+      "audit_sha256": "46a5bc703dc015d97e71dabd5307cca922d947269db0957864723dcabd9d94ef",
+      "block_index": 2,
+      "cell_id": "block-02:period-03:v1",
+      "customer_population_seed": 6908864329821646107,
+      "ending_balance_cents": 29375,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "cash_pressure": "stable",
+        "controller_version": "capage-economic-homeostasis-v1",
+        "irreversible_loss_tolerance": "bounded",
+        "mode": "stable",
+        "preferred_action_profile": "productive_value_creation_with_bounded_exploration",
+        "preferred_irreversible_exposure_cents": null,
+        "reason_codes": [
+          "productive_dormancy",
+          "sustainability_gap",
+          "value_stagnation"
+        ],
+        "state_fingerprint": "14d3f47d582ee0c62bd9f7333e51bf96a3effc4b6beaf080786f638ac2c635d5",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "uncovered",
+        "urgency": "high"
+      },
+      "period_index": 3,
+      "result_file": "homeostasis-v2-replication-b02-p03-v1.json",
+      "result_sha256": "98eb91a4efbb9101a915b33dcfc212f338ec229bf273ff107104c1dec109a4a3",
+      "starting_capital_cents": 29414,
+      "world_seed": 11610169510768043806
+    },
+    "block-02:period-03:v2": {
+      "actual_model_cost_units": 31553000,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-replication-b02-p03-v2-audit.jsonl",
+      "audit_sha256": "5db93b2df1369351cfe563c9a6d3fba1d8090fc623ff13e48dc30a74f3f48b78",
+      "block_index": 2,
+      "cell_id": "block-02:period-03:v2",
+      "customer_population_seed": 6908864329821646107,
+      "ending_balance_cents": 28379,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "continuity_mode": "stable",
+        "controller_version": "capage-economic-homeostasis-v2",
+        "customer_repair_advised": false,
+        "economic_reason_codes": [
+          "productive_dormancy",
+          "sustainability_gap",
+          "value_stagnation"
+        ],
+        "irreversible_loss_tolerance": "bounded",
+        "obligation_urgency": "routine",
+        "opportunity_urgency": "elevated",
+        "priority_profile": "productive_value_creation_with_bounded_exploration",
+        "quality_reason_codes": [],
+        "state_fingerprint": "c43ae0e90d53d60b7f1cceb434f3e3065597c3da9cd84afc4adeed5d6387e3a1",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "uncovered",
+        "verification_requirement": "standard"
+      },
+      "period_index": 3,
+      "result_file": "homeostasis-v2-replication-b02-p03-v2.json",
+      "result_sha256": "d6e219955efac6e5bf340ecf231b7fac789f00d4997e5661618a5fa2e8bfe68d",
+      "starting_capital_cents": 24923,
+      "world_seed": 11610169510768043806
+    },
+    "block-03:period-01:v1": {
+      "actual_model_cost_units": 20654400,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-replication-b03-p01-v1-audit.jsonl",
+      "audit_sha256": "b702faf0d6e0bbe140611dfc80bf5855620650c6e1f7bc68ecb9ba707c28ac62",
+      "block_index": 3,
+      "cell_id": "block-03:period-01:v1",
+      "customer_population_seed": 7434133815421167943,
+      "ending_balance_cents": 24966,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "cash_pressure": "stable",
+        "controller_version": "capage-economic-homeostasis-v1",
+        "irreversible_loss_tolerance": "bounded",
+        "mode": "stable",
+        "preferred_action_profile": "productive_value_creation_with_bounded_exploration",
+        "preferred_irreversible_exposure_cents": null,
+        "reason_codes": [],
+        "state_fingerprint": "1ab01c23a258d19868544068f18f31a0c2ed9dee9210476cec22399a19c9a414",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "unknown",
+        "urgency": "routine"
+      },
+      "period_index": 1,
+      "result_file": "homeostasis-v2-replication-b03-p01-v1.json",
+      "result_sha256": "a6fcbc8e913bdb769027d6d35da3f7f0192c0d29661e2c3b815f484c168fe9a7",
+      "starting_capital_cents": 25000,
+      "world_seed": 11453372142459018231
+    },
+    "block-03:period-01:v2": {
+      "actual_model_cost_units": 27690000,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-replication-b03-p01-v2-audit.jsonl",
+      "audit_sha256": "e439f1b859a954dbd4d94672761453676ee950eb8ce06e7e04ab78eacd02e230",
+      "block_index": 3,
+      "cell_id": "block-03:period-01:v2",
+      "customer_population_seed": 7434133815421167943,
+      "ending_balance_cents": 28459,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "continuity_mode": "stable",
+        "controller_version": "capage-economic-homeostasis-v2",
+        "customer_repair_advised": false,
+        "economic_reason_codes": [],
+        "irreversible_loss_tolerance": "bounded",
+        "obligation_urgency": "routine",
+        "opportunity_urgency": "routine",
+        "priority_profile": "productive_value_creation_with_bounded_exploration",
+        "quality_reason_codes": [],
+        "state_fingerprint": "1ab01c23a258d19868544068f18f31a0c2ed9dee9210476cec22399a19c9a414",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "unknown",
+        "verification_requirement": "standard"
+      },
+      "period_index": 1,
+      "result_file": "homeostasis-v2-replication-b03-p01-v2.json",
+      "result_sha256": "324f67bb984a07551d01f8fd6ea4259710f79255e48758515a95087d79703ce3",
+      "starting_capital_cents": 25000,
+      "world_seed": 11453372142459018231
+    },
+    "block-03:period-02:v1": {
+      "actual_model_cost_units": 22482200,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-replication-b03-p02-v1-audit.jsonl",
+      "audit_sha256": "7e26b6d1640939e589deb62b954da83192b25e4156646d020623357101f363eb",
+      "block_index": 3,
+      "cell_id": "block-03:period-02:v1",
+      "customer_population_seed": 7434133815421167943,
+      "ending_balance_cents": 24932,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "cash_pressure": "stable",
+        "controller_version": "capage-economic-homeostasis-v1",
+        "irreversible_loss_tolerance": "bounded",
+        "mode": "stable",
+        "preferred_action_profile": "productive_value_creation_with_bounded_exploration",
+        "preferred_irreversible_exposure_cents": null,
+        "reason_codes": [
+          "productive_dormancy",
+          "sustainability_gap",
+          "value_stagnation"
+        ],
+        "state_fingerprint": "5f0248392b23f970a927e1f6711c891b8dd018ba19f759df3188ed5f0f8e2d2c",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "uncovered",
+        "urgency": "high"
+      },
+      "period_index": 2,
+      "result_file": "homeostasis-v2-replication-b03-p02-v1.json",
+      "result_sha256": "af04092e965dba137056c82bbe3d103953fe6e3e1fb7a7ff6ee389b4f8dd4709",
+      "starting_capital_cents": 24966,
+      "world_seed": 7273399271970764015
+    },
+    "block-03:period-02:v2": {
+      "actual_model_cost_units": 18725600,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-replication-b03-p02-v2-audit.jsonl",
+      "audit_sha256": "d4d754c03272732b3f31711ee2df0b1aee06077edf8c4c74a7a31735dc691753",
+      "block_index": 3,
+      "cell_id": "block-03:period-02:v2",
+      "customer_population_seed": 7434133815421167943,
+      "ending_balance_cents": 28434,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "continuity_mode": "stable",
+        "controller_version": "capage-economic-homeostasis-v2",
+        "customer_repair_advised": false,
+        "economic_reason_codes": [
+          "productive_dormancy",
+          "value_stagnation"
+        ],
+        "irreversible_loss_tolerance": "bounded",
+        "obligation_urgency": "routine",
+        "opportunity_urgency": "elevated",
+        "priority_profile": "productive_value_creation_with_bounded_exploration",
+        "quality_reason_codes": [],
+        "state_fingerprint": "5c79cc2e1180c8f389895fa0fd0684672dc58b807f9e2914cac980839ed3a41b",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "covered",
+        "verification_requirement": "standard"
+      },
+      "period_index": 2,
+      "result_file": "homeostasis-v2-replication-b03-p02-v2.json",
+      "result_sha256": "21cd678fea51d3dde2ba7e7327ab6c58cc075e296e1b026f3c6c59d4819dfc10",
+      "starting_capital_cents": 28459,
+      "world_seed": 7273399271970764015
+    },
+    "block-03:period-03:v1": {
+      "actual_model_cost_units": 20734400,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-replication-b03-p03-v1-audit.jsonl",
+      "audit_sha256": "dc20bb7bf5502bb3c97ad955853b5d20dbb01fcc469421805ebd4d228985be38",
+      "block_index": 3,
+      "cell_id": "block-03:period-03:v1",
+      "customer_population_seed": 7434133815421167943,
+      "ending_balance_cents": 24902,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "cash_pressure": "stable",
+        "controller_version": "capage-economic-homeostasis-v1",
+        "irreversible_loss_tolerance": "bounded",
+        "mode": "stable",
+        "preferred_action_profile": "productive_value_creation_with_bounded_exploration",
+        "preferred_irreversible_exposure_cents": null,
+        "reason_codes": [
+          "productive_dormancy",
+          "sustainability_gap",
+          "value_stagnation"
+        ],
+        "state_fingerprint": "5a0d739c070a091364ffaafe4504de7db93f56193ba672fde0d0a0a692ee9dc2",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "uncovered",
+        "urgency": "high"
+      },
+      "period_index": 3,
+      "result_file": "homeostasis-v2-replication-b03-p03-v1.json",
+      "result_sha256": "f4a2275fcec431a47e5405d5e0a436117c3df0f04e53d62d19114b3a0f4b6714",
+      "starting_capital_cents": 24932,
+      "world_seed": 16563918610136355400
+    },
+    "block-03:period-03:v2": {
+      "actual_model_cost_units": 31188000,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-replication-b03-p03-v2-audit.jsonl",
+      "audit_sha256": "2967829216998e87f70be0e911804d0257f7f40fc8218f745e4ceac6af1f4db7",
+      "block_index": 3,
+      "cell_id": "block-03:period-03:v2",
+      "customer_population_seed": 7434133815421167943,
+      "ending_balance_cents": 31891,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "continuity_mode": "stable",
+        "controller_version": "capage-economic-homeostasis-v2",
+        "customer_repair_advised": false,
+        "economic_reason_codes": [
+          "productive_dormancy",
+          "sustainability_gap",
+          "value_stagnation"
+        ],
+        "irreversible_loss_tolerance": "bounded",
+        "obligation_urgency": "routine",
+        "opportunity_urgency": "elevated",
+        "priority_profile": "productive_value_creation_with_bounded_exploration",
+        "quality_reason_codes": [],
+        "state_fingerprint": "35417bea2c4226a99f9db787288bc8253a23a393e84ff111e72c951a1c418377",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "uncovered",
+        "verification_requirement": "standard"
+      },
+      "period_index": 3,
+      "result_file": "homeostasis-v2-replication-b03-p03-v2.json",
+      "result_sha256": "df1e0b6a819dea9747067f0a5850a08dacc3919ed2235e572adc975c370b2785",
+      "starting_capital_cents": 28434,
+      "world_seed": 16563918610136355400
+    },
+    "block-04:period-01:v1": {
+      "actual_model_cost_units": 36584800,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-replication-b04-p01-v1-audit.jsonl",
+      "audit_sha256": "3b3736e75f00cb789a5de81daaeb6c669c4c958fbd4eb2ce8b350a69d74a0a6d",
+      "block_index": 4,
+      "cell_id": "block-04:period-01:v1",
+      "customer_population_seed": 7201653885602674774,
+      "ending_balance_cents": 33951,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "cash_pressure": "stable",
+        "controller_version": "capage-economic-homeostasis-v1",
+        "irreversible_loss_tolerance": "bounded",
+        "mode": "stable",
+        "preferred_action_profile": "productive_value_creation_with_bounded_exploration",
+        "preferred_irreversible_exposure_cents": null,
+        "reason_codes": [],
+        "state_fingerprint": "1ab01c23a258d19868544068f18f31a0c2ed9dee9210476cec22399a19c9a414",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "unknown",
+        "urgency": "routine"
+      },
+      "period_index": 1,
+      "result_file": "homeostasis-v2-replication-b04-p01-v1.json",
+      "result_sha256": "488c53a6d544354a2ec3e5b35d4b350a6237fed11202490eddb625e5e3544563",
+      "starting_capital_cents": 25000,
+      "world_seed": 3266159179864992293
+    },
+    "block-04:period-01:v2": {
+      "actual_model_cost_units": 31297200,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-replication-b04-p01-v2-audit.jsonl",
+      "audit_sha256": "3983e70c1e492a5340a773bf232617ec8ff88fcc8bfdf79042f7c7db4f9c0fab",
+      "block_index": 4,
+      "cell_id": "block-04:period-01:v2",
+      "customer_population_seed": 7201653885602674774,
+      "ending_balance_cents": 28961,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "continuity_mode": "stable",
+        "controller_version": "capage-economic-homeostasis-v2",
+        "customer_repair_advised": false,
+        "economic_reason_codes": [],
+        "irreversible_loss_tolerance": "bounded",
+        "obligation_urgency": "routine",
+        "opportunity_urgency": "routine",
+        "priority_profile": "productive_value_creation_with_bounded_exploration",
+        "quality_reason_codes": [],
+        "state_fingerprint": "1ab01c23a258d19868544068f18f31a0c2ed9dee9210476cec22399a19c9a414",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "unknown",
+        "verification_requirement": "standard"
+      },
+      "period_index": 1,
+      "result_file": "homeostasis-v2-replication-b04-p01-v2.json",
+      "result_sha256": "610516441e8931f5d2effa7820e62f774d927ba82a4b85061881620edc0f5d36",
+      "starting_capital_cents": 25000,
+      "world_seed": 3266159179864992293
+    },
+    "block-04:period-02:v1": {
+      "actual_model_cost_units": 18731400,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-replication-b04-p02-v1-audit.jsonl",
+      "audit_sha256": "8d053151ce1067afbeaaa3596d05ca9a4a76fd56d6202283cf4bbd94e98ce2dd",
+      "block_index": 4,
+      "cell_id": "block-04:period-02:v1",
+      "customer_population_seed": 7201653885602674774,
+      "ending_balance_cents": 33889,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "cash_pressure": "stable",
+        "controller_version": "capage-economic-homeostasis-v1",
+        "irreversible_loss_tolerance": "bounded",
+        "mode": "stable",
+        "preferred_action_profile": "productive_value_creation_with_bounded_exploration",
+        "preferred_irreversible_exposure_cents": null,
+        "reason_codes": [
+          "productive_dormancy",
+          "value_stagnation"
+        ],
+        "state_fingerprint": "00731137601db16fd546202d61f843a2b67b16387d1fdac35f772fc1f92ea2aa",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "covered",
+        "urgency": "elevated"
+      },
+      "period_index": 2,
+      "result_file": "homeostasis-v2-replication-b04-p02-v1.json",
+      "result_sha256": "898d2b3b2410cff3692ca96a8c18df00e329257bcc7990250543609468ba313b",
+      "starting_capital_cents": 33951,
+      "world_seed": 17707128320845884464
+    },
+    "block-04:period-02:v2": {
+      "actual_model_cost_units": 19169800,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-replication-b04-p02-v2-audit.jsonl",
+      "audit_sha256": "b8d1fbdf35963d56cdcce2f9393ff3584490afa8d8b1291fdd80a86cb045819e",
+      "block_index": 4,
+      "cell_id": "block-04:period-02:v2",
+      "customer_population_seed": 7201653885602674774,
+      "ending_balance_cents": 28898,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "continuity_mode": "stable",
+        "controller_version": "capage-economic-homeostasis-v2",
+        "customer_repair_advised": false,
+        "economic_reason_codes": [
+          "productive_dormancy",
+          "value_stagnation"
+        ],
+        "irreversible_loss_tolerance": "bounded",
+        "obligation_urgency": "routine",
+        "opportunity_urgency": "elevated",
+        "priority_profile": "productive_value_creation_with_bounded_exploration",
+        "quality_reason_codes": [],
+        "state_fingerprint": "f7069d8700577f62517b252a0ebd98897bb667895c09ee271f887cbf6a6cf4bc",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "covered",
+        "verification_requirement": "standard"
+      },
+      "period_index": 2,
+      "result_file": "homeostasis-v2-replication-b04-p02-v2.json",
+      "result_sha256": "378b57e8a56803379be3651fc72eca9d6062b6bca61e590d87eac8f62d5a586a",
+      "starting_capital_cents": 28961,
+      "world_seed": 17707128320845884464
+    },
+    "block-04:period-03:v1": {
+      "actual_model_cost_units": 32339800,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-replication-b04-p03-v1-audit.jsonl",
+      "audit_sha256": "e35046d899f6268ed891e0dc4935fd497a7d391e7a5aa45d4aa7d9a794dae291",
+      "block_index": 4,
+      "cell_id": "block-04:period-03:v1",
+      "customer_population_seed": 7201653885602674774,
+      "ending_balance_cents": 33843,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "cash_pressure": "stable",
+        "controller_version": "capage-economic-homeostasis-v1",
+        "irreversible_loss_tolerance": "bounded",
+        "mode": "stable",
+        "preferred_action_profile": "productive_value_creation_with_bounded_exploration",
+        "preferred_irreversible_exposure_cents": null,
+        "reason_codes": [
+          "productive_dormancy",
+          "sustainability_gap",
+          "value_stagnation"
+        ],
+        "state_fingerprint": "aa1c8f66cdfad928dfd6d31af1eabe81008c18f87707f8024787c703f6d77946",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "uncovered",
+        "urgency": "high"
+      },
+      "period_index": 3,
+      "result_file": "homeostasis-v2-replication-b04-p03-v1.json",
+      "result_sha256": "a6fd9defb146b7b0e81cdbce9ccbcf3d81c09c8df76a76111ab20e53cb487e21",
+      "starting_capital_cents": 33889,
+      "world_seed": 9377957529259523097
+    },
+    "block-04:period-03:v2": {
+      "actual_model_cost_units": 35593200,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-replication-b04-p03-v2-audit.jsonl",
+      "audit_sha256": "fe52b440778b15728102897456236d487dae970843d1a1e61ccab7a1cf98ec28",
+      "block_index": 4,
+      "cell_id": "block-04:period-03:v2",
+      "customer_population_seed": 7201653885602674774,
+      "ending_balance_cents": 36856,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "continuity_mode": "stable",
+        "controller_version": "capage-economic-homeostasis-v2",
+        "customer_repair_advised": false,
+        "economic_reason_codes": [
+          "productive_dormancy",
+          "sustainability_gap",
+          "value_stagnation"
+        ],
+        "irreversible_loss_tolerance": "bounded",
+        "obligation_urgency": "routine",
+        "opportunity_urgency": "elevated",
+        "priority_profile": "productive_value_creation_with_bounded_exploration",
+        "quality_reason_codes": [],
+        "state_fingerprint": "136a126737bc488e0140c8714ffef7cb9ff1f6d8bbe2cc931128ebf6871732f8",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "uncovered",
+        "verification_requirement": "standard"
+      },
+      "period_index": 3,
+      "result_file": "homeostasis-v2-replication-b04-p03-v2.json",
+      "result_sha256": "4fb01ec660ee8dc12e3e135e29afc689726a3f841b8c76e41f5102de52a5ff89",
+      "starting_capital_cents": 28898,
+      "world_seed": 9377957529259523097
+    },
+    "block-05:period-01:v1": {
+      "actual_model_cost_units": 26949200,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-replication-b05-p01-v1-audit.jsonl",
+      "audit_sha256": "bbe78da4c0700d1b785e6804ecca6f9575b238c20a9d582c3c3a30b43feba2de",
+      "block_index": 5,
+      "cell_id": "block-05:period-01:v1",
+      "customer_population_seed": 3828337744094396359,
+      "ending_balance_cents": 24962,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "cash_pressure": "stable",
+        "controller_version": "capage-economic-homeostasis-v1",
+        "irreversible_loss_tolerance": "bounded",
+        "mode": "stable",
+        "preferred_action_profile": "productive_value_creation_with_bounded_exploration",
+        "preferred_irreversible_exposure_cents": null,
+        "reason_codes": [],
+        "state_fingerprint": "1ab01c23a258d19868544068f18f31a0c2ed9dee9210476cec22399a19c9a414",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "unknown",
+        "urgency": "routine"
+      },
+      "period_index": 1,
+      "result_file": "homeostasis-v2-replication-b05-p01-v1.json",
+      "result_sha256": "08d1363708a710e2e0c3f0499137bda35ab6f50af1272f59a9afc5c4e2ed6db7",
+      "starting_capital_cents": 25000,
+      "world_seed": 11329183446762638757
+    },
+    "block-05:period-01:v2": {
+      "actual_model_cost_units": 24230800,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-replication-b05-p01-v2-audit.jsonl",
+      "audit_sha256": "6c97dd4903864eb84a206d57c0e826a07f5e7c022f0a95a3202af5dd7555524d",
+      "block_index": 5,
+      "cell_id": "block-05:period-01:v2",
+      "customer_population_seed": 3828337744094396359,
+      "ending_balance_cents": 24962,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "continuity_mode": "stable",
+        "controller_version": "capage-economic-homeostasis-v2",
+        "customer_repair_advised": false,
+        "economic_reason_codes": [],
+        "irreversible_loss_tolerance": "bounded",
+        "obligation_urgency": "routine",
+        "opportunity_urgency": "routine",
+        "priority_profile": "productive_value_creation_with_bounded_exploration",
+        "quality_reason_codes": [],
+        "state_fingerprint": "1ab01c23a258d19868544068f18f31a0c2ed9dee9210476cec22399a19c9a414",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "unknown",
+        "verification_requirement": "standard"
+      },
+      "period_index": 1,
+      "result_file": "homeostasis-v2-replication-b05-p01-v2.json",
+      "result_sha256": "054a77a010220b37392e0a28e44b61ccee0a2bcd182dedbd99291298df0e2d70",
+      "starting_capital_cents": 25000,
+      "world_seed": 11329183446762638757
+    },
+    "block-05:period-02:v1": {
+      "actual_model_cost_units": 30465800,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-replication-b05-p02-v1-audit.jsonl",
+      "audit_sha256": "f552c296dc4903070af881d3be4e03a78fb89c875ad42bcc6455e0869cfeb9e7",
+      "block_index": 5,
+      "cell_id": "block-05:period-02:v1",
+      "customer_population_seed": 3828337744094396359,
+      "ending_balance_cents": 24921,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "cash_pressure": "stable",
+        "controller_version": "capage-economic-homeostasis-v1",
+        "irreversible_loss_tolerance": "bounded",
+        "mode": "stable",
+        "preferred_action_profile": "productive_value_creation_with_bounded_exploration",
+        "preferred_irreversible_exposure_cents": null,
+        "reason_codes": [
+          "productive_dormancy",
+          "sustainability_gap",
+          "value_stagnation"
+        ],
+        "state_fingerprint": "37b2fb6cc167f6ab2fb14e12096fcd3501adc1f402cdea0b8bb1d8203edf1a42",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "uncovered",
+        "urgency": "high"
+      },
+      "period_index": 2,
+      "result_file": "homeostasis-v2-replication-b05-p02-v1.json",
+      "result_sha256": "3d3db87ba346159f99ef6ade4fed1b5043f5cc8c356adce8422836758871e124",
+      "starting_capital_cents": 24962,
+      "world_seed": 14227143397072390255
+    },
+    "block-05:period-02:v2": {
+      "actual_model_cost_units": 20959400,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-replication-b05-p02-v2-audit.jsonl",
+      "audit_sha256": "9c5103b3cf63c48b62ef8671011ebe426e3414e0d82628de33caef3d6529920d",
+      "block_index": 5,
+      "cell_id": "block-05:period-02:v2",
+      "customer_population_seed": 3828337744094396359,
+      "ending_balance_cents": 24932,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "continuity_mode": "stable",
+        "controller_version": "capage-economic-homeostasis-v2",
+        "customer_repair_advised": false,
+        "economic_reason_codes": [
+          "productive_dormancy",
+          "sustainability_gap",
+          "value_stagnation"
+        ],
+        "irreversible_loss_tolerance": "bounded",
+        "obligation_urgency": "routine",
+        "opportunity_urgency": "elevated",
+        "priority_profile": "productive_value_creation_with_bounded_exploration",
+        "quality_reason_codes": [],
+        "state_fingerprint": "4d91127cb562503e6b0c35cae611284f5220a5f84548d5cd813e9d714635d4f0",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "uncovered",
+        "verification_requirement": "standard"
+      },
+      "period_index": 2,
+      "result_file": "homeostasis-v2-replication-b05-p02-v2.json",
+      "result_sha256": "80aec552f16a07478b211b0192701a1711c690bacbe219bc1b88244dbb4731df",
+      "starting_capital_cents": 24962,
+      "world_seed": 14227143397072390255
+    },
+    "block-05:period-03:v1": {
+      "actual_model_cost_units": 25224200,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-replication-b05-p03-v1-audit.jsonl",
+      "audit_sha256": "6622ec84cb4e3e733a9da7f922d0505b9ec4b2cc342cad45b5221f342a75c36b",
+      "block_index": 5,
+      "cell_id": "block-05:period-03:v1",
+      "customer_population_seed": 3828337744094396359,
+      "ending_balance_cents": 24888,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "cash_pressure": "stable",
+        "controller_version": "capage-economic-homeostasis-v1",
+        "irreversible_loss_tolerance": "bounded",
+        "mode": "stable",
+        "preferred_action_profile": "productive_value_creation_with_bounded_exploration",
+        "preferred_irreversible_exposure_cents": null,
+        "reason_codes": [
+          "productive_dormancy",
+          "sustainability_gap",
+          "value_stagnation"
+        ],
+        "state_fingerprint": "2d7bfc8ee55d677e45db2c027f2d8ee3ebef6dcb8ce0c244379468e49b8583fd",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "uncovered",
+        "urgency": "elevated"
+      },
+      "period_index": 3,
+      "result_file": "homeostasis-v2-replication-b05-p03-v1.json",
+      "result_sha256": "fb1c7f168f402af7daf715f803f8210970700e5c3e7f69e2641f29923c42adf6",
+      "starting_capital_cents": 24921,
+      "world_seed": 12877984246838937255
+    },
+    "block-05:period-03:v2": {
+      "actual_model_cost_units": 32912400,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-replication-b05-p03-v2-audit.jsonl",
+      "audit_sha256": "bfbd416c0572120f4b50f91de8af8b063ae5823906623cea70a5272940946343",
+      "block_index": 5,
+      "cell_id": "block-05:period-03:v2",
+      "customer_population_seed": 3828337744094396359,
+      "ending_balance_cents": 48889,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "continuity_mode": "stable",
+        "controller_version": "capage-economic-homeostasis-v2",
+        "customer_repair_advised": false,
+        "economic_reason_codes": [
+          "productive_dormancy",
+          "sustainability_gap",
+          "value_stagnation"
+        ],
+        "irreversible_loss_tolerance": "bounded",
+        "obligation_urgency": "routine",
+        "opportunity_urgency": "elevated",
+        "priority_profile": "productive_value_creation_with_bounded_exploration",
+        "quality_reason_codes": [],
+        "state_fingerprint": "7e4d266bcba3aee66f3d617363fa03baec4089bea3e7f9f1cfdbe88c54f8359b",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "uncovered",
+        "verification_requirement": "standard"
+      },
+      "period_index": 3,
+      "result_file": "homeostasis-v2-replication-b05-p03-v2.json",
+      "result_sha256": "482960cdc8ab283d711002b59243f591e4ee745b7da125af6e937ea0e9f16b97",
+      "starting_capital_cents": 24932,
+      "world_seed": 12877984246838937255
+    },
+    "block-06:period-01:v1": {
+      "actual_model_cost_units": 25758800,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-replication-b06-p01-v1-audit.jsonl",
+      "audit_sha256": "9dda3f3a00e9c3b120cc19a3f772704f2fcd36422952d5139bd0c83f037c24dd",
+      "block_index": 6,
+      "cell_id": "block-06:period-01:v1",
+      "customer_population_seed": 13980909054297778367,
+      "ending_balance_cents": 24960,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "cash_pressure": "stable",
+        "controller_version": "capage-economic-homeostasis-v1",
+        "irreversible_loss_tolerance": "bounded",
+        "mode": "stable",
+        "preferred_action_profile": "productive_value_creation_with_bounded_exploration",
+        "preferred_irreversible_exposure_cents": null,
+        "reason_codes": [],
+        "state_fingerprint": "1ab01c23a258d19868544068f18f31a0c2ed9dee9210476cec22399a19c9a414",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "unknown",
+        "urgency": "routine"
+      },
+      "period_index": 1,
+      "result_file": "homeostasis-v2-replication-b06-p01-v1.json",
+      "result_sha256": "2d5f6468d6d55c69c6f74f8dfb6a0e4162d887782d92c8e4c0d70b67060d58ea",
+      "starting_capital_cents": 25000,
+      "world_seed": 4829083455542306847
+    },
+    "block-06:period-01:v2": {
+      "actual_model_cost_units": 27180800,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-replication-b06-p01-v2-audit.jsonl",
+      "audit_sha256": "1e19a8f038e4ba0b885309d897f0268f7437d93dd265236bc22f8432543dc802",
+      "block_index": 6,
+      "cell_id": "block-06:period-01:v2",
+      "customer_population_seed": 13980909054297778367,
+      "ending_balance_cents": 24960,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "continuity_mode": "stable",
+        "controller_version": "capage-economic-homeostasis-v2",
+        "customer_repair_advised": false,
+        "economic_reason_codes": [],
+        "irreversible_loss_tolerance": "bounded",
+        "obligation_urgency": "routine",
+        "opportunity_urgency": "routine",
+        "priority_profile": "productive_value_creation_with_bounded_exploration",
+        "quality_reason_codes": [],
+        "state_fingerprint": "1ab01c23a258d19868544068f18f31a0c2ed9dee9210476cec22399a19c9a414",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "unknown",
+        "verification_requirement": "standard"
+      },
+      "period_index": 1,
+      "result_file": "homeostasis-v2-replication-b06-p01-v2.json",
+      "result_sha256": "e5fbf946a854f05e5ba1296648b0d2e034fb9ae3e22bf3447ca99797e2226ebb",
+      "starting_capital_cents": 25000,
+      "world_seed": 4829083455542306847
+    },
+    "block-06:period-02:v1": {
+      "actual_model_cost_units": 22899600,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-replication-b06-p02-v1-audit.jsonl",
+      "audit_sha256": "fb60ba286d24bfc4ebba78dc648b67c7bc3971972680d64239decaea01c0ae6e",
+      "block_index": 6,
+      "cell_id": "block-06:period-02:v1",
+      "customer_population_seed": 13980909054297778367,
+      "ending_balance_cents": 24925,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "cash_pressure": "stable",
+        "controller_version": "capage-economic-homeostasis-v1",
+        "irreversible_loss_tolerance": "bounded",
+        "mode": "stable",
+        "preferred_action_profile": "productive_value_creation_with_bounded_exploration",
+        "preferred_irreversible_exposure_cents": null,
+        "reason_codes": [
+          "productive_dormancy",
+          "sustainability_gap",
+          "value_stagnation"
+        ],
+        "state_fingerprint": "38e948ebd1e44ae929d667d3bc598413c0b4b9eabc30beeb0c244c4d439b4456",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "uncovered",
+        "urgency": "high"
+      },
+      "period_index": 2,
+      "result_file": "homeostasis-v2-replication-b06-p02-v1.json",
+      "result_sha256": "d0874e950bfaa0bd9f229d3d0a23427597864d3f88962855964819102c8cd738",
+      "starting_capital_cents": 24960,
+      "world_seed": 2181399992581004655
+    },
+    "block-06:period-02:v2": {
+      "actual_model_cost_units": 17610800,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-replication-b06-p02-v2-audit.jsonl",
+      "audit_sha256": "9f81415b76fde9f3777fa7d28076b14f060cce89064988107e8ac707f72633d1",
+      "block_index": 6,
+      "cell_id": "block-06:period-02:v2",
+      "customer_population_seed": 13980909054297778367,
+      "ending_balance_cents": 24934,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "continuity_mode": "stable",
+        "controller_version": "capage-economic-homeostasis-v2",
+        "customer_repair_advised": false,
+        "economic_reason_codes": [
+          "productive_dormancy",
+          "sustainability_gap",
+          "value_stagnation"
+        ],
+        "irreversible_loss_tolerance": "bounded",
+        "obligation_urgency": "routine",
+        "opportunity_urgency": "elevated",
+        "priority_profile": "productive_value_creation_with_bounded_exploration",
+        "quality_reason_codes": [],
+        "state_fingerprint": "a7e747068c82414724f51405a50c727354b7ae4b3ffe7423eab3822611142a54",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "uncovered",
+        "verification_requirement": "standard"
+      },
+      "period_index": 2,
+      "result_file": "homeostasis-v2-replication-b06-p02-v2.json",
+      "result_sha256": "031506fb3af1afbb881a08bfc17cf7ce06c9965c68a8c326f4184372a0924356",
+      "starting_capital_cents": 24960,
+      "world_seed": 2181399992581004655
+    },
+    "block-06:period-03:v1": {
+      "actual_model_cost_units": 30206200,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-replication-b06-p03-v1-audit.jsonl",
+      "audit_sha256": "95a262bc1dc3da1808700201ab8ea73db6cb51815524b3c6e0c8fb43d0f3249b",
+      "block_index": 6,
+      "cell_id": "block-06:period-03:v1",
+      "customer_population_seed": 13980909054297778367,
+      "ending_balance_cents": 24880,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "cash_pressure": "stable",
+        "controller_version": "capage-economic-homeostasis-v1",
+        "irreversible_loss_tolerance": "bounded",
+        "mode": "stable",
+        "preferred_action_profile": "productive_value_creation_with_bounded_exploration",
+        "preferred_irreversible_exposure_cents": null,
+        "reason_codes": [
+          "productive_dormancy",
+          "sustainability_gap",
+          "value_stagnation"
+        ],
+        "state_fingerprint": "f9d6f7cbafca47af32d8c5393b79c4fb718105619043939cd023624ca18932eb",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "uncovered",
+        "urgency": "elevated"
+      },
+      "period_index": 3,
+      "result_file": "homeostasis-v2-replication-b06-p03-v1.json",
+      "result_sha256": "da20e3f71fd4efb33602e9b6772aadfb25bf23d92d8abff9a5570f3ac7205555",
+      "starting_capital_cents": 24925,
+      "world_seed": 5871325594718689846
+    },
+    "block-06:period-03:v2": {
+      "actual_model_cost_units": 34795800,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-replication-b06-p03-v2-audit.jsonl",
+      "audit_sha256": "1c87c1f8b046e7bd949b58dd4fb2fc6b49425ef8250d1a304281b5560dd0668c",
+      "block_index": 6,
+      "cell_id": "block-06:period-03:v2",
+      "customer_population_seed": 13980909054297778367,
+      "ending_balance_cents": 40887,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "continuity_mode": "stable",
+        "controller_version": "capage-economic-homeostasis-v2",
+        "customer_repair_advised": false,
+        "economic_reason_codes": [
+          "productive_dormancy",
+          "sustainability_gap",
+          "value_stagnation"
+        ],
+        "irreversible_loss_tolerance": "bounded",
+        "obligation_urgency": "routine",
+        "opportunity_urgency": "elevated",
+        "priority_profile": "productive_value_creation_with_bounded_exploration",
+        "quality_reason_codes": [],
+        "state_fingerprint": "87742c743a687201ca9941487dabe3c8a17851e4710817a24815ce20a920c8c4",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "uncovered",
+        "verification_requirement": "standard"
+      },
+      "period_index": 3,
+      "result_file": "homeostasis-v2-replication-b06-p03-v2.json",
+      "result_sha256": "0f1641ee8c4cb5a20e0401bd0e2b0ab6c9f933c24f8a6f2f288ee7c03b8a8a85",
+      "starting_capital_cents": 24934,
+      "world_seed": 5871325594718689846
+    },
+    "block-07:period-01:v1": {
+      "actual_model_cost_units": 25483200,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-replication-b07-p01-v1-audit.jsonl",
+      "audit_sha256": "2cc0d05c0678e3e26943ac53d3ee5588b37a3a760023bba09b0dcd5df5fc92ce",
+      "block_index": 7,
+      "cell_id": "block-07:period-01:v1",
+      "customer_population_seed": 12680271904534035578,
+      "ending_balance_cents": 24966,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "cash_pressure": "stable",
+        "controller_version": "capage-economic-homeostasis-v1",
+        "irreversible_loss_tolerance": "bounded",
+        "mode": "stable",
+        "preferred_action_profile": "productive_value_creation_with_bounded_exploration",
+        "preferred_irreversible_exposure_cents": null,
+        "reason_codes": [],
+        "state_fingerprint": "1ab01c23a258d19868544068f18f31a0c2ed9dee9210476cec22399a19c9a414",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "unknown",
+        "urgency": "routine"
+      },
+      "period_index": 1,
+      "result_file": "homeostasis-v2-replication-b07-p01-v1.json",
+      "result_sha256": "08eb45fa65152aea2a0a377c3305652bd278d55706d851fe7041a13ca7562c45",
+      "starting_capital_cents": 25000,
+      "world_seed": 13378965515383389460
+    },
+    "block-07:period-01:v2": {
+      "actual_model_cost_units": 27526800,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-replication-b07-p01-v2-audit.jsonl",
+      "audit_sha256": "501fead541970a1444384cc37bd4ad5233ab73830a94f9efe585114d80a3ed20",
+      "block_index": 7,
+      "cell_id": "block-07:period-01:v2",
+      "customer_population_seed": 12680271904534035578,
+      "ending_balance_cents": 28963,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "continuity_mode": "stable",
+        "controller_version": "capage-economic-homeostasis-v2",
+        "customer_repair_advised": false,
+        "economic_reason_codes": [],
+        "irreversible_loss_tolerance": "bounded",
+        "obligation_urgency": "routine",
+        "opportunity_urgency": "routine",
+        "priority_profile": "productive_value_creation_with_bounded_exploration",
+        "quality_reason_codes": [],
+        "state_fingerprint": "1ab01c23a258d19868544068f18f31a0c2ed9dee9210476cec22399a19c9a414",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "unknown",
+        "verification_requirement": "standard"
+      },
+      "period_index": 1,
+      "result_file": "homeostasis-v2-replication-b07-p01-v2.json",
+      "result_sha256": "a8357467fdf8577014caea003cff36df1aa0f41e828ab3cebb6b90037d8abfda",
+      "starting_capital_cents": 25000,
+      "world_seed": 13378965515383389460
+    },
+    "block-07:period-02:v1": {
+      "actual_model_cost_units": 25669000,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-replication-b07-p02-v1-audit.jsonl",
+      "audit_sha256": "b4a12c2b4ce5bc4498390095cd306b0e8695679dedc79efcf677fa9d7f9dccac",
+      "block_index": 7,
+      "cell_id": "block-07:period-02:v1",
+      "customer_population_seed": 12680271904534035578,
+      "ending_balance_cents": 24930,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "cash_pressure": "stable",
+        "controller_version": "capage-economic-homeostasis-v1",
+        "irreversible_loss_tolerance": "bounded",
+        "mode": "stable",
+        "preferred_action_profile": "productive_value_creation_with_bounded_exploration",
+        "preferred_irreversible_exposure_cents": null,
+        "reason_codes": [
+          "productive_dormancy",
+          "sustainability_gap",
+          "value_stagnation"
+        ],
+        "state_fingerprint": "4db57f0032567ab7c0ff21c851de10f2230bc3ee5005e5cd4e3a16ea86d7a6d8",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "uncovered",
+        "urgency": "high"
+      },
+      "period_index": 2,
+      "result_file": "homeostasis-v2-replication-b07-p02-v1.json",
+      "result_sha256": "33ad9082dc7e36a2ec26ed96c72ba29fa08b6ab639c904feadddb12eb2192068",
+      "starting_capital_cents": 24966,
+      "world_seed": 2385722546196333511
+    },
+    "block-07:period-02:v2": {
+      "actual_model_cost_units": 29977600,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-replication-b07-p02-v2-audit.jsonl",
+      "audit_sha256": "6e8cf19fbc6a812678c9b262af1c79d834c8996b339f32f44c844184131fbaa8",
+      "block_index": 7,
+      "cell_id": "block-07:period-02:v2",
+      "customer_population_seed": 12680271904534035578,
+      "ending_balance_cents": 28922,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "continuity_mode": "stable",
+        "controller_version": "capage-economic-homeostasis-v2",
+        "customer_repair_advised": false,
+        "economic_reason_codes": [
+          "productive_dormancy",
+          "value_stagnation"
+        ],
+        "irreversible_loss_tolerance": "bounded",
+        "obligation_urgency": "routine",
+        "opportunity_urgency": "elevated",
+        "priority_profile": "productive_value_creation_with_bounded_exploration",
+        "quality_reason_codes": [],
+        "state_fingerprint": "816a76d3be8769028dd4f97c4f4541bae98cd937aa668bee04b8e33159ca9f23",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "covered",
+        "verification_requirement": "standard"
+      },
+      "period_index": 2,
+      "result_file": "homeostasis-v2-replication-b07-p02-v2.json",
+      "result_sha256": "b61dad4b96d5abdcfd40c963f6661f064f196e81a6eca8e50007656fe9d29971",
+      "starting_capital_cents": 28963,
+      "world_seed": 2385722546196333511
+    },
+    "block-07:period-03:v1": {
+      "actual_model_cost_units": 29467000,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-replication-b07-p03-v1-audit.jsonl",
+      "audit_sha256": "c9a553ba02d9a92ff2bfcae6cb797b70e5916a01fb366ef1d2c2f31b440d45c6",
+      "block_index": 7,
+      "cell_id": "block-07:period-03:v1",
+      "customer_population_seed": 12680271904534035578,
+      "ending_balance_cents": 24889,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "cash_pressure": "stable",
+        "controller_version": "capage-economic-homeostasis-v1",
+        "irreversible_loss_tolerance": "bounded",
+        "mode": "stable",
+        "preferred_action_profile": "productive_value_creation_with_bounded_exploration",
+        "preferred_irreversible_exposure_cents": null,
+        "reason_codes": [
+          "productive_dormancy",
+          "sustainability_gap",
+          "value_stagnation"
+        ],
+        "state_fingerprint": "4635d53e514e497c6e93b476e2bc617cb0576611ea039640f9bfbd846e7c9844",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "uncovered",
+        "urgency": "high"
+      },
+      "period_index": 3,
+      "result_file": "homeostasis-v2-replication-b07-p03-v1.json",
+      "result_sha256": "561c527dfe993e6571fefccf7e742e9adf83223c5f95f27d1ed547e01745ac8d",
+      "starting_capital_cents": 24930,
+      "world_seed": 9104966108240002134
+    },
+    "block-07:period-03:v2": {
+      "actual_model_cost_units": 34511000,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-replication-b07-p03-v2-audit.jsonl",
+      "audit_sha256": "1f3ff2189821a965116fc090707e0d16c3c7874565cf4c5ca9224c26a035f8f5",
+      "block_index": 7,
+      "cell_id": "block-07:period-03:v2",
+      "customer_population_seed": 12680271904534035578,
+      "ending_balance_cents": 36376,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "continuity_mode": "stable",
+        "controller_version": "capage-economic-homeostasis-v2",
+        "customer_repair_advised": false,
+        "economic_reason_codes": [
+          "productive_dormancy",
+          "sustainability_gap",
+          "value_stagnation"
+        ],
+        "irreversible_loss_tolerance": "bounded",
+        "obligation_urgency": "routine",
+        "opportunity_urgency": "elevated",
+        "priority_profile": "productive_value_creation_with_bounded_exploration",
+        "quality_reason_codes": [],
+        "state_fingerprint": "69cac63c7c9852b0a050750f97e5a864b3ffc50db3a2c0211e8970a9179f32ef",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "uncovered",
+        "verification_requirement": "standard"
+      },
+      "period_index": 3,
+      "result_file": "homeostasis-v2-replication-b07-p03-v2.json",
+      "result_sha256": "db7615897ff52ef226a0ab3261f9edab6542eeacd8501ba0cf8e9edb19174b08",
+      "starting_capital_cents": 28922,
+      "world_seed": 9104966108240002134
+    },
+    "block-08:period-01:v1": {
+      "actual_model_cost_units": 18529800,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-replication-b08-p01-v1-audit.jsonl",
+      "audit_sha256": "4c759530aaa6a418ced93405efa25f46dbf235e3c6ff517066787e6176026be7",
+      "block_index": 8,
+      "cell_id": "block-08:period-01:v1",
+      "customer_population_seed": 4185866851509198216,
+      "ending_balance_cents": 24972,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "cash_pressure": "stable",
+        "controller_version": "capage-economic-homeostasis-v1",
+        "irreversible_loss_tolerance": "bounded",
+        "mode": "stable",
+        "preferred_action_profile": "productive_value_creation_with_bounded_exploration",
+        "preferred_irreversible_exposure_cents": null,
+        "reason_codes": [],
+        "state_fingerprint": "1ab01c23a258d19868544068f18f31a0c2ed9dee9210476cec22399a19c9a414",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "unknown",
+        "urgency": "routine"
+      },
+      "period_index": 1,
+      "result_file": "homeostasis-v2-replication-b08-p01-v1.json",
+      "result_sha256": "c1d7f44122ba4e4d415523aee858e3383c07839565f792d50193d41fc5e0f319",
+      "starting_capital_cents": 25000,
+      "world_seed": 4199005241135064275
+    },
+    "block-08:period-01:v2": {
+      "actual_model_cost_units": 22860600,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-replication-b08-p01-v2-audit.jsonl",
+      "audit_sha256": "58f001eef6224d9dc6801174dd68708537d97df84d2209ff82dc07d36cd8e65d",
+      "block_index": 8,
+      "cell_id": "block-08:period-01:v2",
+      "customer_population_seed": 4185866851509198216,
+      "ending_balance_cents": 28968,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "continuity_mode": "stable",
+        "controller_version": "capage-economic-homeostasis-v2",
+        "customer_repair_advised": false,
+        "economic_reason_codes": [],
+        "irreversible_loss_tolerance": "bounded",
+        "obligation_urgency": "routine",
+        "opportunity_urgency": "routine",
+        "priority_profile": "productive_value_creation_with_bounded_exploration",
+        "quality_reason_codes": [],
+        "state_fingerprint": "1ab01c23a258d19868544068f18f31a0c2ed9dee9210476cec22399a19c9a414",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "unknown",
+        "verification_requirement": "standard"
+      },
+      "period_index": 1,
+      "result_file": "homeostasis-v2-replication-b08-p01-v2.json",
+      "result_sha256": "c8bb872b8498e7cf3091def871e7cddcd714b5f77ca1255222918f975c694397",
+      "starting_capital_cents": 25000,
+      "world_seed": 4199005241135064275
+    },
+    "block-08:period-02:v1": {
+      "actual_model_cost_units": 35574000,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-replication-b08-p02-v1-audit.jsonl",
+      "audit_sha256": "8683cf23baca48f572a051563607ff35fd6c8ee3a7802353272d8dcedac1d239",
+      "block_index": 8,
+      "cell_id": "block-08:period-02:v1",
+      "customer_population_seed": 4185866851509198216,
+      "ending_balance_cents": 28922,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "cash_pressure": "stable",
+        "controller_version": "capage-economic-homeostasis-v1",
+        "irreversible_loss_tolerance": "bounded",
+        "mode": "stable",
+        "preferred_action_profile": "productive_value_creation_with_bounded_exploration",
+        "preferred_irreversible_exposure_cents": null,
+        "reason_codes": [
+          "productive_dormancy",
+          "sustainability_gap",
+          "value_stagnation"
+        ],
+        "state_fingerprint": "70c31bd1666c3441589a3b2ff7f26e36638215300696c505131af88fe759d4c1",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "uncovered",
+        "urgency": "high"
+      },
+      "period_index": 2,
+      "result_file": "homeostasis-v2-replication-b08-p02-v1.json",
+      "result_sha256": "c7172cc53869fedb4caa72d77b0c4958d757c112ae919f2a03782d14ac3cdee4",
+      "starting_capital_cents": 24972,
+      "world_seed": 1747163822476714278
+    },
+    "block-08:period-02:v2": {
+      "actual_model_cost_units": 35422800,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-replication-b08-p02-v2-audit.jsonl",
+      "audit_sha256": "1cd94eea8a427fcfeb0982a614ff834c1c922604127e6db5d70a429efa97c717",
+      "block_index": 8,
+      "cell_id": "block-08:period-02:v2",
+      "customer_population_seed": 4185866851509198216,
+      "ending_balance_cents": 35924,
+      "execution_order": [
+        "v2",
+        "v1"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "continuity_mode": "stable",
+        "controller_version": "capage-economic-homeostasis-v2",
+        "customer_repair_advised": false,
+        "economic_reason_codes": [
+          "productive_dormancy",
+          "value_stagnation"
+        ],
+        "irreversible_loss_tolerance": "bounded",
+        "obligation_urgency": "routine",
+        "opportunity_urgency": "elevated",
+        "priority_profile": "productive_value_creation_with_bounded_exploration",
+        "quality_reason_codes": [],
+        "state_fingerprint": "d8a55564aeaf3d2f86ed2a0e5fad94507e2b15ebba2beeecf5ec31a43e706f1d",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "covered",
+        "verification_requirement": "standard"
+      },
+      "period_index": 2,
+      "result_file": "homeostasis-v2-replication-b08-p02-v2.json",
+      "result_sha256": "93d2cd2e94885aad6e8613f2806755e0e4495e231a0c472dd403cadd4335f26f",
+      "starting_capital_cents": 28968,
+      "world_seed": 1747163822476714278
+    },
+    "block-08:period-03:v1": {
+      "actual_model_cost_units": 26308000,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-replication-b08-p03-v1-audit.jsonl",
+      "audit_sha256": "5d363834afb9d6e464f5b7674f4e9f4ea67f027c9394775ee51dba35b3d3fe46",
+      "block_index": 8,
+      "cell_id": "block-08:period-03:v1",
+      "customer_population_seed": 4185866851509198216,
+      "ending_balance_cents": 28880,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "cash_pressure": "stable",
+        "controller_version": "capage-economic-homeostasis-v1",
+        "irreversible_loss_tolerance": "bounded",
+        "mode": "stable",
+        "preferred_action_profile": "productive_value_creation_with_bounded_exploration",
+        "preferred_irreversible_exposure_cents": null,
+        "reason_codes": [
+          "productive_dormancy",
+          "value_stagnation"
+        ],
+        "state_fingerprint": "106a3183679bc044eb6b82abf0f546a8117632f854a397101ffb06a7edad43a6",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "covered",
+        "urgency": "high"
+      },
+      "period_index": 3,
+      "result_file": "homeostasis-v2-replication-b08-p03-v1.json",
+      "result_sha256": "69e1d6151deca3ee560162c12ba7ba02dc4f02469f41f8ce76d1064c0c14842d",
+      "starting_capital_cents": 28922,
+      "world_seed": 4575245262763414134
+    },
+    "block-08:period-03:v2": {
+      "actual_model_cost_units": 34213800,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-replication-b08-p03-v2-audit.jsonl",
+      "audit_sha256": "aeff210039040df4733d6113c33a55a408f5b0a78d704e0c68186df1c8000170",
+      "block_index": 8,
+      "cell_id": "block-08:period-03:v2",
+      "customer_population_seed": 4185866851509198216,
+      "ending_balance_cents": 43879,
+      "execution_order": [
+        "v1",
+        "v2"
+      ],
+      "homeostasis_signal": {
+        "advisory_only": true,
+        "any_exposure_remains_proposable": true,
+        "continuity_mode": "stable",
+        "controller_version": "capage-economic-homeostasis-v2",
+        "customer_repair_advised": false,
+        "economic_reason_codes": [
+          "productive_dormancy",
+          "value_stagnation"
+        ],
+        "irreversible_loss_tolerance": "bounded",
+        "obligation_urgency": "routine",
+        "opportunity_urgency": "elevated",
+        "priority_profile": "productive_value_creation_with_bounded_exploration",
+        "quality_reason_codes": [],
+        "state_fingerprint": "accfb2445021af49825bfcc4414b3050befea0580bbafa3d615369687aabc2db",
+        "strict_run_disqualified": false,
+        "sustainability_pressure": "covered",
+        "verification_requirement": "standard"
+      },
+      "period_index": 3,
+      "result_file": "homeostasis-v2-replication-b08-p03-v2.json",
+      "result_sha256": "cea2a6ad9979db6dc9776b3b5df51f5dcc46da07e7f33a74d467f514bffa5b57",
+      "starting_capital_cents": 35924,
+      "world_seed": 4575245262763414134
+    }
+  },
+  "config_commitment": "249063f31fbedd4a75071858b5486bef22f87ccf6d5116837cad72381864727f",
+  "errors": [],
+  "model_cost_units": 1292405000,
+  "plan_sha256": "271b5549cc88b17b3683496c93cf24563cd802582d548293d0378b6c38b303b7",
+  "runtime_commitments": {
+    "capage/homeostasis_v2_replication.py": "39f0274abd5f6ee2c2ac688e1220080fe3e45457a570cd1694658d9f84072bd2",
+    "capage/homeostasis_v2_replication_runner.py": "3871e9c076ceb7faa4674bd612fd0de246adc1f35d776bbcbb6bc81c9d8055ac",
+    "experiments/sandbox/economic_homeostasis_v2_replication_plan_v1.json": "60f03ff598a3ce6332445656a62383df57f816f2dab96d1b692c8145de604ff4",
+    "experiments/sandbox/economic_homeostasis_v2_replication_prereg_v1.json": "2996ebd8583eb33ed6b25334318e6ef0d96088ae12da6495e844e6b0d4eec028"
+  },
+  "schema_version": "capage-homeostasis-v2-blocked-replication-checkpoint-v1",
+  "status": "completed",
+  "stop_reason": "all_cells_completed"
+}

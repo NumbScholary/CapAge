@@ -1,0 +1,15 @@
+{
+  "audit_sha256": "bf5dfee8b1796c5af4f38eaa9a43d5c1de5779f121cf01241a3ce8e3808e0c3c",
+  "cell_id": "block-01:period-02:v2",
+  "config_commitment": "249063f31fbedd4a75071858b5486bef22f87ccf6d5116837cad72381864727f",
+  "result_sha256": "e515f6b8fd7dde6985ee70209cfc5addb458ad635812915c7742d0be4b592d24",
+  "runtime_commitments": {
+    "capage/homeostasis_v2_replication.py": "39f0274abd5f6ee2c2ac688e1220080fe3e45457a570cd1694658d9f84072bd2",
+    "capage/homeostasis_v2_replication_runner.py": "3871e9c076ceb7faa4674bd612fd0de246adc1f35d776bbcbb6bc81c9d8055ac",
+    "experiments/sandbox/economic_homeostasis_v2_replication_plan_v1.json": "60f03ff598a3ce6332445656a62383df57f816f2dab96d1b692c8145de604ff4",
+    "experiments/sandbox/economic_homeostasis_v2_replication_prereg_v1.json": "2996ebd8583eb33ed6b25334318e6ef0d96088ae12da6495e844e6b0d4eec028"
+  },
+  "schema_version": "capage-paid-attempt-v3",
+  "started_at": "2026-08-20T08:37:05.515691+00:00",
+  "status": "completed"
+}

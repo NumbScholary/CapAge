@@ -1,0 +1,10 @@
+{
+  ".github/workflows/hosting-liability-tariff-replication-launch.yml": "77698a56c490b33f5fd771737d4b595d4310d15e78577cb91bc25d8d309beb8b",
+  "capage/hosting_liability_replication.py": "4b46bf8b800c4df6bc3851252fabf5ed257ca9b154af9dd9c8f9d2743176bab4",
+  "capage/hosting_liability_replication_launch.py": "7df6240dd9eb14471ea95030feef531ccdb1d86b4fb6985f27b452aafd4090a1",
+  "capage/hosting_liability_replication_runner.py": "161b3ab4de0328d8d562fefea8c9dbfbc80cf7bd5e01f162f34eb03b03ef89b4",
+  "experiments/sandbox/HOSTING_LIABILITY_TARIFF_REPLICATION_AUTHORIZATION.md": "a4a772b7f0ee8fc81871dc3adea2c9a1acf8856329e2d42765337ae1d96f95bc",
+  "experiments/sandbox/HOSTING_LIABILITY_TARIFF_REPLICATION_LAUNCH_GATE.md": "530d15d22a49dae35a59e0f4f96229298db62db76c1d33d0bbd2a7c7681edd74",
+  "experiments/sandbox/HOSTING_LIABILITY_TARIFF_REPLICATION_PREREG_v1.md": "d8b73cc6f0a31d5cf185184226e2fa39562a3d5d92da4b2c25e9d566702c0c5a",
+  "experiments/sandbox/hosting_liability_tariff_replication_plan_v1.json": "382001b101df3ac676ab99e661a6b113fd26f7f561340ae9d1bbfc2377218b79"
+}

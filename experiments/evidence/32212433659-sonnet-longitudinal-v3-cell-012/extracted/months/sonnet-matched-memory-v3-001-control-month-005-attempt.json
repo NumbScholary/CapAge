@@ -1,0 +1,9 @@
+{
+  "cell_id": "month-005:control",
+  "completed_at": "2026-08-19T01:13:00.732938+00:00",
+  "config_commitment": "b09b59bf7f7b39c83d96c55eae80b8322c0735baeda9fa21d26fc1d793cc5e47",
+  "result_sha256": "17f87fb07938f62777379f59b16421d34daae1a4533394e9c17ccf4af3fe2b4e",
+  "schema_version": "capage-paid-attempt-v1",
+  "started_at": "2026-08-19T01:11:50.579358+00:00",
+  "status": "completed"
+}

@@ -1,0 +1,5208 @@
+{
+  "actual_model_cost_cents_billed": 20,
+  "actual_model_cost_cents_unrounded": 19.1698,
+  "actual_model_cost_units": 19169800,
+  "business_continuity": {
+    "customers": {
+      "customer-comparison-research-01": {
+        "contracts_accepted": 0,
+        "contracts_defaulted": 0,
+        "contracts_disputed": 0,
+        "contracts_paid": 0,
+        "deliveries_assessed": 0,
+        "feedback_responses": 0,
+        "last_outcome": "",
+        "offers_sent": 1,
+        "reputation_points": 0
+      },
+      "customer-data-cleanup-01": {
+        "contracts_accepted": 1,
+        "contracts_defaulted": 0,
+        "contracts_disputed": 0,
+        "contracts_paid": 1,
+        "deliveries_assessed": 1,
+        "feedback_responses": 0,
+        "last_outcome": "paid",
+        "offers_sent": 1,
+        "reputation_points": 12
+      },
+      "customer-inventory-analysis-01": {
+        "contracts_accepted": 0,
+        "contracts_defaulted": 0,
+        "contracts_disputed": 0,
+        "contracts_paid": 0,
+        "deliveries_assessed": 0,
+        "feedback_responses": 0,
+        "last_outcome": "",
+        "offers_sent": 1,
+        "reputation_points": 0
+      },
+      "customer-service-clarity-01": {
+        "contracts_accepted": 0,
+        "contracts_defaulted": 0,
+        "contracts_disputed": 0,
+        "contracts_paid": 0,
+        "deliveries_assessed": 0,
+        "feedback_responses": 0,
+        "last_outcome": "",
+        "offers_sent": 1,
+        "reputation_points": 0
+      }
+    },
+    "global_reputation_points": 12,
+    "schema_version": "capage-business-continuity-v1"
+  },
+  "completed_at": "2026-08-20T09:03:50.130607+00:00",
+  "config": {
+    "assessor_version": "deterministic-artifact-v2",
+    "customer_namespace": "",
+    "customer_population_seed": 7201653885602674774,
+    "effort": "medium",
+    "horizon_days": 30,
+    "market_profile": "baseline-v1",
+    "max_decisions": 25,
+    "max_output_tokens": 1024,
+    "max_run_cost_cents": 45,
+    "model": "claude-sonnet-5",
+    "run_name": "homeostasis-v2-replication-b04-p02-v2",
+    "seed": 17707128320845884464,
+    "starting_capital_cents": 28961,
+    "tariff": {
+      "input_cents_per_million_tokens": 200,
+      "name": "anthropic-sonnet-5-introductory-2026-08",
+      "output_cents_per_million_tokens": 1000
+    },
+    "tariff_valid_through": "2026-08-31"
+  },
+  "decision_count": 25,
+  "failure": null,
+  "outcome": {
+    "balance_cents": 28898,
+    "contracts_accepted": 0,
+    "contracts_defaulted": 0,
+    "contracts_disputed": 0,
+    "contracts_paid": 0,
+    "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+    "day": 30,
+    "earned_revenue_cents": 0,
+    "expense_cents": 63,
+    "insolvent": false,
+    "mean_customer_satisfaction": null,
+    "model_api_cost_cents": 20,
+    "model_api_cost_units": 19169800,
+    "model_input_tokens": 85989,
+    "model_output_tokens": 1972,
+    "net_change_cents": -63,
+    "offers_sent": 1,
+    "open_obligations": 0,
+    "owner_capital_cents": 28961,
+    "run_id": "87d8bda89e38",
+    "world_commitment": "57a8b68f24ce49e7166c49ddf4bd558583427dbb8d92451ed820c30721742cd6"
+  },
+  "schema_version": "capage-live-sandbox-result-v1",
+  "started_at": "2026-08-20T09:02:36.170114+00:00",
+  "status": "completed",
+  "stop_reason": "decision_limit",
+  "transcript": [
+    {
+      "day_after_action": 0,
+      "day_before_action": 0,
+      "decision": 1,
+      "execution": {
+        "action_id": "9fd3d285-cfbf-4a93-9510-0cd5c914c38d",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "cost_cents": 2,
+          "ok": true,
+          "results": []
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.search_market",
+      "metered_usage": {
+        "input_tokens": 2833,
+        "output_tokens": 74
+      },
+      "preflight_input_tokens": 2833,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 2833,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01Qh99i1YfQPeU14BoZbobsr",
+            "input": {
+              "limit": 5,
+              "query": "small business need for data analysis or document automation help"
+            },
+            "name": "sandbox_search_market",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeDjHZVtMv3NtFb3zjr7U",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 2833,
+          "output_tokens": 74,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 0,
+      "day_before_action": 0,
+      "decision": 2,
+      "execution": {
+        "action_id": "9789b905-2b25-453a-96b5-083256e756ba",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "cost_cents": 2,
+          "ok": true,
+          "results": []
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.search_market",
+      "metered_usage": {
+        "input_tokens": 2933,
+        "output_tokens": 80
+      },
+      "preflight_input_tokens": 2933,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 2933,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01THjdhcnpfS4PitnAPYn8qw",
+            "input": {
+              "limit": 5,
+              "query": "freelance need for resume writing or LinkedIn profile help"
+            },
+            "name": "sandbox_search_market",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeDjHmyUxQFSH4pjwG458",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 2933,
+          "output_tokens": 80,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 0,
+      "day_before_action": 0,
+      "decision": 3,
+      "execution": {
+        "action_id": "35ec53bf-8ad6-4fc5-a4cb-5ba22340d081",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "cost_cents": 2,
+          "ok": true,
+          "results": []
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.search_market",
+      "metered_usage": {
+        "input_tokens": 3037,
+        "output_tokens": 85
+      },
+      "preflight_input_tokens": 3037,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 3037,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 1
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_013WMHBM5rJYSPouYSsW9MTG",
+            "input": {
+              "limit": 5,
+              "query": "small business owner looking for help with bookkeeping or spreadsheet automation"
+            },
+            "name": "sandbox_search_market",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeDjHzL8L3PxGGp3PMYne",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 3037,
+          "output_tokens": 85,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 0,
+      "day_before_action": 0,
+      "decision": 4,
+      "execution": {
+        "action_id": "5e4d4f1f-eea5-419d-a687-9201b1dcc07a",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "cost_cents": 2,
+          "ok": true,
+          "results": []
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.search_market",
+      "metered_usage": {
+        "input_tokens": 3145,
+        "output_tokens": 76
+      },
+      "preflight_input_tokens": 3145,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 3145,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01WMt2bnZ35KPE8WESNuzKRK",
+            "input": {
+              "limit": 5,
+              "query": "customer need for market research reports or competitive analysis"
+            },
+            "name": "sandbox_search_market",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeDjJDHVMBuVgEkhp7Upp",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 3145,
+          "output_tokens": 76,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 0,
+      "day_before_action": 0,
+      "decision": 5,
+      "execution": {
+        "action_id": "03c00cbf-5680-47ad-a9c4-f52d9011e19e",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "cost_cents": 2,
+          "ok": true,
+          "results": []
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.search_market",
+      "metered_usage": {
+        "input_tokens": 3244,
+        "output_tokens": 77
+      },
+      "preflight_input_tokens": 3244,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 3244,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01P8DoRAUbLvXbFUTkH7jptA",
+            "input": {
+              "limit": 5,
+              "query": "startup founder needs pitch deck or business plan review"
+            },
+            "name": "sandbox_search_market",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeDjJSfA5yPr88D9Wc2fe",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 3244,
+          "output_tokens": 77,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 0,
+      "day_before_action": 0,
+      "decision": 6,
+      "execution": {
+        "action_id": "3eb3a8c2-59cd-4c3d-b6ef-0f653390207a",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "cost_cents": 2,
+          "ok": true,
+          "results": []
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.search_market",
+      "metered_usage": {
+        "input_tokens": 3344,
+        "output_tokens": 74
+      },
+      "preflight_input_tokens": 3344,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 3344,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01UwPY5XiQsFJ3wejNCe46C8",
+            "input": {
+              "limit": 5,
+              "query": "need help writing website copy or product descriptions"
+            },
+            "name": "sandbox_search_market",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeDjJf6Ghmzkw5daaLRRn",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 3344,
+          "output_tokens": 74,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 0,
+      "day_before_action": 0,
+      "decision": 7,
+      "execution": {
+        "action_id": "bccff747-679f-4016-8770-1ab44f5867fc",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "cost_cents": 2,
+          "ok": true,
+          "results": []
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.search_market",
+      "metered_usage": {
+        "input_tokens": 3441,
+        "output_tokens": 75
+      },
+      "preflight_input_tokens": 3441,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 3441,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 1
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01WtFVVvCYW5Mgq89JBXZPFk",
+            "input": {
+              "limit": 5,
+              "query": "need for social media content calendar or marketing plan"
+            },
+            "name": "sandbox_search_market",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeDjJrzsqusjyb6yQoDGE",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 3441,
+          "output_tokens": 75,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 0,
+      "day_before_action": 0,
+      "decision": 8,
+      "execution": {
+        "action_id": "ace512da-716e-4d23-982c-fbd13aab4ffc",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "cost_cents": 2,
+          "ok": true,
+          "results": []
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.search_market",
+      "metered_usage": {
+        "input_tokens": 3442,
+        "output_tokens": 76
+      },
+      "preflight_input_tokens": 3442,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 3442,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01J7RjWmycptsoVjgbXttueJ",
+            "input": {
+              "limit": 5,
+              "query": "need help analyzing customer survey data or feedback"
+            },
+            "name": "sandbox_search_market",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeDjK4ipkEvWQETb1WnKF",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 3442,
+          "output_tokens": 76,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 0,
+      "day_before_action": 0,
+      "decision": 9,
+      "execution": {
+        "action_id": "a5c2a7d3-5505-4206-a769-0dade891fced",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "cost_cents": 2,
+          "ok": true,
+          "results": []
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.search_market",
+      "metered_usage": {
+        "input_tokens": 3438,
+        "output_tokens": 74
+      },
+      "preflight_input_tokens": 3438,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 3438,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_014EKiLB2Gx8DwXe9tvhAJh5",
+            "input": {
+              "limit": 5,
+              "query": "freelance data entry or research assistance needed"
+            },
+            "name": "sandbox_search_market",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeDjKGy2aywPwyCiSnAzs",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 3438,
+          "output_tokens": 74,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 0,
+      "day_before_action": 0,
+      "decision": 10,
+      "execution": {
+        "action_id": "cd981df2-2a9e-4177-8e7b-aa6d4d829adc",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "cost_cents": 2,
+          "ok": true,
+          "results": []
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.search_market",
+      "metered_usage": {
+        "input_tokens": 3427,
+        "output_tokens": 80
+      },
+      "preflight_input_tokens": 3427,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 3427,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_018rEhJMPAK7m8kqrf6yetki",
+            "input": {
+              "limit": 5,
+              "query": "small business needs help with financial planning or bookkeeping templates"
+            },
+            "name": "sandbox_search_market",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeDjKV53XqoozP77RfYtD",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 3427,
+          "output_tokens": 80,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 0,
+      "day_before_action": 0,
+      "decision": 11,
+      "execution": {
+        "action_id": "136e83cb-443a-4a4d-97b1-9edb360ff4f1",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "cost_cents": 2,
+          "ok": true,
+          "results": []
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.search_market",
+      "metered_usage": {
+        "input_tokens": 3431,
+        "output_tokens": 80
+      },
+      "preflight_input_tokens": 3431,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 3431,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 1
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_011f23dUcXNhAkgfLLyDT74G",
+            "input": {
+              "limit": 5,
+              "query": "small business owner needs help creating standard operating procedures documentation"
+            },
+            "name": "sandbox_search_market",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeDjKgPvwzP5s66wMZyvy",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 3431,
+          "output_tokens": 80,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 0,
+      "day_before_action": 0,
+      "decision": 12,
+      "execution": {
+        "action_id": "1328de08-4609-4d61-b05a-db0ffbdf55dc",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "cost_cents": 2,
+          "ok": true,
+          "results": []
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.search_market",
+      "metered_usage": {
+        "input_tokens": 3433,
+        "output_tokens": 79
+      },
+      "preflight_input_tokens": 3433,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 3433,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01HqxCaBvGzurL6ohDQxYxzr",
+            "input": {
+              "limit": 5,
+              "query": "startup founder needs pitch deck review or investor materials help"
+            },
+            "name": "sandbox_search_market",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeDjKsQiDvQrfh43bFjew",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 3433,
+          "output_tokens": 79,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 0,
+      "day_before_action": 0,
+      "decision": 13,
+      "execution": {
+        "action_id": "6ec5761c-5699-4c80-9a35-827b45bf52f1",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "cost_cents": 2,
+          "ok": true,
+          "results": []
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.search_market",
+      "metered_usage": {
+        "input_tokens": 3439,
+        "output_tokens": 76
+      },
+      "preflight_input_tokens": 3439,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 3439,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_013Na6LbJT7qJsCcD1RtHTZb",
+            "input": {
+              "limit": 5,
+              "query": "business needs help writing website copy or product descriptions"
+            },
+            "name": "sandbox_search_market",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeDjL58fG3x3cYgUhbJ3i",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 3439,
+          "output_tokens": 76,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 0,
+      "day_before_action": 0,
+      "decision": 14,
+      "execution": {
+        "action_id": "5fb28de0-4d2c-4915-853a-7cd6c2b5d170",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "cost_cents": 2,
+          "ok": true,
+          "results": []
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.search_market",
+      "metered_usage": {
+        "input_tokens": 3441,
+        "output_tokens": 74
+      },
+      "preflight_input_tokens": 3441,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 3441,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01G5aXKEYpMM1gP8w4JkCmRr",
+            "input": {
+              "limit": 5,
+              "query": "need help writing job descriptions for hiring"
+            },
+            "name": "sandbox_search_market",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeDjLJ6XBYNBgjVPPEhBH",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 3441,
+          "output_tokens": 74,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 0,
+      "day_before_action": 0,
+      "decision": 15,
+      "execution": {
+        "action_id": "83974fd8-8c9c-4bb8-8e31-deaf0c03be12",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "cost_cents": 2,
+          "ok": true,
+          "results": []
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.search_market",
+      "metered_usage": {
+        "input_tokens": 3439,
+        "output_tokens": 70
+      },
+      "preflight_input_tokens": 3439,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 3439,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 1
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_015rQv49vGBGScRcE6tyChyv",
+            "input": {
+              "limit": 3,
+              "query": "customer service email response templates needed"
+            },
+            "name": "sandbox_search_market",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeDjLUmDiiC9J6vq9zrgo",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 3439,
+          "output_tokens": 70,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 0,
+      "day_before_action": 0,
+      "decision": 16,
+      "execution": {
+        "action_id": "38549102-6e67-4baf-8b29-1869587b358f",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "cost_cents": 2,
+          "ok": true,
+          "results": []
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.search_market",
+      "metered_usage": {
+        "input_tokens": 3435,
+        "output_tokens": 73
+      },
+      "preflight_input_tokens": 3435,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 3435,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 1
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01VQGxt2sBetLcGGd8UWi1tw",
+            "input": {
+              "limit": 3,
+              "query": "need help with social media content calendar for small business"
+            },
+            "name": "sandbox_search_market",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeDjLgkYL7yZLvAFJBLAn",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 3435,
+          "output_tokens": 73,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 0,
+      "day_before_action": 0,
+      "decision": 17,
+      "execution": {
+        "action_id": "2460d9e8-bea1-4124-80c2-0764cb34ddf7",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "cost_cents": 2,
+          "ok": true,
+          "results": []
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.search_market",
+      "metered_usage": {
+        "input_tokens": 3428,
+        "output_tokens": 78
+      },
+      "preflight_input_tokens": 3428,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 3428,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01PtJb3EXTjG4u2GWdV492pS",
+            "input": {
+              "limit": 3,
+              "query": "freelancer needs help with resume and cover letter writing"
+            },
+            "name": "sandbox_search_market",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeDjLvDf2DFzvJT2CjK7R",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 3428,
+          "output_tokens": 78,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 0,
+      "day_before_action": 0,
+      "decision": 18,
+      "execution": {
+        "action_id": "66f1c93c-02e7-480a-9f25-639d6294b32f",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "cost_cents": 2,
+          "ok": true,
+          "results": []
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.search_market",
+      "metered_usage": {
+        "input_tokens": 3425,
+        "output_tokens": 78
+      },
+      "preflight_input_tokens": 3425,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 3425,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01Fe7wHYzGn8BDiPmMmDSB6v",
+            "input": {
+              "limit": 3,
+              "query": "small business owner needs help with SEO or blog content writing"
+            },
+            "name": "sandbox_search_market",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeDjM8ys4mU6v4m5D6a25",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 3425,
+          "output_tokens": 78,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 0,
+      "day_before_action": 0,
+      "decision": 19,
+      "execution": {
+        "action_id": "a9d9d009-c321-439a-bab0-bd40214566dc",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "cost_cents": 2,
+          "ok": true,
+          "results": []
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.search_market",
+      "metered_usage": {
+        "input_tokens": 3424,
+        "output_tokens": 77
+      },
+      "preflight_input_tokens": 3424,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 3424,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01W3ZvykHQFva98VSBKcUYrG",
+            "input": {
+              "limit": 3,
+              "query": "startup founder needs pitch deck or business plan help"
+            },
+            "name": "sandbox_search_market",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeDjMLo2G2iuhNacMRZcX",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 3424,
+          "output_tokens": 77,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 0,
+      "day_before_action": 0,
+      "decision": 20,
+      "execution": {
+        "action_id": "a058038a-d151-4fc3-97ca-260ba7c38e13",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "cost_cents": 2,
+          "ok": true,
+          "results": []
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.search_market",
+      "metered_usage": {
+        "input_tokens": 3426,
+        "output_tokens": 77
+      },
+      "preflight_input_tokens": 3426,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 3426,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 1
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01JNoYRRySHs8FB46Wqe5M9z",
+            "input": {
+              "limit": 3,
+              "query": "need help with data cleanup spreadsheet organization"
+            },
+            "name": "sandbox_search_market",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeDjMaxonAu86JKBfPqqJ",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 3426,
+          "output_tokens": 77,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 7,
+      "day_before_action": 0,
+      "decision": 21,
+      "execution": {
+        "action_id": "65f39f9f-6fc2-4872-ad97-739883c4f6a1",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "advanced_days": 7,
+          "capital": {
+            "balance_cents": 28905,
+            "earned_revenue_cents": 0,
+            "expense_cents": 56,
+            "model_api_cost_cents": 16,
+            "model_api_cost_units": 15578600,
+            "model_input_tokens": 70033,
+            "model_output_tokens": 1572,
+            "owner_capital_cents": 28961
+          },
+          "contracts": [],
+          "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+          "day": 7,
+          "discovered_signals": [],
+          "horizon_days": 30,
+          "inbox": [],
+          "offers": [],
+          "ok": true,
+          "public_events": [
+            {
+              "day": 7,
+              "kind": "demand_up",
+              "summary": "Public demand strengthened in small_retail."
+            }
+          ],
+          "run_id": "87d8bda89e38",
+          "token_tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "world_commitment": "57a8b68f24ce49e7166c49ddf4bd558583427dbb8d92451ed820c30721742cd6"
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.wait",
+      "metered_usage": {
+        "input_tokens": 3428,
+        "output_tokens": 39
+      },
+      "preflight_input_tokens": 3428,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 3428,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01FjTuCz32aXaTLQrADj1WwN",
+            "input": {
+              "days": 7
+            },
+            "name": "sandbox_wait",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeDjMqhKzH3NowGdyT9gT",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 3428,
+          "output_tokens": 39,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 7,
+      "day_before_action": 7,
+      "decision": 22,
+      "execution": {
+        "action_id": "d5dba730-5374-4484-9e7c-c54e73f018e9",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "cost_cents": 2,
+          "ok": true,
+          "results": [
+            {
+              "currently_visible": true,
+              "customer_id": "customer-inventory-analysis-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1
+              },
+              "sector": "micro_manufacturing",
+              "signal_id": "signal-009",
+              "source_type": "trade_forum",
+              "text": "A small producer describes repeated shortages of inexpensive components alongside excess stock of rarely used parts."
+            },
+            {
+              "currently_visible": true,
+              "customer_id": "customer-data-cleanup-01",
+              "prior_relationship": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 1,
+                "feedback_responses": 0,
+                "last_outcome": "paid",
+                "offers_sent": 1
+              },
+              "sector": "community_organizations",
+              "signal_id": "signal-001",
+              "source_type": "public_forum",
+              "text": "A volunteer group says its donation and attendance records are spread across several inconsistent spreadsheets."
+            },
+            {
+              "currently_visible": true,
+              "customer_id": "customer-service-clarity-01",
+              "sector": "local_services",
+              "signal_id": "signal-011",
+              "source_type": "business_page",
+              "text": "A repair business has conflicting public descriptions of what its standard service includes, and customers keep asking the same questions."
+            }
+          ]
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.search_market",
+      "metered_usage": {
+        "input_tokens": 3440,
+        "output_tokens": 82
+      },
+      "preflight_input_tokens": 3440,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 3440,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01XF4pQ8ojn2hYEiAihYsF78",
+            "input": {
+              "limit": 3,
+              "query": "small retail business needs help with inventory or marketing due to rising demand"
+            },
+            "name": "sandbox_search_market",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeDjN3rpc2SEd9Fn7eeHg",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 3440,
+          "output_tokens": 82,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 7,
+      "day_before_action": 7,
+      "decision": 23,
+      "execution": {
+        "action_id": "599ae2e1-ec72-4af8-8b27-5a8d155a1851",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "cost_cents": 1,
+          "offer_id": "offer-001",
+          "ok": true,
+          "response_not_before_day": 8,
+          "status": "pending"
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.send_offer",
+      "metered_usage": {
+        "input_tokens": 3920,
+        "output_tokens": 240
+      },
+      "preflight_input_tokens": 3920,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 3920,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01GEZPL3qk13QHpFBVaky7Tx",
+            "input": {
+              "price_cents": 4000,
+              "promise_days": 3,
+              "scope": "Create a single clear, consistent written description of the repair business's standard service (what's included, what's not, typical turnaround) to resolve conflicting public descriptions and reduce repetitive customer questions. Delivered as ready-to-use text for website/FAQ.",
+              "signal_id": "signal-011",
+              "solution_tags": [
+                "service_description",
+                "FAQ",
+                "copywriting"
+              ]
+            },
+            "name": "sandbox_send_offer",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeDjNGY4neaHZ1FbgyWH5",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 3920,
+          "output_tokens": 240,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 8,
+      "day_before_action": 7,
+      "decision": 24,
+      "execution": {
+        "action_id": "8592c06b-939a-4bc9-a6bd-32e4db44b2b0",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "advanced_days": 1,
+          "capital": {
+            "balance_cents": 28899,
+            "earned_revenue_cents": 0,
+            "expense_cents": 62,
+            "model_api_cost_cents": 19,
+            "model_api_cost_units": 18270800,
+            "model_input_tokens": 81689,
+            "model_output_tokens": 1933,
+            "owner_capital_cents": 28961
+          },
+          "contracts": [],
+          "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+          "day": 8,
+          "discovered_signals": [
+            {
+              "currently_visible": true,
+              "customer_id": "customer-data-cleanup-01",
+              "prior_relationship": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 1,
+                "feedback_responses": 0,
+                "last_outcome": "paid",
+                "offers_sent": 1
+              },
+              "sector": "community_organizations",
+              "signal_id": "signal-001",
+              "source_type": "public_forum",
+              "text": "A volunteer group says its donation and attendance records are spread across several inconsistent spreadsheets."
+            },
+            {
+              "currently_visible": true,
+              "customer_id": "customer-inventory-analysis-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1
+              },
+              "sector": "micro_manufacturing",
+              "signal_id": "signal-009",
+              "source_type": "trade_forum",
+              "text": "A small producer describes repeated shortages of inexpensive components alongside excess stock of rarely used parts."
+            },
+            {
+              "currently_visible": true,
+              "customer_id": "customer-service-clarity-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1
+              },
+              "sector": "local_services",
+              "signal_id": "signal-011",
+              "source_type": "business_page",
+              "text": "A repair business has conflicting public descriptions of what its standard service includes, and customers keep asking the same questions."
+            }
+          ],
+          "horizon_days": 30,
+          "inbox": [
+            {
+              "day": 8,
+              "from": "signal-011",
+              "offer_id": "offer-001",
+              "type": "offer_declined"
+            }
+          ],
+          "offers": [
+            {
+              "offer_id": "offer-001",
+              "price_cents": 4000,
+              "promise_days": 3,
+              "response_day": 8,
+              "scope": "Create a single clear, consistent written description of the repair business's standard service (what's included, what's not, typical turnaround) to resolve conflicting public descriptions and reduce repetitive customer questions. Delivered as ready-to-use text for website/FAQ.",
+              "sent_day": 7,
+              "signal_id": "signal-011",
+              "solution_tags": [
+                "copywriting",
+                "faq",
+                "service_description"
+              ],
+              "status": "declined"
+            }
+          ],
+          "ok": true,
+          "public_events": [
+            {
+              "day": 8,
+              "kind": "demand_down",
+              "summary": "Public demand weakened in community_organizations."
+            }
+          ],
+          "run_id": "87d8bda89e38",
+          "token_tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "world_commitment": "57a8b68f24ce49e7166c49ddf4bd558583427dbb8d92451ed820c30721742cd6"
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.wait",
+      "metered_usage": {
+        "input_tokens": 4296,
+        "output_tokens": 39
+      },
+      "preflight_input_tokens": 4296,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 4296,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01TYy8KxKZjfvoep4MpSKHoU",
+            "input": {
+              "days": 1
+            },
+            "name": "sandbox_wait",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeDjNdbLVQ7p3qUZkCBJc",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 4296,
+          "output_tokens": 39,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 9,
+      "day_before_action": 8,
+      "decision": 25,
+      "execution": {
+        "action_id": "3ca60ec4-5cc8-4a29-ba83-c2be61c19446",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "advanced_days": 1,
+          "capital": {
+            "balance_cents": 28898,
+            "earned_revenue_cents": 0,
+            "expense_cents": 63,
+            "model_api_cost_cents": 20,
+            "model_api_cost_units": 19169800,
+            "model_input_tokens": 85989,
+            "model_output_tokens": 1972,
+            "owner_capital_cents": 28961
+          },
+          "contracts": [],
+          "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+          "day": 9,
+          "discovered_signals": [
+            {
+              "currently_visible": true,
+              "customer_id": "customer-data-cleanup-01",
+              "prior_relationship": {
+                "contracts_accepted": 1,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 1,
+                "feedback_responses": 0,
+                "last_outcome": "paid",
+                "offers_sent": 1
+              },
+              "sector": "community_organizations",
+              "signal_id": "signal-001",
+              "source_type": "public_forum",
+              "text": "A volunteer group says its donation and attendance records are spread across several inconsistent spreadsheets."
+            },
+            {
+              "currently_visible": true,
+              "customer_id": "customer-inventory-analysis-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1
+              },
+              "sector": "micro_manufacturing",
+              "signal_id": "signal-009",
+              "source_type": "trade_forum",
+              "text": "A small producer describes repeated shortages of inexpensive components alongside excess stock of rarely used parts."
+            },
+            {
+              "currently_visible": true,
+              "customer_id": "customer-service-clarity-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1
+              },
+              "sector": "local_services",
+              "signal_id": "signal-011",
+              "source_type": "business_page",
+              "text": "A repair business has conflicting public descriptions of what its standard service includes, and customers keep asking the same questions."
+            }
+          ],
+          "horizon_days": 30,
+          "inbox": [
+            {
+              "day": 8,
+              "from": "signal-011",
+              "offer_id": "offer-001",
+              "type": "offer_declined"
+            }
+          ],
+          "offers": [
+            {
+              "offer_id": "offer-001",
+              "price_cents": 4000,
+              "promise_days": 3,
+              "response_day": 8,
+              "scope": "Create a single clear, consistent written description of the repair business's standard service (what's included, what's not, typical turnaround) to resolve conflicting public descriptions and reduce repetitive customer questions. Delivered as ready-to-use text for website/FAQ.",
+              "sent_day": 7,
+              "signal_id": "signal-011",
+              "solution_tags": [
+                "copywriting",
+                "faq",
+                "service_description"
+              ],
+              "status": "declined"
+            }
+          ],
+          "ok": true,
+          "public_events": [],
+          "run_id": "87d8bda89e38",
+          "token_tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "world_commitment": "57a8b68f24ce49e7166c49ddf4bd558583427dbb8d92451ed820c30721742cd6"
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.wait",
+      "metered_usage": {
+        "input_tokens": 4300,
+        "output_tokens": 39
+      },
+      "preflight_input_tokens": 4300,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 4300,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01JX8E4brvko9fuTXr2uGF1n",
+            "input": {
+              "days": 1
+            },
+            "name": "sandbox_wait",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeDjNqDadESa2qRzK3rNr",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 4300,
+          "output_tokens": 39,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    }
+  ],
+  "world_reveal": {
+    "cost_policy": {
+      "cost_units_per_cent": 1000000,
+      "token_tariff": {
+        "input_cents_per_million_tokens": 200,
+        "name": "anthropic-sonnet-5-introductory-2026-08",
+        "output_cents_per_million_tokens": 1000
+      }
+    },
+    "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+    "journal": [
+      {
+        "data": {
+          "amount_cents": 28961,
+          "balance_cents": 28961,
+          "day": 0,
+          "entry_type": "owner_capital",
+          "memo": "Initial synthetic owner-supplied capital.",
+          "reference": "initial-capital",
+          "sequence": 1
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 1
+      },
+      {
+        "data": {
+          "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+          "horizon_days": 30,
+          "run_id": "87d8bda89e38",
+          "token_tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "world_commitment": "57a8b68f24ce49e7166c49ddf4bd558583427dbb8d92451ed820c30721742cd6"
+        },
+        "day": 0,
+        "event_type": "sandbox_started",
+        "sequence": 2
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 28960,
+          "day": 0,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through homeostasis-v2-replication-b04-p02-v2-call-001.",
+          "reference": "homeostasis-v2-replication-b04-p02-v2-call-001",
+          "sequence": 2
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 3
+      },
+      {
+        "data": {
+          "call_id": "homeostasis-v2-replication-b04-p02-v2-call-001",
+          "cost_units": 640600,
+          "cumulative_billed_cents": 1,
+          "cumulative_cost_units": 640600,
+          "day": 0,
+          "incremental_billed_cents": 1,
+          "input_tokens": 2833,
+          "output_tokens": 74,
+          "sequence": 1,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 0,
+        "event_type": "model_usage_metered",
+        "sequence": 4
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 28958,
+          "day": 0,
+          "entry_type": "market_research_cost",
+          "memo": "Simulated public-market search: small business need for data analysis or document automation help",
+          "reference": "search-001",
+          "sequence": 3
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 5
+      },
+      {
+        "data": {
+          "cost_cents": 2,
+          "discovered_signal_ids": [],
+          "query": "small business need for data analysis or document automation help",
+          "result_count": 0
+        },
+        "day": 0,
+        "event_type": "market_searched",
+        "sequence": 6
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 28957,
+          "day": 0,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through homeostasis-v2-replication-b04-p02-v2-call-002.",
+          "reference": "homeostasis-v2-replication-b04-p02-v2-call-002",
+          "sequence": 4
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 7
+      },
+      {
+        "data": {
+          "call_id": "homeostasis-v2-replication-b04-p02-v2-call-002",
+          "cost_units": 666600,
+          "cumulative_billed_cents": 2,
+          "cumulative_cost_units": 1307200,
+          "day": 0,
+          "incremental_billed_cents": 1,
+          "input_tokens": 2933,
+          "output_tokens": 80,
+          "sequence": 2,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 0,
+        "event_type": "model_usage_metered",
+        "sequence": 8
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 28955,
+          "day": 0,
+          "entry_type": "market_research_cost",
+          "memo": "Simulated public-market search: freelance need for resume writing or LinkedIn profile help",
+          "reference": "search-002",
+          "sequence": 5
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 9
+      },
+      {
+        "data": {
+          "cost_cents": 2,
+          "discovered_signal_ids": [],
+          "query": "freelance need for resume writing or LinkedIn profile help",
+          "result_count": 0
+        },
+        "day": 0,
+        "event_type": "market_searched",
+        "sequence": 10
+      },
+      {
+        "data": {
+          "call_id": "homeostasis-v2-replication-b04-p02-v2-call-003",
+          "cost_units": 692400,
+          "cumulative_billed_cents": 2,
+          "cumulative_cost_units": 1999600,
+          "day": 0,
+          "incremental_billed_cents": 0,
+          "input_tokens": 3037,
+          "output_tokens": 85,
+          "sequence": 3,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 0,
+        "event_type": "model_usage_metered",
+        "sequence": 11
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 28953,
+          "day": 0,
+          "entry_type": "market_research_cost",
+          "memo": "Simulated public-market search: small business owner looking for help with bookkeeping or spreadsheet automation",
+          "reference": "search-003",
+          "sequence": 6
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 12
+      },
+      {
+        "data": {
+          "cost_cents": 2,
+          "discovered_signal_ids": [],
+          "query": "small business owner looking for help with bookkeeping or spreadsheet automation",
+          "result_count": 0
+        },
+        "day": 0,
+        "event_type": "market_searched",
+        "sequence": 13
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 28952,
+          "day": 0,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through homeostasis-v2-replication-b04-p02-v2-call-004.",
+          "reference": "homeostasis-v2-replication-b04-p02-v2-call-004",
+          "sequence": 7
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 14
+      },
+      {
+        "data": {
+          "call_id": "homeostasis-v2-replication-b04-p02-v2-call-004",
+          "cost_units": 705000,
+          "cumulative_billed_cents": 3,
+          "cumulative_cost_units": 2704600,
+          "day": 0,
+          "incremental_billed_cents": 1,
+          "input_tokens": 3145,
+          "output_tokens": 76,
+          "sequence": 4,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 0,
+        "event_type": "model_usage_metered",
+        "sequence": 15
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 28950,
+          "day": 0,
+          "entry_type": "market_research_cost",
+          "memo": "Simulated public-market search: customer need for market research reports or competitive analysis",
+          "reference": "search-004",
+          "sequence": 8
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 16
+      },
+      {
+        "data": {
+          "cost_cents": 2,
+          "discovered_signal_ids": [],
+          "query": "customer need for market research reports or competitive analysis",
+          "result_count": 0
+        },
+        "day": 0,
+        "event_type": "market_searched",
+        "sequence": 17
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 28949,
+          "day": 0,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through homeostasis-v2-replication-b04-p02-v2-call-005.",
+          "reference": "homeostasis-v2-replication-b04-p02-v2-call-005",
+          "sequence": 9
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 18
+      },
+      {
+        "data": {
+          "call_id": "homeostasis-v2-replication-b04-p02-v2-call-005",
+          "cost_units": 725800,
+          "cumulative_billed_cents": 4,
+          "cumulative_cost_units": 3430400,
+          "day": 0,
+          "incremental_billed_cents": 1,
+          "input_tokens": 3244,
+          "output_tokens": 77,
+          "sequence": 5,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 0,
+        "event_type": "model_usage_metered",
+        "sequence": 19
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 28947,
+          "day": 0,
+          "entry_type": "market_research_cost",
+          "memo": "Simulated public-market search: startup founder needs pitch deck or business plan review",
+          "reference": "search-005",
+          "sequence": 10
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 20
+      },
+      {
+        "data": {
+          "cost_cents": 2,
+          "discovered_signal_ids": [],
+          "query": "startup founder needs pitch deck or business plan review",
+          "result_count": 0
+        },
+        "day": 0,
+        "event_type": "market_searched",
+        "sequence": 21
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 28946,
+          "day": 0,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through homeostasis-v2-replication-b04-p02-v2-call-006.",
+          "reference": "homeostasis-v2-replication-b04-p02-v2-call-006",
+          "sequence": 11
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 22
+      },
+      {
+        "data": {
+          "call_id": "homeostasis-v2-replication-b04-p02-v2-call-006",
+          "cost_units": 742800,
+          "cumulative_billed_cents": 5,
+          "cumulative_cost_units": 4173200,
+          "day": 0,
+          "incremental_billed_cents": 1,
+          "input_tokens": 3344,
+          "output_tokens": 74,
+          "sequence": 6,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 0,
+        "event_type": "model_usage_metered",
+        "sequence": 23
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 28944,
+          "day": 0,
+          "entry_type": "market_research_cost",
+          "memo": "Simulated public-market search: need help writing website copy or product descriptions",
+          "reference": "search-006",
+          "sequence": 12
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 24
+      },
+      {
+        "data": {
+          "cost_cents": 2,
+          "discovered_signal_ids": [],
+          "query": "need help writing website copy or product descriptions",
+          "result_count": 0
+        },
+        "day": 0,
+        "event_type": "market_searched",
+        "sequence": 25
+      },
+      {
+        "data": {
+          "call_id": "homeostasis-v2-replication-b04-p02-v2-call-007",
+          "cost_units": 763200,
+          "cumulative_billed_cents": 5,
+          "cumulative_cost_units": 4936400,
+          "day": 0,
+          "incremental_billed_cents": 0,
+          "input_tokens": 3441,
+          "output_tokens": 75,
+          "sequence": 7,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 0,
+        "event_type": "model_usage_metered",
+        "sequence": 26
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 28942,
+          "day": 0,
+          "entry_type": "market_research_cost",
+          "memo": "Simulated public-market search: need for social media content calendar or marketing plan",
+          "reference": "search-007",
+          "sequence": 13
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 27
+      },
+      {
+        "data": {
+          "cost_cents": 2,
+          "discovered_signal_ids": [],
+          "query": "need for social media content calendar or marketing plan",
+          "result_count": 0
+        },
+        "day": 0,
+        "event_type": "market_searched",
+        "sequence": 28
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 28941,
+          "day": 0,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through homeostasis-v2-replication-b04-p02-v2-call-008.",
+          "reference": "homeostasis-v2-replication-b04-p02-v2-call-008",
+          "sequence": 14
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 29
+      },
+      {
+        "data": {
+          "call_id": "homeostasis-v2-replication-b04-p02-v2-call-008",
+          "cost_units": 764400,
+          "cumulative_billed_cents": 6,
+          "cumulative_cost_units": 5700800,
+          "day": 0,
+          "incremental_billed_cents": 1,
+          "input_tokens": 3442,
+          "output_tokens": 76,
+          "sequence": 8,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 0,
+        "event_type": "model_usage_metered",
+        "sequence": 30
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 28939,
+          "day": 0,
+          "entry_type": "market_research_cost",
+          "memo": "Simulated public-market search: need help analyzing customer survey data or feedback",
+          "reference": "search-008",
+          "sequence": 15
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 31
+      },
+      {
+        "data": {
+          "cost_cents": 2,
+          "discovered_signal_ids": [],
+          "query": "need help analyzing customer survey data or feedback",
+          "result_count": 0
+        },
+        "day": 0,
+        "event_type": "market_searched",
+        "sequence": 32
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 28938,
+          "day": 0,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through homeostasis-v2-replication-b04-p02-v2-call-009.",
+          "reference": "homeostasis-v2-replication-b04-p02-v2-call-009",
+          "sequence": 16
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 33
+      },
+      {
+        "data": {
+          "call_id": "homeostasis-v2-replication-b04-p02-v2-call-009",
+          "cost_units": 761600,
+          "cumulative_billed_cents": 7,
+          "cumulative_cost_units": 6462400,
+          "day": 0,
+          "incremental_billed_cents": 1,
+          "input_tokens": 3438,
+          "output_tokens": 74,
+          "sequence": 9,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 0,
+        "event_type": "model_usage_metered",
+        "sequence": 34
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 28936,
+          "day": 0,
+          "entry_type": "market_research_cost",
+          "memo": "Simulated public-market search: freelance data entry or research assistance needed",
+          "reference": "search-009",
+          "sequence": 17
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 35
+      },
+      {
+        "data": {
+          "cost_cents": 2,
+          "discovered_signal_ids": [],
+          "query": "freelance data entry or research assistance needed",
+          "result_count": 0
+        },
+        "day": 0,
+        "event_type": "market_searched",
+        "sequence": 36
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 28935,
+          "day": 0,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through homeostasis-v2-replication-b04-p02-v2-call-010.",
+          "reference": "homeostasis-v2-replication-b04-p02-v2-call-010",
+          "sequence": 18
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 37
+      },
+      {
+        "data": {
+          "call_id": "homeostasis-v2-replication-b04-p02-v2-call-010",
+          "cost_units": 765400,
+          "cumulative_billed_cents": 8,
+          "cumulative_cost_units": 7227800,
+          "day": 0,
+          "incremental_billed_cents": 1,
+          "input_tokens": 3427,
+          "output_tokens": 80,
+          "sequence": 10,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 0,
+        "event_type": "model_usage_metered",
+        "sequence": 38
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 28933,
+          "day": 0,
+          "entry_type": "market_research_cost",
+          "memo": "Simulated public-market search: small business needs help with financial planning or bookkeeping templates",
+          "reference": "search-010",
+          "sequence": 19
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 39
+      },
+      {
+        "data": {
+          "cost_cents": 2,
+          "discovered_signal_ids": [],
+          "query": "small business needs help with financial planning or bookkeeping templates",
+          "result_count": 0
+        },
+        "day": 0,
+        "event_type": "market_searched",
+        "sequence": 40
+      },
+      {
+        "data": {
+          "call_id": "homeostasis-v2-replication-b04-p02-v2-call-011",
+          "cost_units": 766200,
+          "cumulative_billed_cents": 8,
+          "cumulative_cost_units": 7994000,
+          "day": 0,
+          "incremental_billed_cents": 0,
+          "input_tokens": 3431,
+          "output_tokens": 80,
+          "sequence": 11,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 0,
+        "event_type": "model_usage_metered",
+        "sequence": 41
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 28931,
+          "day": 0,
+          "entry_type": "market_research_cost",
+          "memo": "Simulated public-market search: small business owner needs help creating standard operating procedures documentation",
+          "reference": "search-011",
+          "sequence": 20
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 42
+      },
+      {
+        "data": {
+          "cost_cents": 2,
+          "discovered_signal_ids": [],
+          "query": "small business owner needs help creating standard operating procedures documentation",
+          "result_count": 0
+        },
+        "day": 0,
+        "event_type": "market_searched",
+        "sequence": 43
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 28930,
+          "day": 0,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through homeostasis-v2-replication-b04-p02-v2-call-012.",
+          "reference": "homeostasis-v2-replication-b04-p02-v2-call-012",
+          "sequence": 21
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 44
+      },
+      {
+        "data": {
+          "call_id": "homeostasis-v2-replication-b04-p02-v2-call-012",
+          "cost_units": 765600,
+          "cumulative_billed_cents": 9,
+          "cumulative_cost_units": 8759600,
+          "day": 0,
+          "incremental_billed_cents": 1,
+          "input_tokens": 3433,
+          "output_tokens": 79,
+          "sequence": 12,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 0,
+        "event_type": "model_usage_metered",
+        "sequence": 45
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 28928,
+          "day": 0,
+          "entry_type": "market_research_cost",
+          "memo": "Simulated public-market search: startup founder needs pitch deck review or investor materials help",
+          "reference": "search-012",
+          "sequence": 22
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 46
+      },
+      {
+        "data": {
+          "cost_cents": 2,
+          "discovered_signal_ids": [],
+          "query": "startup founder needs pitch deck review or investor materials help",
+          "result_count": 0
+        },
+        "day": 0,
+        "event_type": "market_searched",
+        "sequence": 47
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 28927,
+          "day": 0,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through homeostasis-v2-replication-b04-p02-v2-call-013.",
+          "reference": "homeostasis-v2-replication-b04-p02-v2-call-013",
+          "sequence": 23
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 48
+      },
+      {
+        "data": {
+          "call_id": "homeostasis-v2-replication-b04-p02-v2-call-013",
+          "cost_units": 763800,
+          "cumulative_billed_cents": 10,
+          "cumulative_cost_units": 9523400,
+          "day": 0,
+          "incremental_billed_cents": 1,
+          "input_tokens": 3439,
+          "output_tokens": 76,
+          "sequence": 13,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 0,
+        "event_type": "model_usage_metered",
+        "sequence": 49
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 28925,
+          "day": 0,
+          "entry_type": "market_research_cost",
+          "memo": "Simulated public-market search: business needs help writing website copy or product descriptions",
+          "reference": "search-013",
+          "sequence": 24
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 50
+      },
+      {
+        "data": {
+          "cost_cents": 2,
+          "discovered_signal_ids": [],
+          "query": "business needs help writing website copy or product descriptions",
+          "result_count": 0
+        },
+        "day": 0,
+        "event_type": "market_searched",
+        "sequence": 51
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 28924,
+          "day": 0,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through homeostasis-v2-replication-b04-p02-v2-call-014.",
+          "reference": "homeostasis-v2-replication-b04-p02-v2-call-014",
+          "sequence": 25
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 52
+      },
+      {
+        "data": {
+          "call_id": "homeostasis-v2-replication-b04-p02-v2-call-014",
+          "cost_units": 762200,
+          "cumulative_billed_cents": 11,
+          "cumulative_cost_units": 10285600,
+          "day": 0,
+          "incremental_billed_cents": 1,
+          "input_tokens": 3441,
+          "output_tokens": 74,
+          "sequence": 14,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 0,
+        "event_type": "model_usage_metered",
+        "sequence": 53
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 28922,
+          "day": 0,
+          "entry_type": "market_research_cost",
+          "memo": "Simulated public-market search: need help writing job descriptions for hiring",
+          "reference": "search-014",
+          "sequence": 26
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 54
+      },
+      {
+        "data": {
+          "cost_cents": 2,
+          "discovered_signal_ids": [],
+          "query": "need help writing job descriptions for hiring",
+          "result_count": 0
+        },
+        "day": 0,
+        "event_type": "market_searched",
+        "sequence": 55
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 28921,
+          "day": 0,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through homeostasis-v2-replication-b04-p02-v2-call-015.",
+          "reference": "homeostasis-v2-replication-b04-p02-v2-call-015",
+          "sequence": 27
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 56
+      },
+      {
+        "data": {
+          "call_id": "homeostasis-v2-replication-b04-p02-v2-call-015",
+          "cost_units": 757800,
+          "cumulative_billed_cents": 12,
+          "cumulative_cost_units": 11043400,
+          "day": 0,
+          "incremental_billed_cents": 1,
+          "input_tokens": 3439,
+          "output_tokens": 70,
+          "sequence": 15,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 0,
+        "event_type": "model_usage_metered",
+        "sequence": 57
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 28919,
+          "day": 0,
+          "entry_type": "market_research_cost",
+          "memo": "Simulated public-market search: customer service email response templates needed",
+          "reference": "search-015",
+          "sequence": 28
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 58
+      },
+      {
+        "data": {
+          "cost_cents": 2,
+          "discovered_signal_ids": [],
+          "query": "customer service email response templates needed",
+          "result_count": 0
+        },
+        "day": 0,
+        "event_type": "market_searched",
+        "sequence": 59
+      },
+      {
+        "data": {
+          "call_id": "homeostasis-v2-replication-b04-p02-v2-call-016",
+          "cost_units": 760000,
+          "cumulative_billed_cents": 12,
+          "cumulative_cost_units": 11803400,
+          "day": 0,
+          "incremental_billed_cents": 0,
+          "input_tokens": 3435,
+          "output_tokens": 73,
+          "sequence": 16,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 0,
+        "event_type": "model_usage_metered",
+        "sequence": 60
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 28917,
+          "day": 0,
+          "entry_type": "market_research_cost",
+          "memo": "Simulated public-market search: need help with social media content calendar for small business",
+          "reference": "search-016",
+          "sequence": 29
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 61
+      },
+      {
+        "data": {
+          "cost_cents": 2,
+          "discovered_signal_ids": [],
+          "query": "need help with social media content calendar for small business",
+          "result_count": 0
+        },
+        "day": 0,
+        "event_type": "market_searched",
+        "sequence": 62
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 28916,
+          "day": 0,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through homeostasis-v2-replication-b04-p02-v2-call-017.",
+          "reference": "homeostasis-v2-replication-b04-p02-v2-call-017",
+          "sequence": 30
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 63
+      },
+      {
+        "data": {
+          "call_id": "homeostasis-v2-replication-b04-p02-v2-call-017",
+          "cost_units": 763600,
+          "cumulative_billed_cents": 13,
+          "cumulative_cost_units": 12567000,
+          "day": 0,
+          "incremental_billed_cents": 1,
+          "input_tokens": 3428,
+          "output_tokens": 78,
+          "sequence": 17,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 0,
+        "event_type": "model_usage_metered",
+        "sequence": 64
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 28914,
+          "day": 0,
+          "entry_type": "market_research_cost",
+          "memo": "Simulated public-market search: freelancer needs help with resume and cover letter writing",
+          "reference": "search-017",
+          "sequence": 31
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 65
+      },
+      {
+        "data": {
+          "cost_cents": 2,
+          "discovered_signal_ids": [],
+          "query": "freelancer needs help with resume and cover letter writing",
+          "result_count": 0
+        },
+        "day": 0,
+        "event_type": "market_searched",
+        "sequence": 66
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 28913,
+          "day": 0,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through homeostasis-v2-replication-b04-p02-v2-call-018.",
+          "reference": "homeostasis-v2-replication-b04-p02-v2-call-018",
+          "sequence": 32
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 67
+      },
+      {
+        "data": {
+          "call_id": "homeostasis-v2-replication-b04-p02-v2-call-018",
+          "cost_units": 763000,
+          "cumulative_billed_cents": 14,
+          "cumulative_cost_units": 13330000,
+          "day": 0,
+          "incremental_billed_cents": 1,
+          "input_tokens": 3425,
+          "output_tokens": 78,
+          "sequence": 18,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 0,
+        "event_type": "model_usage_metered",
+        "sequence": 68
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 28911,
+          "day": 0,
+          "entry_type": "market_research_cost",
+          "memo": "Simulated public-market search: small business owner needs help with SEO or blog content writing",
+          "reference": "search-018",
+          "sequence": 33
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 69
+      },
+      {
+        "data": {
+          "cost_cents": 2,
+          "discovered_signal_ids": [],
+          "query": "small business owner needs help with SEO or blog content writing",
+          "result_count": 0
+        },
+        "day": 0,
+        "event_type": "market_searched",
+        "sequence": 70
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 28910,
+          "day": 0,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through homeostasis-v2-replication-b04-p02-v2-call-019.",
+          "reference": "homeostasis-v2-replication-b04-p02-v2-call-019",
+          "sequence": 34
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 71
+      },
+      {
+        "data": {
+          "call_id": "homeostasis-v2-replication-b04-p02-v2-call-019",
+          "cost_units": 761800,
+          "cumulative_billed_cents": 15,
+          "cumulative_cost_units": 14091800,
+          "day": 0,
+          "incremental_billed_cents": 1,
+          "input_tokens": 3424,
+          "output_tokens": 77,
+          "sequence": 19,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 0,
+        "event_type": "model_usage_metered",
+        "sequence": 72
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 28908,
+          "day": 0,
+          "entry_type": "market_research_cost",
+          "memo": "Simulated public-market search: startup founder needs pitch deck or business plan help",
+          "reference": "search-019",
+          "sequence": 35
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 73
+      },
+      {
+        "data": {
+          "cost_cents": 2,
+          "discovered_signal_ids": [],
+          "query": "startup founder needs pitch deck or business plan help",
+          "result_count": 0
+        },
+        "day": 0,
+        "event_type": "market_searched",
+        "sequence": 74
+      },
+      {
+        "data": {
+          "call_id": "homeostasis-v2-replication-b04-p02-v2-call-020",
+          "cost_units": 762200,
+          "cumulative_billed_cents": 15,
+          "cumulative_cost_units": 14854000,
+          "day": 0,
+          "incremental_billed_cents": 0,
+          "input_tokens": 3426,
+          "output_tokens": 77,
+          "sequence": 20,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 0,
+        "event_type": "model_usage_metered",
+        "sequence": 75
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 28906,
+          "day": 0,
+          "entry_type": "market_research_cost",
+          "memo": "Simulated public-market search: need help with data cleanup spreadsheet organization",
+          "reference": "search-020",
+          "sequence": 36
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 76
+      },
+      {
+        "data": {
+          "cost_cents": 2,
+          "discovered_signal_ids": [],
+          "query": "need help with data cleanup spreadsheet organization",
+          "result_count": 0
+        },
+        "day": 0,
+        "event_type": "market_searched",
+        "sequence": 77
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 28905,
+          "day": 0,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through homeostasis-v2-replication-b04-p02-v2-call-021.",
+          "reference": "homeostasis-v2-replication-b04-p02-v2-call-021",
+          "sequence": 37
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 78
+      },
+      {
+        "data": {
+          "call_id": "homeostasis-v2-replication-b04-p02-v2-call-021",
+          "cost_units": 724600,
+          "cumulative_billed_cents": 16,
+          "cumulative_cost_units": 15578600,
+          "day": 0,
+          "incremental_billed_cents": 1,
+          "input_tokens": 3428,
+          "output_tokens": 39,
+          "sequence": 21,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 0,
+        "event_type": "model_usage_metered",
+        "sequence": 79
+      },
+      {
+        "data": {
+          "day": 1,
+          "kind": "market_access_up",
+          "summary": "Public-market search is unusually responsive today."
+        },
+        "day": 1,
+        "event_type": "exogenous_event",
+        "sequence": 80
+      },
+      {
+        "data": {
+          "day": 1
+        },
+        "day": 1,
+        "event_type": "day_advanced",
+        "sequence": 81
+      },
+      {
+        "data": {
+          "day": 2
+        },
+        "day": 2,
+        "event_type": "day_advanced",
+        "sequence": 82
+      },
+      {
+        "data": {
+          "day": 3,
+          "kind": "operating_cost_down",
+          "summary": "Routine external-service costs are temporarily lower today."
+        },
+        "day": 3,
+        "event_type": "exogenous_event",
+        "sequence": 83
+      },
+      {
+        "data": {
+          "day": 3
+        },
+        "day": 3,
+        "event_type": "day_advanced",
+        "sequence": 84
+      },
+      {
+        "data": {
+          "day": 4,
+          "kind": "demand_up",
+          "summary": "Public demand strengthened in small_retail."
+        },
+        "day": 4,
+        "event_type": "exogenous_event",
+        "sequence": 85
+      },
+      {
+        "data": {
+          "day": 4
+        },
+        "day": 4,
+        "event_type": "day_advanced",
+        "sequence": 86
+      },
+      {
+        "data": {
+          "day": 5,
+          "kind": "market_access_up",
+          "summary": "Public-market search is unusually responsive today."
+        },
+        "day": 5,
+        "event_type": "exogenous_event",
+        "sequence": 87
+      },
+      {
+        "data": {
+          "day": 5
+        },
+        "day": 5,
+        "event_type": "day_advanced",
+        "sequence": 88
+      },
+      {
+        "data": {
+          "day": 6,
+          "kind": "demand_up",
+          "summary": "Public demand strengthened in independent_media."
+        },
+        "day": 6,
+        "event_type": "exogenous_event",
+        "sequence": 89
+      },
+      {
+        "data": {
+          "day": 6
+        },
+        "day": 6,
+        "event_type": "day_advanced",
+        "sequence": 90
+      },
+      {
+        "data": {
+          "day": 7,
+          "kind": "demand_up",
+          "summary": "Public demand strengthened in small_retail."
+        },
+        "day": 7,
+        "event_type": "exogenous_event",
+        "sequence": 91
+      },
+      {
+        "data": {
+          "day": 7
+        },
+        "day": 7,
+        "event_type": "day_advanced",
+        "sequence": 92
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 28904,
+          "day": 7,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through homeostasis-v2-replication-b04-p02-v2-call-022.",
+          "reference": "homeostasis-v2-replication-b04-p02-v2-call-022",
+          "sequence": 38
+        },
+        "day": 7,
+        "event_type": "ledger_posted",
+        "sequence": 93
+      },
+      {
+        "data": {
+          "call_id": "homeostasis-v2-replication-b04-p02-v2-call-022",
+          "cost_units": 770000,
+          "cumulative_billed_cents": 17,
+          "cumulative_cost_units": 16348600,
+          "day": 7,
+          "incremental_billed_cents": 1,
+          "input_tokens": 3440,
+          "output_tokens": 82,
+          "sequence": 22,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 7,
+        "event_type": "model_usage_metered",
+        "sequence": 94
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 28902,
+          "day": 7,
+          "entry_type": "market_research_cost",
+          "memo": "Simulated public-market search: small retail business needs help with inventory or marketing due to rising demand",
+          "reference": "search-021",
+          "sequence": 39
+        },
+        "day": 7,
+        "event_type": "ledger_posted",
+        "sequence": 95
+      },
+      {
+        "data": {
+          "cost_cents": 2,
+          "discovered_signal_ids": [
+            "signal-009",
+            "signal-001",
+            "signal-011"
+          ],
+          "query": "small retail business needs help with inventory or marketing due to rising demand",
+          "result_count": 3
+        },
+        "day": 7,
+        "event_type": "market_searched",
+        "sequence": 96
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 28901,
+          "day": 7,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through homeostasis-v2-replication-b04-p02-v2-call-023.",
+          "reference": "homeostasis-v2-replication-b04-p02-v2-call-023",
+          "sequence": 40
+        },
+        "day": 7,
+        "event_type": "ledger_posted",
+        "sequence": 97
+      },
+      {
+        "data": {
+          "call_id": "homeostasis-v2-replication-b04-p02-v2-call-023",
+          "cost_units": 1024000,
+          "cumulative_billed_cents": 18,
+          "cumulative_cost_units": 17372600,
+          "day": 7,
+          "incremental_billed_cents": 1,
+          "input_tokens": 3920,
+          "output_tokens": 240,
+          "sequence": 23,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 7,
+        "event_type": "model_usage_metered",
+        "sequence": 98
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 28900,
+          "day": 7,
+          "entry_type": "communication_cost",
+          "memo": "Send simulated offer to signal-011.",
+          "reference": "offer-001",
+          "sequence": 41
+        },
+        "day": 7,
+        "event_type": "ledger_posted",
+        "sequence": 99
+      },
+      {
+        "data": {
+          "cost_cents": 1,
+          "offer_id": "offer-001",
+          "price_cents": 4000,
+          "promise_days": 3,
+          "signal_id": "signal-011"
+        },
+        "day": 7,
+        "event_type": "offer_sent",
+        "sequence": 100
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 28899,
+          "day": 7,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through homeostasis-v2-replication-b04-p02-v2-call-024.",
+          "reference": "homeostasis-v2-replication-b04-p02-v2-call-024",
+          "sequence": 42
+        },
+        "day": 7,
+        "event_type": "ledger_posted",
+        "sequence": 101
+      },
+      {
+        "data": {
+          "call_id": "homeostasis-v2-replication-b04-p02-v2-call-024",
+          "cost_units": 898200,
+          "cumulative_billed_cents": 19,
+          "cumulative_cost_units": 18270800,
+          "day": 7,
+          "incremental_billed_cents": 1,
+          "input_tokens": 4296,
+          "output_tokens": 39,
+          "sequence": 24,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 7,
+        "event_type": "model_usage_metered",
+        "sequence": 102
+      },
+      {
+        "data": {
+          "day": 8,
+          "kind": "demand_down",
+          "summary": "Public demand weakened in community_organizations."
+        },
+        "day": 8,
+        "event_type": "exogenous_event",
+        "sequence": 103
+      },
+      {
+        "data": {
+          "day": 8,
+          "from": "signal-011",
+          "offer_id": "offer-001",
+          "type": "offer_declined"
+        },
+        "day": 8,
+        "event_type": "offer_declined",
+        "sequence": 104
+      },
+      {
+        "data": {
+          "day": 8
+        },
+        "day": 8,
+        "event_type": "day_advanced",
+        "sequence": 105
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 28898,
+          "day": 8,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through homeostasis-v2-replication-b04-p02-v2-call-025.",
+          "reference": "homeostasis-v2-replication-b04-p02-v2-call-025",
+          "sequence": 43
+        },
+        "day": 8,
+        "event_type": "ledger_posted",
+        "sequence": 106
+      },
+      {
+        "data": {
+          "call_id": "homeostasis-v2-replication-b04-p02-v2-call-025",
+          "cost_units": 899000,
+          "cumulative_billed_cents": 20,
+          "cumulative_cost_units": 19169800,
+          "day": 8,
+          "incremental_billed_cents": 1,
+          "input_tokens": 4300,
+          "output_tokens": 39,
+          "sequence": 25,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 8,
+        "event_type": "model_usage_metered",
+        "sequence": 107
+      },
+      {
+        "data": {
+          "day": 9
+        },
+        "day": 9,
+        "event_type": "day_advanced",
+        "sequence": 108
+      },
+      {
+        "data": {
+          "day": 10
+        },
+        "day": 10,
+        "event_type": "day_advanced",
+        "sequence": 109
+      },
+      {
+        "data": {
+          "day": 11,
+          "kind": "demand_down",
+          "summary": "Public demand weakened in professional_services."
+        },
+        "day": 11,
+        "event_type": "exogenous_event",
+        "sequence": 110
+      },
+      {
+        "data": {
+          "day": 11
+        },
+        "day": 11,
+        "event_type": "day_advanced",
+        "sequence": 111
+      },
+      {
+        "data": {
+          "day": 12,
+          "kind": "demand_up",
+          "summary": "Public demand strengthened in independent_media."
+        },
+        "day": 12,
+        "event_type": "exogenous_event",
+        "sequence": 112
+      },
+      {
+        "data": {
+          "day": 12
+        },
+        "day": 12,
+        "event_type": "day_advanced",
+        "sequence": 113
+      },
+      {
+        "data": {
+          "day": 13,
+          "kind": "demand_up",
+          "summary": "Public demand strengthened in community_organizations."
+        },
+        "day": 13,
+        "event_type": "exogenous_event",
+        "sequence": 114
+      },
+      {
+        "data": {
+          "day": 13
+        },
+        "day": 13,
+        "event_type": "day_advanced",
+        "sequence": 115
+      },
+      {
+        "data": {
+          "day": 14,
+          "kind": "demand_down",
+          "summary": "Public demand weakened in small_retail."
+        },
+        "day": 14,
+        "event_type": "exogenous_event",
+        "sequence": 116
+      },
+      {
+        "data": {
+          "day": 14
+        },
+        "day": 14,
+        "event_type": "day_advanced",
+        "sequence": 117
+      },
+      {
+        "data": {
+          "day": 15
+        },
+        "day": 15,
+        "event_type": "day_advanced",
+        "sequence": 118
+      },
+      {
+        "data": {
+          "day": 16,
+          "kind": "market_access_up",
+          "summary": "Public-market search is unusually responsive today."
+        },
+        "day": 16,
+        "event_type": "exogenous_event",
+        "sequence": 119
+      },
+      {
+        "data": {
+          "day": 16
+        },
+        "day": 16,
+        "event_type": "day_advanced",
+        "sequence": 120
+      },
+      {
+        "data": {
+          "day": 17
+        },
+        "day": 17,
+        "event_type": "day_advanced",
+        "sequence": 121
+      },
+      {
+        "data": {
+          "day": 18
+        },
+        "day": 18,
+        "event_type": "day_advanced",
+        "sequence": 122
+      },
+      {
+        "data": {
+          "day": 19,
+          "kind": "operating_cost_down",
+          "summary": "Routine external-service costs are temporarily lower today."
+        },
+        "day": 19,
+        "event_type": "exogenous_event",
+        "sequence": 123
+      },
+      {
+        "data": {
+          "day": 19
+        },
+        "day": 19,
+        "event_type": "day_advanced",
+        "sequence": 124
+      },
+      {
+        "data": {
+          "day": 20
+        },
+        "day": 20,
+        "event_type": "day_advanced",
+        "sequence": 125
+      },
+      {
+        "data": {
+          "day": 21
+        },
+        "day": 21,
+        "event_type": "day_advanced",
+        "sequence": 126
+      },
+      {
+        "data": {
+          "day": 22
+        },
+        "day": 22,
+        "event_type": "day_advanced",
+        "sequence": 127
+      },
+      {
+        "data": {
+          "day": 23
+        },
+        "day": 23,
+        "event_type": "day_advanced",
+        "sequence": 128
+      },
+      {
+        "data": {
+          "day": 24,
+          "kind": "market_access_up",
+          "summary": "Public-market search is unusually responsive today."
+        },
+        "day": 24,
+        "event_type": "exogenous_event",
+        "sequence": 129
+      },
+      {
+        "data": {
+          "day": 24
+        },
+        "day": 24,
+        "event_type": "day_advanced",
+        "sequence": 130
+      },
+      {
+        "data": {
+          "day": 25,
+          "kind": "market_access_down",
+          "summary": "The public-market search platform is unavailable today."
+        },
+        "day": 25,
+        "event_type": "exogenous_event",
+        "sequence": 131
+      },
+      {
+        "data": {
+          "day": 25
+        },
+        "day": 25,
+        "event_type": "day_advanced",
+        "sequence": 132
+      },
+      {
+        "data": {
+          "day": 26
+        },
+        "day": 26,
+        "event_type": "day_advanced",
+        "sequence": 133
+      },
+      {
+        "data": {
+          "day": 27,
+          "kind": "demand_up",
+          "summary": "Public demand strengthened in local_services."
+        },
+        "day": 27,
+        "event_type": "exogenous_event",
+        "sequence": 134
+      },
+      {
+        "data": {
+          "day": 27
+        },
+        "day": 27,
+        "event_type": "day_advanced",
+        "sequence": 135
+      },
+      {
+        "data": {
+          "day": 28,
+          "kind": "market_access_up",
+          "summary": "Public-market search is unusually responsive today."
+        },
+        "day": 28,
+        "event_type": "exogenous_event",
+        "sequence": 136
+      },
+      {
+        "data": {
+          "day": 28
+        },
+        "day": 28,
+        "event_type": "day_advanced",
+        "sequence": 137
+      },
+      {
+        "data": {
+          "day": 29
+        },
+        "day": 29,
+        "event_type": "day_advanced",
+        "sequence": 138
+      },
+      {
+        "data": {
+          "day": 30
+        },
+        "day": 30,
+        "event_type": "day_advanced",
+        "sequence": 139
+      }
+    ],
+    "payload": {
+      "customer_population_seed": 7201653885602674774,
+      "events": [
+        {
+          "day": 1,
+          "kind": "market_access_up",
+          "magnitude": 15,
+          "sector": ""
+        },
+        {
+          "day": 3,
+          "kind": "operating_cost_down",
+          "magnitude": 15,
+          "sector": ""
+        },
+        {
+          "day": 4,
+          "kind": "demand_up",
+          "magnitude": 15,
+          "sector": "small_retail"
+        },
+        {
+          "day": 5,
+          "kind": "market_access_up",
+          "magnitude": 20,
+          "sector": ""
+        },
+        {
+          "day": 6,
+          "kind": "demand_up",
+          "magnitude": 10,
+          "sector": "independent_media"
+        },
+        {
+          "day": 7,
+          "kind": "demand_up",
+          "magnitude": 15,
+          "sector": "small_retail"
+        },
+        {
+          "day": 8,
+          "kind": "demand_down",
+          "magnitude": 15,
+          "sector": "community_organizations"
+        },
+        {
+          "day": 11,
+          "kind": "demand_down",
+          "magnitude": 10,
+          "sector": "professional_services"
+        },
+        {
+          "day": 12,
+          "kind": "demand_up",
+          "magnitude": 10,
+          "sector": "independent_media"
+        },
+        {
+          "day": 13,
+          "kind": "demand_up",
+          "magnitude": 20,
+          "sector": "community_organizations"
+        },
+        {
+          "day": 14,
+          "kind": "demand_down",
+          "magnitude": 10,
+          "sector": "small_retail"
+        },
+        {
+          "day": 16,
+          "kind": "market_access_up",
+          "magnitude": 20,
+          "sector": ""
+        },
+        {
+          "day": 19,
+          "kind": "operating_cost_down",
+          "magnitude": 15,
+          "sector": ""
+        },
+        {
+          "day": 24,
+          "kind": "market_access_up",
+          "magnitude": 20,
+          "sector": ""
+        },
+        {
+          "day": 25,
+          "kind": "market_access_down",
+          "magnitude": 15,
+          "sector": ""
+        },
+        {
+          "day": 27,
+          "kind": "demand_up",
+          "magnitude": 10,
+          "sector": "local_services"
+        },
+        {
+          "day": 28,
+          "kind": "market_access_up",
+          "magnitude": 15,
+          "sector": ""
+        }
+      ],
+      "horizon_days": 30,
+      "seed": 17707128320845884464,
+      "signals": [
+        {
+          "active_from": 3,
+          "active_until": 20,
+          "budget_cents": 15000,
+          "buyer_intent": true,
+          "customer_id": "customer-data-cleanup-01",
+          "discoverability": 0.9269,
+          "need_tag": "data_cleanup",
+          "payment_reliability": 0.9414,
+          "public_text": "A volunteer group says its donation and attendance records are spread across several inconsistent spreadsheets.",
+          "quality_threshold": 73,
+          "responsiveness": 0.6403,
+          "sector": "community_organizations",
+          "signal_id": "signal-001",
+          "source_type": "public_forum",
+          "task_brief": {
+            "brief_id": "f3c967488dd7083e",
+            "objective": "Evaluate all three data source records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 15,
+                "label": "Data Source 1",
+                "record_id": "option-1",
+                "risk_points": 16,
+                "value_points": 61
+              },
+              {
+                "cost_points": 13,
+                "label": "Data Source 2",
+                "record_id": "option-2",
+                "risk_points": 4,
+                "value_points": 94
+              },
+              {
+                "cost_points": 25,
+                "label": "Data Source 3",
+                "record_id": "option-3",
+                "risk_points": 5,
+                "value_points": 66
+              }
+            ],
+            "task_type": "data_cleanup"
+          }
+        },
+        {
+          "active_from": 4,
+          "active_until": 19,
+          "budget_cents": 17500,
+          "buyer_intent": true,
+          "customer_id": "customer-comparison-research-01",
+          "discoverability": 0.2633,
+          "need_tag": "comparison_research",
+          "payment_reliability": 0.9703,
+          "public_text": "A small professional practice is publicly comparing several software subscriptions but lacks a consistent cost and feature analysis.",
+          "quality_threshold": 90,
+          "responsiveness": 0.5614,
+          "sector": "professional_services",
+          "signal_id": "signal-002",
+          "source_type": "discussion_board",
+          "task_brief": {
+            "brief_id": "57e18e774000fe38",
+            "objective": "Evaluate all three software option records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 16,
+                "label": "Software Option 1",
+                "record_id": "option-1",
+                "risk_points": 7,
+                "value_points": 82
+              },
+              {
+                "cost_points": 32,
+                "label": "Software Option 2",
+                "record_id": "option-2",
+                "risk_points": 7,
+                "value_points": 85
+              },
+              {
+                "cost_points": 27,
+                "label": "Software Option 3",
+                "record_id": "option-3",
+                "risk_points": 17,
+                "value_points": 94
+              }
+            ],
+            "task_type": "comparison_research"
+          }
+        },
+        {
+          "active_from": 5,
+          "active_until": 27,
+          "budget_cents": 4000,
+          "buyer_intent": true,
+          "customer_id": "customer-customer-research-01",
+          "discoverability": 0.4978,
+          "need_tag": "customer_research",
+          "payment_reliability": 0.8347,
+          "public_text": "Reviews for a small retailer repeatedly disagree about available products, pickup rules, and current opening hours.",
+          "quality_threshold": 69,
+          "responsiveness": 0.6839,
+          "sector": "small_retail",
+          "signal_id": "signal-003",
+          "source_type": "review_stream",
+          "task_brief": {
+            "brief_id": "344566a5b033e906",
+            "objective": "Evaluate all three customer theme records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 10,
+                "label": "Customer Theme 1",
+                "record_id": "option-1",
+                "risk_points": 9,
+                "value_points": 87
+              },
+              {
+                "cost_points": 15,
+                "label": "Customer Theme 2",
+                "record_id": "option-2",
+                "risk_points": 3,
+                "value_points": 91
+              },
+              {
+                "cost_points": 38,
+                "label": "Customer Theme 3",
+                "record_id": "option-3",
+                "risk_points": 8,
+                "value_points": 66
+              }
+            ],
+            "task_type": "customer_research"
+          }
+        },
+        {
+          "active_from": 3,
+          "active_until": 29,
+          "budget_cents": 13000,
+          "buyer_intent": true,
+          "customer_id": "customer-supplier-research-01",
+          "discoverability": 0.4786,
+          "need_tag": "supplier_research",
+          "payment_reliability": 0.9206,
+          "public_text": "A small workshop asks peers how they track changing supplier prices and lead times for recurring materials.",
+          "quality_threshold": 65,
+          "responsiveness": 0.3226,
+          "sector": "micro_manufacturing",
+          "signal_id": "signal-004",
+          "source_type": "trade_forum",
+          "task_brief": {
+            "brief_id": "87147536664bba76",
+            "objective": "Evaluate all three supplier option records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 17,
+                "label": "Supplier Option 1",
+                "record_id": "option-1",
+                "risk_points": 18,
+                "value_points": 63
+              },
+              {
+                "cost_points": 22,
+                "label": "Supplier Option 2",
+                "record_id": "option-2",
+                "risk_points": 4,
+                "value_points": 69
+              },
+              {
+                "cost_points": 45,
+                "label": "Supplier Option 3",
+                "record_id": "option-3",
+                "risk_points": 21,
+                "value_points": 93
+              }
+            ],
+            "task_type": "supplier_research"
+          }
+        },
+        {
+          "active_from": 4,
+          "active_until": 19,
+          "budget_cents": 11500,
+          "buyer_intent": true,
+          "customer_id": "customer-lead-qualification-01",
+          "discoverability": 0.2782,
+          "need_tag": "lead_qualification",
+          "payment_reliability": 0.7918,
+          "public_text": "A solo professional reports spending substantial time responding to inquiries that do not match the services actually offered.",
+          "quality_threshold": 82,
+          "responsiveness": 0.8895,
+          "sector": "professional_services",
+          "signal_id": "signal-005",
+          "source_type": "business_page",
+          "task_brief": {
+            "brief_id": "6ac02aee7281edc7",
+            "objective": "Evaluate all three lead segment records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 28,
+                "label": "Lead Segment 1",
+                "record_id": "option-1",
+                "risk_points": 24,
+                "value_points": 42
+              },
+              {
+                "cost_points": 41,
+                "label": "Lead Segment 2",
+                "record_id": "option-2",
+                "risk_points": 8,
+                "value_points": 53
+              },
+              {
+                "cost_points": 16,
+                "label": "Lead Segment 3",
+                "record_id": "option-3",
+                "risk_points": 7,
+                "value_points": 93
+              }
+            ],
+            "task_type": "lead_qualification"
+          }
+        },
+        {
+          "active_from": 1,
+          "active_until": 28,
+          "budget_cents": 13000,
+          "buyer_intent": true,
+          "customer_id": "customer-documentation-01",
+          "discoverability": 0.4188,
+          "need_tag": "documentation",
+          "payment_reliability": 0.8493,
+          "public_text": "An independent audio publisher mentions that useful interviews are difficult for its audience to search and reference later.",
+          "quality_threshold": 90,
+          "responsiveness": 0.5829,
+          "sector": "independent_media",
+          "signal_id": "signal-006",
+          "source_type": "creator_post",
+          "task_brief": {
+            "brief_id": "f27b1c3498e9fc4e",
+            "objective": "Evaluate all three archive item records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 40,
+                "label": "Archive Item 1",
+                "record_id": "option-1",
+                "risk_points": 24,
+                "value_points": 51
+              },
+              {
+                "cost_points": 45,
+                "label": "Archive Item 2",
+                "record_id": "option-2",
+                "risk_points": 2,
+                "value_points": 72
+              },
+              {
+                "cost_points": 28,
+                "label": "Archive Item 3",
+                "record_id": "option-3",
+                "risk_points": 14,
+                "value_points": 70
+              }
+            ],
+            "task_type": "documentation"
+          }
+        },
+        {
+          "active_from": 2,
+          "active_until": 18,
+          "budget_cents": 15500,
+          "buyer_intent": true,
+          "customer_id": "customer-scheduling-01",
+          "discoverability": 0.4067,
+          "need_tag": "scheduling",
+          "payment_reliability": 0.9077,
+          "public_text": "Customers of a seasonal service complain that appointment availability and expected response times are unclear.",
+          "quality_threshold": 76,
+          "responsiveness": 0.2871,
+          "sector": "local_services",
+          "signal_id": "signal-007",
+          "source_type": "community_post",
+          "task_brief": {
+            "brief_id": "7fe636e8ce58982a",
+            "objective": "Evaluate all three scheduling policy records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 25,
+                "label": "Scheduling Policy 1",
+                "record_id": "option-1",
+                "risk_points": 10,
+                "value_points": 56
+              },
+              {
+                "cost_points": 27,
+                "label": "Scheduling Policy 2",
+                "record_id": "option-2",
+                "risk_points": 22,
+                "value_points": 78
+              },
+              {
+                "cost_points": 30,
+                "label": "Scheduling Policy 3",
+                "record_id": "option-3",
+                "risk_points": 8,
+                "value_points": 73
+              }
+            ],
+            "task_type": "scheduling"
+          }
+        },
+        {
+          "active_from": 5,
+          "active_until": 18,
+          "budget_cents": 9500,
+          "buyer_intent": true,
+          "customer_id": "customer-audience-research-01",
+          "discoverability": 0.6066,
+          "need_tag": "audience_research",
+          "payment_reliability": 0.8438,
+          "public_text": "A newsletter publisher wonders which recurring questions in its archive would justify a focused guide.",
+          "quality_threshold": 61,
+          "responsiveness": 0.5121,
+          "sector": "independent_media",
+          "signal_id": "signal-008",
+          "source_type": "creator_post",
+          "task_brief": {
+            "brief_id": "85a1e44fcb9bc7e1",
+            "objective": "Evaluate all three guide topic records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 15,
+                "label": "Guide Topic 1",
+                "record_id": "option-1",
+                "risk_points": 10,
+                "value_points": 43
+              },
+              {
+                "cost_points": 24,
+                "label": "Guide Topic 2",
+                "record_id": "option-2",
+                "risk_points": 20,
+                "value_points": 82
+              },
+              {
+                "cost_points": 38,
+                "label": "Guide Topic 3",
+                "record_id": "option-3",
+                "risk_points": 20,
+                "value_points": 90
+              }
+            ],
+            "task_type": "audience_research"
+          }
+        },
+        {
+          "active_from": 2,
+          "active_until": 19,
+          "budget_cents": 17500,
+          "buyer_intent": true,
+          "customer_id": "customer-inventory-analysis-01",
+          "discoverability": 0.9317,
+          "need_tag": "inventory_analysis",
+          "payment_reliability": 0.5851,
+          "public_text": "A small producer describes repeated shortages of inexpensive components alongside excess stock of rarely used parts.",
+          "quality_threshold": 88,
+          "responsiveness": 0.8965,
+          "sector": "micro_manufacturing",
+          "signal_id": "signal-009",
+          "source_type": "trade_forum",
+          "task_brief": {
+            "brief_id": "53e181d5a4ce003a",
+            "objective": "Evaluate all three inventory policy records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 42,
+                "label": "Inventory Policy 1",
+                "record_id": "option-1",
+                "risk_points": 12,
+                "value_points": 80
+              },
+              {
+                "cost_points": 40,
+                "label": "Inventory Policy 2",
+                "record_id": "option-2",
+                "risk_points": 6,
+                "value_points": 61
+              },
+              {
+                "cost_points": 31,
+                "label": "Inventory Policy 3",
+                "record_id": "option-3",
+                "risk_points": 16,
+                "value_points": 74
+              }
+            ],
+            "task_type": "inventory_analysis"
+          }
+        },
+        {
+          "active_from": 1,
+          "active_until": 23,
+          "budget_cents": 16000,
+          "buyer_intent": false,
+          "customer_id": "customer-process-documentation-01",
+          "discoverability": 0.4761,
+          "need_tag": "process_documentation",
+          "payment_reliability": 0.7704,
+          "public_text": "A neighborhood organization says recurring volunteers struggle to understand its handoff and event setup process.",
+          "quality_threshold": 88,
+          "responsiveness": 0.3032,
+          "sector": "community_organizations",
+          "signal_id": "signal-010",
+          "source_type": "public_forum",
+          "task_brief": {
+            "brief_id": "2f54ad707237bf67",
+            "objective": "Evaluate all three process change records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 26,
+                "label": "Process Change 1",
+                "record_id": "option-1",
+                "risk_points": 12,
+                "value_points": 36
+              },
+              {
+                "cost_points": 25,
+                "label": "Process Change 2",
+                "record_id": "option-2",
+                "risk_points": 10,
+                "value_points": 54
+              },
+              {
+                "cost_points": 44,
+                "label": "Process Change 3",
+                "record_id": "option-3",
+                "risk_points": 22,
+                "value_points": 76
+              }
+            ],
+            "task_type": "process_documentation"
+          }
+        },
+        {
+          "active_from": 2,
+          "active_until": 20,
+          "budget_cents": 8000,
+          "buyer_intent": false,
+          "customer_id": "customer-service-clarity-01",
+          "discoverability": 0.926,
+          "need_tag": "service_clarity",
+          "payment_reliability": 0.8136,
+          "public_text": "A repair business has conflicting public descriptions of what its standard service includes, and customers keep asking the same questions.",
+          "quality_threshold": 67,
+          "responsiveness": 0.9197,
+          "sector": "local_services",
+          "signal_id": "signal-011",
+          "source_type": "business_page",
+          "task_brief": {
+            "brief_id": "3b62394bdd76930a",
+            "objective": "Evaluate all three service package records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 12,
+                "label": "Service Package 1",
+                "record_id": "option-1",
+                "risk_points": 13,
+                "value_points": 65
+              },
+              {
+                "cost_points": 32,
+                "label": "Service Package 2",
+                "record_id": "option-2",
+                "risk_points": 3,
+                "value_points": 77
+              },
+              {
+                "cost_points": 25,
+                "label": "Service Package 3",
+                "record_id": "option-3",
+                "risk_points": 8,
+                "value_points": 40
+              }
+            ],
+            "task_type": "service_clarity"
+          }
+        },
+        {
+          "active_from": 5,
+          "active_until": 15,
+          "budget_cents": 15000,
+          "buyer_intent": true,
+          "customer_id": "customer-catalog-cleanup-01",
+          "discoverability": 0.5639,
+          "need_tag": "catalog_cleanup",
+          "payment_reliability": 0.6595,
+          "public_text": "A specialty seller has duplicated and inconsistent product descriptions across several public listings.",
+          "quality_threshold": 65,
+          "responsiveness": 0.4729,
+          "sector": "small_retail",
+          "signal_id": "signal-012",
+          "source_type": "business_page",
+          "task_brief": {
+            "brief_id": "208994e94e389aab",
+            "objective": "Evaluate all three catalog group records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 23,
+                "label": "Catalog Group 1",
+                "record_id": "option-1",
+                "risk_points": 15,
+                "value_points": 85
+              },
+              {
+                "cost_points": 28,
+                "label": "Catalog Group 2",
+                "record_id": "option-2",
+                "risk_points": 2,
+                "value_points": 46
+              },
+              {
+                "cost_points": 22,
+                "label": "Catalog Group 3",
+                "record_id": "option-3",
+                "risk_points": 3,
+                "value_points": 90
+              }
+            ],
+            "task_type": "catalog_cleanup"
+          }
+        },
+        {
+          "active_from": 1,
+          "active_until": 21,
+          "budget_cents": 16000,
+          "buyer_intent": false,
+          "customer_id": "customer-data-cleanup-02",
+          "discoverability": 0.2676,
+          "need_tag": "data_cleanup",
+          "payment_reliability": 0.6728,
+          "public_text": "A volunteer group says its donation and attendance records are spread across several inconsistent spreadsheets.",
+          "quality_threshold": 67,
+          "responsiveness": 0.8037,
+          "sector": "community_organizations",
+          "signal_id": "signal-013",
+          "source_type": "public_forum",
+          "task_brief": {
+            "brief_id": "1c9d4eef1b8d24e6",
+            "objective": "Evaluate all three data source records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 18,
+                "label": "Data Source 1",
+                "record_id": "option-1",
+                "risk_points": 25,
+                "value_points": 40
+              },
+              {
+                "cost_points": 30,
+                "label": "Data Source 2",
+                "record_id": "option-2",
+                "risk_points": 18,
+                "value_points": 79
+              },
+              {
+                "cost_points": 43,
+                "label": "Data Source 3",
+                "record_id": "option-3",
+                "risk_points": 1,
+                "value_points": 59
+              }
+            ],
+            "task_type": "data_cleanup"
+          }
+        },
+        {
+          "active_from": 1,
+          "active_until": 22,
+          "budget_cents": 9000,
+          "buyer_intent": true,
+          "customer_id": "customer-comparison-research-02",
+          "discoverability": 0.4496,
+          "need_tag": "comparison_research",
+          "payment_reliability": 0.7127,
+          "public_text": "A small professional practice is publicly comparing several software subscriptions but lacks a consistent cost and feature analysis.",
+          "quality_threshold": 90,
+          "responsiveness": 0.8338,
+          "sector": "professional_services",
+          "signal_id": "signal-014",
+          "source_type": "discussion_board",
+          "task_brief": {
+            "brief_id": "6b1a28f5d053865d",
+            "objective": "Evaluate all three software option records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 8,
+                "label": "Software Option 1",
+                "record_id": "option-1",
+                "risk_points": 3,
+                "value_points": 50
+              },
+              {
+                "cost_points": 21,
+                "label": "Software Option 2",
+                "record_id": "option-2",
+                "risk_points": 16,
+                "value_points": 77
+              },
+              {
+                "cost_points": 34,
+                "label": "Software Option 3",
+                "record_id": "option-3",
+                "risk_points": 3,
+                "value_points": 52
+              }
+            ],
+            "task_type": "comparison_research"
+          }
+        },
+        {
+          "active_from": 1,
+          "active_until": 23,
+          "budget_cents": 16000,
+          "buyer_intent": true,
+          "customer_id": "customer-customer-research-02",
+          "discoverability": 0.5132,
+          "need_tag": "customer_research",
+          "payment_reliability": 0.8065,
+          "public_text": "Reviews for a small retailer repeatedly disagree about available products, pickup rules, and current opening hours.",
+          "quality_threshold": 75,
+          "responsiveness": 0.3976,
+          "sector": "small_retail",
+          "signal_id": "signal-015",
+          "source_type": "review_stream",
+          "task_brief": {
+            "brief_id": "dcc900dff663bf9e",
+            "objective": "Evaluate all three customer theme records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 22,
+                "label": "Customer Theme 1",
+                "record_id": "option-1",
+                "risk_points": 20,
+                "value_points": 59
+              },
+              {
+                "cost_points": 16,
+                "label": "Customer Theme 2",
+                "record_id": "option-2",
+                "risk_points": 10,
+                "value_points": 61
+              },
+              {
+                "cost_points": 5,
+                "label": "Customer Theme 3",
+                "record_id": "option-3",
+                "risk_points": 10,
+                "value_points": 49
+              }
+            ],
+            "task_type": "customer_research"
+          }
+        },
+        {
+          "active_from": 4,
+          "active_until": 25,
+          "budget_cents": 15000,
+          "buyer_intent": true,
+          "customer_id": "customer-supplier-research-02",
+          "discoverability": 0.3766,
+          "need_tag": "supplier_research",
+          "payment_reliability": 0.9697,
+          "public_text": "A small workshop asks peers how they track changing supplier prices and lead times for recurring materials.",
+          "quality_threshold": 66,
+          "responsiveness": 0.5933,
+          "sector": "micro_manufacturing",
+          "signal_id": "signal-016",
+          "source_type": "trade_forum",
+          "task_brief": {
+            "brief_id": "c2e1ead34d778291",
+            "objective": "Evaluate all three supplier option records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 39,
+                "label": "Supplier Option 1",
+                "record_id": "option-1",
+                "risk_points": 23,
+                "value_points": 59
+              },
+              {
+                "cost_points": 11,
+                "label": "Supplier Option 2",
+                "record_id": "option-2",
+                "risk_points": 2,
+                "value_points": 43
+              },
+              {
+                "cost_points": 44,
+                "label": "Supplier Option 3",
+                "record_id": "option-3",
+                "risk_points": 24,
+                "value_points": 92
+              }
+            ],
+            "task_type": "supplier_research"
+          }
+        },
+        {
+          "active_from": 5,
+          "active_until": 15,
+          "budget_cents": 13500,
+          "buyer_intent": false,
+          "customer_id": "customer-lead-qualification-02",
+          "discoverability": 0.3241,
+          "need_tag": "lead_qualification",
+          "payment_reliability": 0.7212,
+          "public_text": "A solo professional reports spending substantial time responding to inquiries that do not match the services actually offered.",
+          "quality_threshold": 67,
+          "responsiveness": 0.7727,
+          "sector": "professional_services",
+          "signal_id": "signal-017",
+          "source_type": "business_page",
+          "task_brief": {
+            "brief_id": "452758dcadbdbc53",
+            "objective": "Evaluate all three lead segment records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 40,
+                "label": "Lead Segment 1",
+                "record_id": "option-1",
+                "risk_points": 4,
+                "value_points": 51
+              },
+              {
+                "cost_points": 38,
+                "label": "Lead Segment 2",
+                "record_id": "option-2",
+                "risk_points": 22,
+                "value_points": 78
+              },
+              {
+                "cost_points": 28,
+                "label": "Lead Segment 3",
+                "record_id": "option-3",
+                "risk_points": 16,
+                "value_points": 90
+              }
+            ],
+            "task_type": "lead_qualification"
+          }
+        },
+        {
+          "active_from": 5,
+          "active_until": 25,
+          "budget_cents": 5000,
+          "buyer_intent": false,
+          "customer_id": "customer-documentation-02",
+          "discoverability": 0.327,
+          "need_tag": "documentation",
+          "payment_reliability": 0.7159,
+          "public_text": "An independent audio publisher mentions that useful interviews are difficult for its audience to search and reference later.",
+          "quality_threshold": 73,
+          "responsiveness": 0.7131,
+          "sector": "independent_media",
+          "signal_id": "signal-018",
+          "source_type": "creator_post",
+          "task_brief": {
+            "brief_id": "6613c0c765ddc01e",
+            "objective": "Evaluate all three archive item records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 16,
+                "label": "Archive Item 1",
+                "record_id": "option-1",
+                "risk_points": 23,
+                "value_points": 56
+              },
+              {
+                "cost_points": 12,
+                "label": "Archive Item 2",
+                "record_id": "option-2",
+                "risk_points": 1,
+                "value_points": 72
+              },
+              {
+                "cost_points": 19,
+                "label": "Archive Item 3",
+                "record_id": "option-3",
+                "risk_points": 16,
+                "value_points": 43
+              }
+            ],
+            "task_type": "documentation"
+          }
+        }
+      ],
+      "starting_capital_cents": 28961
+    },
+    "world_commitment": "57a8b68f24ce49e7166c49ddf4bd558583427dbb8d92451ed820c30721742cd6"
+  }
+}

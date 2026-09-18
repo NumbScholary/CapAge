@@ -1,0 +1,894 @@
+{
+  "arms": {
+    "control": {
+      "balance_cents": 36291,
+      "business_continuity": {
+        "customers": {
+          "customer-catalog-cleanup-01": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 2,
+            "reputation_points": 0
+          },
+          "customer-comparison-research-01": {
+            "contracts_accepted": 1,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 1,
+            "deliveries_assessed": 1,
+            "feedback_responses": 0,
+            "last_outcome": "paid",
+            "offers_sent": 3,
+            "reputation_points": 12
+          },
+          "customer-comparison-research-02": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 1,
+            "reputation_points": 0
+          },
+          "customer-data-cleanup-01": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 1,
+            "reputation_points": 0
+          },
+          "customer-data-cleanup-02": {
+            "contracts_accepted": 1,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 1,
+            "contracts_paid": 0,
+            "deliveries_assessed": 1,
+            "feedback_responses": 1,
+            "last_outcome": "feedback_dissatisfied",
+            "offers_sent": 1,
+            "reputation_points": -18
+          },
+          "customer-documentation-01": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 1,
+            "reputation_points": 0
+          },
+          "customer-documentation-02": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 1,
+            "reputation_points": 0
+          },
+          "customer-inventory-analysis-01": {
+            "contracts_accepted": 1,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 1,
+            "contracts_paid": 0,
+            "deliveries_assessed": 1,
+            "feedback_responses": 1,
+            "last_outcome": "feedback_dissatisfied",
+            "offers_sent": 3,
+            "reputation_points": -18
+          },
+          "customer-inventory-analysis-02": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 1,
+            "reputation_points": 0
+          },
+          "customer-lead-qualification-01": {
+            "contracts_accepted": 1,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 1,
+            "deliveries_assessed": 1,
+            "feedback_responses": 0,
+            "last_outcome": "paid",
+            "offers_sent": 3,
+            "reputation_points": 12
+          },
+          "customer-process-documentation-01": {
+            "contracts_accepted": 1,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 1,
+            "deliveries_assessed": 1,
+            "feedback_responses": 0,
+            "last_outcome": "paid",
+            "offers_sent": 1,
+            "reputation_points": 12
+          },
+          "customer-process-documentation-02": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 1,
+            "reputation_points": 0
+          },
+          "customer-scheduling-02": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 2,
+            "reputation_points": 0
+          },
+          "customer-service-clarity-01": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 3,
+            "reputation_points": 0
+          },
+          "customer-supplier-research-01": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 3,
+            "reputation_points": 0
+          },
+          "customer-supplier-research-02": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 4,
+            "reputation_points": 0
+          }
+        },
+        "global_reputation_points": 0,
+        "schema_version": "capage-business-continuity-v1"
+      },
+      "model_cost_units": 140757400
+    },
+    "v1": {
+      "balance_cents": 44250,
+      "business_continuity": {
+        "customers": {
+          "customer-catalog-cleanup-01": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 4,
+            "reputation_points": 0
+          },
+          "customer-comparison-research-01": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 2,
+            "reputation_points": 0
+          },
+          "customer-comparison-research-02": {
+            "contracts_accepted": 1,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 1,
+            "deliveries_assessed": 1,
+            "feedback_responses": 0,
+            "last_outcome": "paid",
+            "offers_sent": 1,
+            "reputation_points": 12
+          },
+          "customer-data-cleanup-01": {
+            "contracts_accepted": 1,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 1,
+            "contracts_paid": 0,
+            "deliveries_assessed": 1,
+            "feedback_responses": 1,
+            "last_outcome": "feedback_dissatisfied",
+            "offers_sent": 1,
+            "reputation_points": -18
+          },
+          "customer-data-cleanup-02": {
+            "contracts_accepted": 4,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 1,
+            "contracts_paid": 3,
+            "deliveries_assessed": 4,
+            "feedback_responses": 1,
+            "last_outcome": "feedback_dissatisfied",
+            "offers_sent": 4,
+            "reputation_points": 18
+          },
+          "customer-inventory-analysis-01": {
+            "contracts_accepted": 1,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 1,
+            "contracts_paid": 0,
+            "deliveries_assessed": 1,
+            "feedback_responses": 0,
+            "last_outcome": "delivery_disputed",
+            "offers_sent": 5,
+            "reputation_points": -18
+          },
+          "customer-inventory-analysis-02": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 1,
+            "reputation_points": 0
+          },
+          "customer-lead-qualification-01": {
+            "contracts_accepted": 1,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 1,
+            "deliveries_assessed": 1,
+            "feedback_responses": 0,
+            "last_outcome": "paid",
+            "offers_sent": 4,
+            "reputation_points": 12
+          },
+          "customer-process-documentation-01": {
+            "contracts_accepted": 1,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 1,
+            "contracts_paid": 0,
+            "deliveries_assessed": 1,
+            "feedback_responses": 1,
+            "last_outcome": "feedback_dissatisfied",
+            "offers_sent": 1,
+            "reputation_points": -18
+          },
+          "customer-process-documentation-02": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 1,
+            "reputation_points": 0
+          },
+          "customer-scheduling-01": {
+            "contracts_accepted": 1,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 1,
+            "contracts_paid": 0,
+            "deliveries_assessed": 1,
+            "feedback_responses": 0,
+            "last_outcome": "delivery_disputed",
+            "offers_sent": 1,
+            "reputation_points": -18
+          },
+          "customer-service-clarity-01": {
+            "contracts_accepted": 1,
+            "contracts_defaulted": 1,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 1,
+            "feedback_responses": 0,
+            "last_outcome": "customer_payment_default",
+            "offers_sent": 4,
+            "reputation_points": 12
+          },
+          "customer-service-clarity-02": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 2,
+            "reputation_points": 0
+          },
+          "customer-supplier-research-01": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 1,
+            "reputation_points": 0
+          }
+        },
+        "global_reputation_points": -18,
+        "schema_version": "capage-business-continuity-v1"
+      },
+      "model_cost_units": 183569400
+    },
+    "v2": {
+      "balance_cents": 40784,
+      "business_continuity": {
+        "customers": {
+          "customer-catalog-cleanup-01": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 3,
+            "reputation_points": 0
+          },
+          "customer-comparison-research-01": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 3,
+            "reputation_points": 0
+          },
+          "customer-comparison-research-02": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 1,
+            "reputation_points": 0
+          },
+          "customer-data-cleanup-01": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 1,
+            "reputation_points": 0
+          },
+          "customer-data-cleanup-02": {
+            "contracts_accepted": 2,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 2,
+            "deliveries_assessed": 2,
+            "feedback_responses": 0,
+            "last_outcome": "paid",
+            "offers_sent": 3,
+            "reputation_points": 24
+          },
+          "customer-documentation-01": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 2,
+            "reputation_points": 0
+          },
+          "customer-inventory-analysis-01": {
+            "contracts_accepted": 1,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 1,
+            "deliveries_assessed": 1,
+            "feedback_responses": 0,
+            "last_outcome": "paid",
+            "offers_sent": 6,
+            "reputation_points": 12
+          },
+          "customer-inventory-analysis-02": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 1,
+            "reputation_points": 0
+          },
+          "customer-lead-qualification-01": {
+            "contracts_accepted": 1,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 1,
+            "deliveries_assessed": 1,
+            "feedback_responses": 0,
+            "last_outcome": "paid",
+            "offers_sent": 1,
+            "reputation_points": 12
+          },
+          "customer-process-documentation-01": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 2,
+            "reputation_points": 0
+          },
+          "customer-scheduling-02": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 1,
+            "reputation_points": 0
+          },
+          "customer-service-clarity-01": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 4,
+            "reputation_points": 0
+          },
+          "customer-service-clarity-02": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 2,
+            "reputation_points": 0
+          },
+          "customer-supplier-research-01": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 3,
+            "reputation_points": 0
+          },
+          "customer-supplier-research-02": {
+            "contracts_accepted": 0,
+            "contracts_defaulted": 0,
+            "contracts_disputed": 0,
+            "contracts_paid": 0,
+            "deliveries_assessed": 0,
+            "feedback_responses": 0,
+            "last_outcome": "",
+            "offers_sent": 2,
+            "reputation_points": 0
+          }
+        },
+        "global_reputation_points": 48,
+        "schema_version": "capage-business-continuity-v1"
+      },
+      "model_cost_units": 158834600
+    }
+  },
+  "completed_cells": {
+    "pair-01:control": {
+      "actual_model_cost_units": 29318800,
+      "arm": "control",
+      "audit_file": "homeostasis-v2-pair-01-control-audit.jsonl",
+      "cell_id": "pair-01:control",
+      "ending_balance_cents": 28459,
+      "execution_order": [
+        "v2",
+        "v1",
+        "control"
+      ],
+      "pair_index": 1,
+      "result_file": "homeostasis-v2-pair-01-control.json",
+      "result_sha256": "2a50e1d442a9c985ab1e4cfb8d2a8be5009e5c5edb669dbe9cedf42e2b793bd8",
+      "seed": 15429834353583384301,
+      "starting_capital_cents": 25000,
+      "status": "completed",
+      "stop_reason": "decision_limit"
+    },
+    "pair-01:v1": {
+      "actual_model_cost_units": 31345400,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-pair-01-v1-audit.jsonl",
+      "cell_id": "pair-01:v1",
+      "ending_balance_cents": 28958,
+      "execution_order": [
+        "v2",
+        "v1",
+        "control"
+      ],
+      "pair_index": 1,
+      "result_file": "homeostasis-v2-pair-01-v1.json",
+      "result_sha256": "b33a1f71d2ca8d65920fd3024b6c869e3d9b96c3bc888e3b123c80a66d61b814",
+      "seed": 15429834353583384301,
+      "starting_capital_cents": 25000,
+      "status": "completed",
+      "stop_reason": "horizon_reached"
+    },
+    "pair-01:v2": {
+      "actual_model_cost_units": 27877200,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-pair-01-v2-audit.jsonl",
+      "cell_id": "pair-01:v2",
+      "ending_balance_cents": 28962,
+      "execution_order": [
+        "v2",
+        "v1",
+        "control"
+      ],
+      "pair_index": 1,
+      "result_file": "homeostasis-v2-pair-01-v2.json",
+      "result_sha256": "d06db87c0873c21789314c33b111f3d03fc870fcdc3ed8ddf165833e39e6c0cd",
+      "seed": 15429834353583384301,
+      "starting_capital_cents": 25000,
+      "status": "completed",
+      "stop_reason": "horizon_reached"
+    },
+    "pair-02:control": {
+      "actual_model_cost_units": 20159200,
+      "arm": "control",
+      "audit_file": "homeostasis-v2-pair-02-control-audit.jsonl",
+      "cell_id": "pair-02:control",
+      "ending_balance_cents": 28426,
+      "execution_order": [
+        "v1",
+        "v2",
+        "control"
+      ],
+      "pair_index": 2,
+      "result_file": "homeostasis-v2-pair-02-control.json",
+      "result_sha256": "69ec850390b224784d04bfd2c95cc3c86eb0a41709007e3801dc43cfe778b920",
+      "seed": 874019623035430017,
+      "starting_capital_cents": 28459,
+      "status": "completed",
+      "stop_reason": "horizon_reached"
+    },
+    "pair-02:v1": {
+      "actual_model_cost_units": 25074600,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-pair-02-v1-audit.jsonl",
+      "cell_id": "pair-02:v1",
+      "ending_balance_cents": 28921,
+      "execution_order": [
+        "v1",
+        "v2",
+        "control"
+      ],
+      "pair_index": 2,
+      "result_file": "homeostasis-v2-pair-02-v1.json",
+      "result_sha256": "af2db09af7011b11b4b202956ca113e4085e5d937131a2eb3d911eeaf239c6ff",
+      "seed": 874019623035430017,
+      "starting_capital_cents": 28958,
+      "status": "completed",
+      "stop_reason": "horizon_reached"
+    },
+    "pair-02:v2": {
+      "actual_model_cost_units": 21532400,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-pair-02-v2-audit.jsonl",
+      "cell_id": "pair-02:v2",
+      "ending_balance_cents": 28930,
+      "execution_order": [
+        "v1",
+        "v2",
+        "control"
+      ],
+      "pair_index": 2,
+      "result_file": "homeostasis-v2-pair-02-v2.json",
+      "result_sha256": "20b946b3365a83dd8826b66aecbdd91311194c5698cead227f67584017648ea9",
+      "seed": 874019623035430017,
+      "starting_capital_cents": 28962,
+      "status": "completed",
+      "stop_reason": "horizon_reached"
+    },
+    "pair-03:control": {
+      "actual_model_cost_units": 29896800,
+      "arm": "control",
+      "audit_file": "homeostasis-v2-pair-03-control-audit.jsonl",
+      "cell_id": "pair-03:control",
+      "ending_balance_cents": 32384,
+      "execution_order": [
+        "control",
+        "v1",
+        "v2"
+      ],
+      "pair_index": 3,
+      "result_file": "homeostasis-v2-pair-03-control.json",
+      "result_sha256": "8739f6f8bda4edde1c64e5dde6895b2b69272a646657f2054927b7d99b676318",
+      "seed": 11950441628831527822,
+      "starting_capital_cents": 28426,
+      "status": "completed",
+      "stop_reason": "horizon_reached"
+    },
+    "pair-03:v1": {
+      "actual_model_cost_units": 34210200,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-pair-03-v1-audit.jsonl",
+      "cell_id": "pair-03:v1",
+      "ending_balance_cents": 40877,
+      "execution_order": [
+        "control",
+        "v1",
+        "v2"
+      ],
+      "pair_index": 3,
+      "result_file": "homeostasis-v2-pair-03-v1.json",
+      "result_sha256": "60fc3453c62f1e663d5dd2331e4028ceb181a52d998316fb2ea2aac946d1ab38",
+      "seed": 11950441628831527822,
+      "starting_capital_cents": 28921,
+      "status": "completed",
+      "stop_reason": "horizon_reached"
+    },
+    "pair-03:v2": {
+      "actual_model_cost_units": 33170600,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-pair-03-v2-audit.jsonl",
+      "cell_id": "pair-03:v2",
+      "ending_balance_cents": 36888,
+      "execution_order": [
+        "control",
+        "v1",
+        "v2"
+      ],
+      "pair_index": 3,
+      "result_file": "homeostasis-v2-pair-03-v2.json",
+      "result_sha256": "a12e82956ddad28b3d8b6babd115c8c803eca4e804326cb8e0377fbad6de78bd",
+      "seed": 11950441628831527822,
+      "starting_capital_cents": 28930,
+      "status": "completed",
+      "stop_reason": "decision_limit"
+    },
+    "pair-04:control": {
+      "actual_model_cost_units": 21127600,
+      "arm": "control",
+      "audit_file": "homeostasis-v2-pair-04-control-audit.jsonl",
+      "cell_id": "pair-04:control",
+      "ending_balance_cents": 36353,
+      "execution_order": [
+        "control",
+        "v2",
+        "v1"
+      ],
+      "pair_index": 4,
+      "result_file": "homeostasis-v2-pair-04-control.json",
+      "result_sha256": "48efbf20f1b9493d9e760b5ac398807d11cda7c61192a85c302278346796b2a4",
+      "seed": 3767195574301308249,
+      "starting_capital_cents": 32384,
+      "status": "completed",
+      "stop_reason": "horizon_reached"
+    },
+    "pair-04:v1": {
+      "actual_model_cost_units": 29811600,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-pair-04-v1-audit.jsonl",
+      "cell_id": "pair-04:v1",
+      "ending_balance_cents": 40838,
+      "execution_order": [
+        "control",
+        "v2",
+        "v1"
+      ],
+      "pair_index": 4,
+      "result_file": "homeostasis-v2-pair-04-v1.json",
+      "result_sha256": "2eb1905b7f1bfd1837169213c2bb61a460ff480925be0fb996da24bf9c6594f7",
+      "seed": 3767195574301308249,
+      "starting_capital_cents": 40877,
+      "status": "completed",
+      "stop_reason": "horizon_reached"
+    },
+    "pair-04:v2": {
+      "actual_model_cost_units": 20712000,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-pair-04-v2-audit.jsonl",
+      "cell_id": "pair-04:v2",
+      "ending_balance_cents": 36860,
+      "execution_order": [
+        "control",
+        "v2",
+        "v1"
+      ],
+      "pair_index": 4,
+      "result_file": "homeostasis-v2-pair-04-v2.json",
+      "result_sha256": "abf2f418745d6a78579059d38c62ea0791480204ff3f25ac363241139250c1ba",
+      "seed": 3767195574301308249,
+      "starting_capital_cents": 36888,
+      "status": "completed",
+      "stop_reason": "horizon_reached"
+    },
+    "pair-05:control": {
+      "actual_model_cost_units": 21120600,
+      "arm": "control",
+      "audit_file": "homeostasis-v2-pair-05-control-audit.jsonl",
+      "cell_id": "pair-05:control",
+      "ending_balance_cents": 36318,
+      "execution_order": [
+        "v1",
+        "control",
+        "v2"
+      ],
+      "pair_index": 5,
+      "result_file": "homeostasis-v2-pair-05-control.json",
+      "result_sha256": "1b4d0376abb8e06ce76a519b291437f4eb2a0d5e1a24ba44ec9cf6bd71848f07",
+      "seed": 17967328634873905990,
+      "starting_capital_cents": 36353,
+      "status": "completed",
+      "stop_reason": "horizon_reached"
+    },
+    "pair-05:v1": {
+      "actual_model_cost_units": 31920600,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-pair-05-v1-audit.jsonl",
+      "cell_id": "pair-05:v1",
+      "ending_balance_cents": 44296,
+      "execution_order": [
+        "v1",
+        "control",
+        "v2"
+      ],
+      "pair_index": 5,
+      "result_file": "homeostasis-v2-pair-05-v1.json",
+      "result_sha256": "0cdc0dc82cabacdfc02696e36939d5a628c5c9f9e854c6df91c2dfe0913e6240",
+      "seed": 17967328634873905990,
+      "starting_capital_cents": 40838,
+      "status": "completed",
+      "stop_reason": "horizon_reached"
+    },
+    "pair-05:v2": {
+      "actual_model_cost_units": 22789600,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-pair-05-v2-audit.jsonl",
+      "cell_id": "pair-05:v2",
+      "ending_balance_cents": 36829,
+      "execution_order": [
+        "v1",
+        "control",
+        "v2"
+      ],
+      "pair_index": 5,
+      "result_file": "homeostasis-v2-pair-05-v2.json",
+      "result_sha256": "396aef758f7f21fb25f852d50ca7914819fa0577a4cf915307896f6c02953501",
+      "seed": 17967328634873905990,
+      "starting_capital_cents": 36860,
+      "status": "completed",
+      "stop_reason": "horizon_reached"
+    },
+    "pair-06:control": {
+      "actual_model_cost_units": 19134400,
+      "arm": "control",
+      "audit_file": "homeostasis-v2-pair-06-control-audit.jsonl",
+      "cell_id": "pair-06:control",
+      "ending_balance_cents": 36291,
+      "execution_order": [
+        "v2",
+        "control",
+        "v1"
+      ],
+      "pair_index": 6,
+      "result_file": "homeostasis-v2-pair-06-control.json",
+      "result_sha256": "279b1e0d7d30bdc32b13c10fd882880b4f7e158cca249337c4f752d2b22bab44",
+      "seed": 17171962492203596349,
+      "starting_capital_cents": 36318,
+      "status": "completed",
+      "stop_reason": "horizon_reached"
+    },
+    "pair-06:v1": {
+      "actual_model_cost_units": 31207000,
+      "arm": "v1",
+      "audit_file": "homeostasis-v2-pair-06-v1-audit.jsonl",
+      "cell_id": "pair-06:v1",
+      "ending_balance_cents": 44250,
+      "execution_order": [
+        "v2",
+        "control",
+        "v1"
+      ],
+      "pair_index": 6,
+      "result_file": "homeostasis-v2-pair-06-v1.json",
+      "result_sha256": "58d325face5295db3dd39b3cabccadb91bd6185afe6a3321da4e154dcbb0a9eb",
+      "seed": 17171962492203596349,
+      "starting_capital_cents": 44296,
+      "status": "completed",
+      "stop_reason": "horizon_reached"
+    },
+    "pair-06:v2": {
+      "actual_model_cost_units": 32752800,
+      "arm": "v2",
+      "audit_file": "homeostasis-v2-pair-06-v2-audit.jsonl",
+      "cell_id": "pair-06:v2",
+      "ending_balance_cents": 40784,
+      "execution_order": [
+        "v2",
+        "control",
+        "v1"
+      ],
+      "pair_index": 6,
+      "result_file": "homeostasis-v2-pair-06-v2.json",
+      "result_sha256": "9bb69a37a3b88cc4cfa24334d4907a121af89a0fbac21e9b84d967603870c7d7",
+      "seed": 17171962492203596349,
+      "starting_capital_cents": 36829,
+      "status": "completed",
+      "stop_reason": "horizon_reached"
+    }
+  },
+  "config_commitment": "161ceafa89059ae18e07efe5701bb90d8a509184b960ebe68ba3d47856e53eec",
+  "errors": [],
+  "implementation_commitments": {
+    "capage/homeostasis.py": "7af4527ebe4c77d2ef7bce0c7a1ad73b55ad9d86b29e5087261eda229ea6caf8",
+    "capage/homeostasis_experiment.py": "c9bea1761c80322e17e590e5bacf3e497bafa552f054a22e22b217ebd917304c",
+    "capage/homeostasis_shadow.py": "4a6b80d59a060782fcb61c98356011a8435a028a5761540ec91cb895445cbcfd",
+    "capage/homeostasis_v2.py": "37abdddaafb2b5f673f3d551854a58e0234ba66119f501b85691e809f13653d5",
+    "capage/homeostasis_v2_active_runner.py": "12ed4e32d68f4974962ac6b11557f514a29b891b93b99c3ed6d3b90d90438e74",
+    "capage/homeostasis_v2_experiment.py": "98f9f05b626855c74f53b1bac60548e307a00ab2b5a38dfb9f288348c3aa75ce",
+    "capage/homeostasis_v2_runner.py": "2616fe2b48aeac3253a74d5e7b28c2503c74cf1b0b3b1884eea6ff4e22aad8cc",
+    "capage/sandbox.py": "35b4eec2eb80a9184ca5511fdfd72c51a0d26194b7c1b211abe3ffd8e5b0a5d3",
+    "capage/sandbox_runner.py": "9712f321b898b66a7e129d78fc8218eed8639344b3a5d0486b0e9c70778f98cb",
+    "experiments/sandbox/economic_homeostasis_v2_prereg_v1.json": "831bc60ddaefcb9e0f10c5fb02e61b0c5f7daf442b1be893814cbca6c8455c68"
+  },
+  "model_cost_units": 512077000,
+  "plan_sha256": "4023063f99e7f84dfbd11e600fa5d1c5dd4b9c5244924740a95517fbbe21403d",
+  "prior_cost_reference": "github-actions-run:32292164227/artifact:9379919939",
+  "prior_model_cost_units": 28915600,
+  "schema_version": "capage-homeostasis-v2-three-arm-checkpoint-v1",
+  "status": "completed",
+  "stop_reason": "all_cells_completed"
+}
