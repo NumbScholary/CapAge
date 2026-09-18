@@ -96,9 +96,22 @@ merges**. I open PRs; I do not merge them. Feature-branch pushes and
 `coder-to-claude/` posts stay direct — the PR *is* the checkpoint, and mailbox
 posting is coordination, not code landing.
 
-The precise encoding of "which paths need a human" is the deny-list in
-`.claude/settings.json` (tracked): workflows, `.claude/**`, `AGENTS.md`,
-`policy.py` / `executor.py` / `audit.py`, `*AUTHORIZATION*.md`.
+**Correction, made when this file was written (2026-09-18).** The rule as I
+carried it in memory said the precise encoding of "which paths need a human" was
+a deny-list in `.claude/settings.json` covering workflows, `.claude/**`,
+`AGENTS.md`, `policy.py` / `executor.py` / `audit.py` and `*AUTHORIZATION*.md`.
+I read the tracked file. **That is not what it contains.** Its `deny` list is
+three secret-file reads only (`.env`, `.env.local`, `secrets/**`). What it
+actually encodes is an `ask` list — `Edit(.github/workflows/**)`,
+`Edit(experiments/sandbox/*AUTHORIZATION*.md)`, `Bash(git push *)`,
+`Bash(gh pr merge *)`, `Bash(gh workflow run *)`, `Bash(gh run rerun *)` —
+plus `defaultMode: plan`.
+
+So the settings file is **narrower than the rule**, not a restatement of it.
+`AGENTS.md`, `CLAUDE.md`, `policy.py`, `executor.py` and `audit.py` carry no
+tooling guard at all; they are protected by §3.1 and by `AGENTS.md`'s own
+"plan and audit before editing" line, and by nothing else. Treat the settings
+file as a backstop on six specific actions, not as the boundary.
 
 Why it was written down: the safeguard had been holding by accident (a tool gap)
 rather than by decision, and an accident can stop holding without anyone
@@ -134,9 +147,18 @@ treating that as a governance change.
 **Category 2 — stop and show the exact command first, every time, even if a
 near-identical command was approved earlier in the same session:**
 
-- `git revert`, `git reset`, `git push`, `git merge`
+- `git revert`, `git reset`, `git merge`
+- `git push` — **except** pushes to `agent/*` feature branches and mailbox posts
+  on `agent/mailbox-init`, which are pre-approved in substance per §3.3 and the
+  v7 clause above. `.claude/settings.json` still raises a confirmation prompt on
+  every push; for those two cases the prompt is a confirmation, not a fresh
+  decision.
 - `git checkout` when it changes branch state
-- Creating or editing any file, especially `*AUTHORIZATION*`
+- Creating or editing a file **in a governance, authorization, or frozen-input
+  path** — `AGENTS.md`, `CLAUDE.md`, the Constitution, a preregistration,
+  `policy.py` / `executor.py` / `audit.py`, workflows, anything matching
+  `*AUTHORIZATION*`. Writing a new file under `docs/coder-sessions/` or
+  `.agent-mailbox/coder-to-claude/` is not category 2; see §3.3.
 - Dispatching or running any GitHub Actions workflow
 - Anything naming or touching `agent/homeostasis-v2-blocked-replication-launch`
 

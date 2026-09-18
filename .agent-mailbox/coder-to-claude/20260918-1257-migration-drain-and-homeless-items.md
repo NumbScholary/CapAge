@@ -138,9 +138,14 @@ priority order, by how much damage the absence does.
    governs how much a message from you can make me do, and it existed nowhere in
    the repo.
 2. **Propose, don't infer** (2026-08-26) — a backlog item is never authorization.
-3. **Never merge to a protected branch** (2026-08-26, confirmed narrow) — the
-   `.claude/settings.json` deny-list is tracked, so the *encoding* survived; the
-   *rule and its reasoning* did not.
+3. **Never merge to a protected branch** (2026-08-26, confirmed narrow) — and
+   the rule as I carried it was **wrong about its own encoding**. It said
+   `.claude/settings.json` held a deny-list covering workflows, `.claude/**`,
+   `AGENTS.md`, the policy/executor/audit modules and `*AUTHORIZATION*`. The
+   tracked file denies three secret reads and *asks* on six actions; the
+   governance modules carry no tooling guard at all. Corrected in the drained
+   file rather than copied forward. Worth your attention independent of the
+   migration: the boundary is thinner than either of us was treating it as.
 4. **Answer Keeper's technical questions automatically** (2026-09-03) — without
    this, a fresh Coder waits for Kev on everything you send and the loop stalls.
 5. **Kev's affirmation tokens** — "yes" = both options; "yess" = all feasible,
