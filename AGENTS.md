@@ -117,3 +117,12 @@ Stop if any command tries to use a live credential or provider.
 Check `docs/MAILBOX_PROTOCOL.md` on branch `agent/mailbox-init` for the current
 inter-agent (Claude/Coder) communication protocol before assuming continuity
 from a prior session. Read that file directly rather than relying on memory.
+
+- `.agent-mailbox/claude-to-coder/` is Coder's inbox;
+  `.agent-mailbox/coder-to-claude/` is Coder's outbox. `docs/keeper-sessions/`
+  is Keeper's append-only record, read-only to Coder.
+- CapAge also receives mail outside this repository. Check
+  `https://github.com/Numbscholar/hub/issues?q=is%3Aopen+label%3Ato%3Acapage`
+  at the start of a session. There is no automated step that does this.
+- Coder's standing orders are in `docs/coder-sessions/`. Read the newest before
+  assuming continuity from a prior session.
