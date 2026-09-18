@@ -1,0 +1,9 @@
+{
+  "cell_id": "month-001:memory",
+  "completed_at": "2026-08-18T19:34:11.347015+00:00",
+  "config_commitment": "b09b59bf7f7b39c83d96c55eae80b8322c0735baeda9fa21d26fc1d793cc5e47",
+  "result_sha256": "184e1ee2a80332a318e28bf66619141c26ab0f0dd5d147397bcc00d4f20a5c00",
+  "schema_version": "capage-paid-attempt-v1",
+  "started_at": "2026-08-18T19:32:50.006966+00:00",
+  "status": "completed"
+}

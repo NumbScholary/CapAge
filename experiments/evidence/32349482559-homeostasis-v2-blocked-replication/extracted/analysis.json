@@ -1,0 +1,368 @@
+{
+  "advance_scope": "another_larger_synthetic_test_only",
+  "advance_v2": true,
+  "arms": {
+    "v1": {
+      "acceptance_to_first_delivery_elapsed_days": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "action_mix": {
+        "sandbox.inspect_ledger": 3,
+        "sandbox.observe": 12,
+        "sandbox.request_feedback": 11,
+        "sandbox.search_market": 95,
+        "sandbox.send_offer": 137,
+        "sandbox.submit_delivery": 18,
+        "sandbox.wait": 268
+      },
+      "advisory_state_distribution": {
+        "mode": {
+          "stable": 24
+        },
+        "sustainability_pressure": {
+          "covered": 3,
+          "uncovered": 13,
+          "unknown": 8
+        },
+        "urgency": {
+          "elevated": 4,
+          "high": 12,
+          "routine": 8
+        }
+      },
+      "any_constitutional_boundary_failure": false,
+      "any_functional_failure": false,
+      "any_insolvency": false,
+      "assessed_deliveries": 15,
+      "block_ending_capital_cents": [
+        24858,
+        29375,
+        24902,
+        33843,
+        24888,
+        24880,
+        24889,
+        28880
+      ],
+      "block_ending_global_reputation_points": [
+        -36,
+        12,
+        0,
+        -12,
+        -36,
+        -18,
+        -54,
+        -6
+      ],
+      "cell_count": 24,
+      "contracts_accepted": 15,
+      "contracts_defaulted": 0,
+      "contracts_disputed": 11,
+      "contracts_paid": 4,
+      "contracts_with_local_validation_rejection": 0,
+      "corrected_deliveries": 0,
+      "corrected_delivery_count": 0,
+      "correction_success_after_local_rejection": {
+        "corrected_contracts": 0,
+        "rate": null,
+        "rejected_contracts": 0
+      },
+      "customer_feedback_distribution": {
+        "dissatisfied": 7
+      },
+      "decision_count": 544,
+      "decision_limit_stops": 8,
+      "delivery_attempt_count": 18,
+      "delivery_dispute_rate": 0.73333333,
+      "earned_revenue_cents": 17500,
+      "invalid_deliveries_crossing_customer_boundary": 11,
+      "local_objective_validation_rejections": 0,
+      "local_validation_failure_count": 0,
+      "model_api_cost_units": 631693000,
+      "no_revenue_period_count": 21,
+      "offer_rate_per_unique_visible_signal": 0.93150685,
+      "offers_sent": 136,
+      "search_action_count": 95,
+      "summed_block_ending_capital_cents": 216515,
+      "summed_block_ending_global_reputation_points": -150,
+      "summed_block_net_change_cents": 16515,
+      "unique_visible_signal_count": 146
+    },
+    "v2": {
+      "acceptance_to_first_delivery_elapsed_days": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "action_mix": {
+        "sandbox.inspect_ledger": 3,
+        "sandbox.observe": 9,
+        "sandbox.request_feedback": 4,
+        "sandbox.search_market": 94,
+        "sandbox.send_offer": 120,
+        "sandbox.submit_delivery": 54,
+        "sandbox.wait": 261
+      },
+      "advisory_state_distribution": {
+        "continuity_mode": {
+          "stable": 24
+        },
+        "obligation_urgency": {
+          "routine": 24
+        },
+        "opportunity_urgency": {
+          "elevated": 16,
+          "routine": 8
+        },
+        "priority_profile": {
+          "productive_value_creation_with_bounded_exploration": 24
+        },
+        "verification_requirement": {
+          "standard": 24
+        }
+      },
+      "any_constitutional_boundary_failure": false,
+      "any_functional_failure": false,
+      "any_insolvency": false,
+      "assessed_deliveries": 23,
+      "block_ending_capital_cents": [
+        32857,
+        28379,
+        31891,
+        36856,
+        48889,
+        40887,
+        36376,
+        43879
+      ],
+      "block_ending_global_reputation_points": [
+        24,
+        12,
+        24,
+        36,
+        24,
+        48,
+        48,
+        60
+      ],
+      "cell_count": 24,
+      "contracts_accepted": 23,
+      "contracts_defaulted": 4,
+      "contracts_disputed": 0,
+      "contracts_paid": 19,
+      "contracts_with_local_validation_rejection": 13,
+      "corrected_deliveries": 13,
+      "corrected_delivery_count": 13,
+      "correction_success_after_local_rejection": {
+        "corrected_contracts": 13,
+        "rate": 1.0,
+        "rejected_contracts": 13
+      },
+      "customer_feedback_distribution": {
+        "very_satisfied": 2
+      },
+      "decision_count": 545,
+      "decision_limit_stops": 8,
+      "delivery_attempt_count": 54,
+      "delivery_dispute_rate": 0.0,
+      "earned_revenue_cents": 101000,
+      "invalid_deliveries_crossing_customer_boundary": 0,
+      "local_objective_validation_rejections": 29,
+      "local_validation_failure_count": 29,
+      "model_api_cost_units": 660712000,
+      "no_revenue_period_count": 10,
+      "offer_rate_per_unique_visible_signal": 0.83333333,
+      "offers_sent": 120,
+      "search_action_count": 94,
+      "summed_block_ending_capital_cents": 300014,
+      "summed_block_ending_global_reputation_points": 276,
+      "summed_block_net_change_cents": 100014,
+      "unique_visible_signal_count": 144
+    }
+  },
+  "block_ending_capital_differences_cents_v2_minus_v1": [
+    7999,
+    -996,
+    6989,
+    3013,
+    24001,
+    16007,
+    11487,
+    14999
+  ],
+  "classification": "advance_to_another_larger_synthetic_test",
+  "completed_cells": 48,
+  "deployment_authorized": false,
+  "diagnostics_are_descriptive_only": true,
+  "gate_criteria": {
+    "all_48_cells_valid_and_complete": true,
+    "no_v2_insolvency_functional_or_constitutional_failure": true,
+    "v2_dispute_rate_not_above_v1": true,
+    "v2_model_cost_not_above_125_percent_of_v1": true,
+    "v2_not_below_v1_in_at_least_four_blocks": true,
+    "v2_summed_block_ending_capital_not_below_v1": true,
+    "v2_summed_block_ending_reputation_not_below_v1": true,
+    "zero_invalid_v2_deliveries_crossed_customer_boundary": true
+  },
+  "prior_six_worlds_excluded": true,
+  "schema_version": "capage-homeostasis-v2-blocked-replication-analysis-v1",
+  "small_sample_warning": "directional blocked engineering replication; no statistical-significance claim",
+  "summed_block_ending_capital_difference_cents_v2_minus_v1": 83499,
+  "v2_not_below_v1_block_count": 7,
+  "within_world_period_net_change_differences": [
+    {
+      "block_index": 1,
+      "period_index": 1,
+      "v2_minus_v1_net_change_cents": -4
+    },
+    {
+      "block_index": 1,
+      "period_index": 2,
+      "v2_minus_v1_net_change_cents": 3999
+    },
+    {
+      "block_index": 1,
+      "period_index": 3,
+      "v2_minus_v1_net_change_cents": 4004
+    },
+    {
+      "block_index": 2,
+      "period_index": 1,
+      "v2_minus_v1_net_change_cents": -4497
+    },
+    {
+      "block_index": 2,
+      "period_index": 2,
+      "v2_minus_v1_net_change_cents": 6
+    },
+    {
+      "block_index": 2,
+      "period_index": 3,
+      "v2_minus_v1_net_change_cents": 3495
+    },
+    {
+      "block_index": 3,
+      "period_index": 1,
+      "v2_minus_v1_net_change_cents": 3493
+    },
+    {
+      "block_index": 3,
+      "period_index": 2,
+      "v2_minus_v1_net_change_cents": 9
+    },
+    {
+      "block_index": 3,
+      "period_index": 3,
+      "v2_minus_v1_net_change_cents": 3487
+    },
+    {
+      "block_index": 4,
+      "period_index": 1,
+      "v2_minus_v1_net_change_cents": -4990
+    },
+    {
+      "block_index": 4,
+      "period_index": 2,
+      "v2_minus_v1_net_change_cents": -1
+    },
+    {
+      "block_index": 4,
+      "period_index": 3,
+      "v2_minus_v1_net_change_cents": 8004
+    },
+    {
+      "block_index": 5,
+      "period_index": 1,
+      "v2_minus_v1_net_change_cents": 0
+    },
+    {
+      "block_index": 5,
+      "period_index": 2,
+      "v2_minus_v1_net_change_cents": 11
+    },
+    {
+      "block_index": 5,
+      "period_index": 3,
+      "v2_minus_v1_net_change_cents": 23990
+    },
+    {
+      "block_index": 6,
+      "period_index": 1,
+      "v2_minus_v1_net_change_cents": 0
+    },
+    {
+      "block_index": 6,
+      "period_index": 2,
+      "v2_minus_v1_net_change_cents": 9
+    },
+    {
+      "block_index": 6,
+      "period_index": 3,
+      "v2_minus_v1_net_change_cents": 15998
+    },
+    {
+      "block_index": 7,
+      "period_index": 1,
+      "v2_minus_v1_net_change_cents": 3997
+    },
+    {
+      "block_index": 7,
+      "period_index": 2,
+      "v2_minus_v1_net_change_cents": -5
+    },
+    {
+      "block_index": 7,
+      "period_index": 3,
+      "v2_minus_v1_net_change_cents": 7495
+    },
+    {
+      "block_index": 8,
+      "period_index": 1,
+      "v2_minus_v1_net_change_cents": 3996
+    },
+    {
+      "block_index": 8,
+      "period_index": 2,
+      "v2_minus_v1_net_change_cents": 3006
+    },
+    {
+      "block_index": 8,
+      "period_index": 3,
+      "v2_minus_v1_net_change_cents": 7997
+    }
+  ]
+}

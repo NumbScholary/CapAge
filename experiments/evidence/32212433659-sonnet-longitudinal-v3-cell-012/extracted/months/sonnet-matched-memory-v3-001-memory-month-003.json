@@ -1,0 +1,4850 @@
+{
+  "actual_model_cost_cents_billed": 18,
+  "actual_model_cost_cents_unrounded": 17.1268,
+  "actual_model_cost_units": 17126800,
+  "business_continuity": {
+    "customers": {
+      "customer-comparison-research-01": {
+        "contracts_accepted": 0,
+        "contracts_defaulted": 0,
+        "contracts_disputed": 0,
+        "contracts_paid": 0,
+        "deliveries_assessed": 0,
+        "feedback_responses": 0,
+        "last_outcome": "",
+        "offers_sent": 1,
+        "reputation_points": 0
+      },
+      "customer-comparison-research-02": {
+        "contracts_accepted": 1,
+        "contracts_defaulted": 0,
+        "contracts_disputed": 1,
+        "contracts_paid": 0,
+        "deliveries_assessed": 1,
+        "feedback_responses": 1,
+        "last_outcome": "feedback_dissatisfied",
+        "offers_sent": 1,
+        "reputation_points": -18
+      },
+      "customer-customer-research-02": {
+        "contracts_accepted": 0,
+        "contracts_defaulted": 0,
+        "contracts_disputed": 0,
+        "contracts_paid": 0,
+        "deliveries_assessed": 0,
+        "feedback_responses": 0,
+        "last_outcome": "",
+        "offers_sent": 1,
+        "reputation_points": 0
+      },
+      "customer-data-cleanup-01": {
+        "contracts_accepted": 0,
+        "contracts_defaulted": 0,
+        "contracts_disputed": 0,
+        "contracts_paid": 0,
+        "deliveries_assessed": 0,
+        "feedback_responses": 0,
+        "last_outcome": "",
+        "offers_sent": 1,
+        "reputation_points": 0
+      },
+      "customer-documentation-01": {
+        "contracts_accepted": 0,
+        "contracts_defaulted": 0,
+        "contracts_disputed": 0,
+        "contracts_paid": 0,
+        "deliveries_assessed": 0,
+        "feedback_responses": 0,
+        "last_outcome": "",
+        "offers_sent": 2,
+        "reputation_points": 0
+      },
+      "customer-lead-qualification-01": {
+        "contracts_accepted": 0,
+        "contracts_defaulted": 0,
+        "contracts_disputed": 0,
+        "contracts_paid": 0,
+        "deliveries_assessed": 0,
+        "feedback_responses": 0,
+        "last_outcome": "",
+        "offers_sent": 2,
+        "reputation_points": 0
+      },
+      "customer-process-documentation-02": {
+        "contracts_accepted": 0,
+        "contracts_defaulted": 0,
+        "contracts_disputed": 0,
+        "contracts_paid": 0,
+        "deliveries_assessed": 0,
+        "feedback_responses": 0,
+        "last_outcome": "",
+        "offers_sent": 1,
+        "reputation_points": 0
+      },
+      "customer-scheduling-01": {
+        "contracts_accepted": 0,
+        "contracts_defaulted": 0,
+        "contracts_disputed": 0,
+        "contracts_paid": 0,
+        "deliveries_assessed": 0,
+        "feedback_responses": 0,
+        "last_outcome": "",
+        "offers_sent": 1,
+        "reputation_points": 0
+      },
+      "customer-service-clarity-01": {
+        "contracts_accepted": 0,
+        "contracts_defaulted": 0,
+        "contracts_disputed": 0,
+        "contracts_paid": 0,
+        "deliveries_assessed": 0,
+        "feedback_responses": 0,
+        "last_outcome": "",
+        "offers_sent": 1,
+        "reputation_points": 0
+      },
+      "customer-supplier-research-01": {
+        "contracts_accepted": 0,
+        "contracts_defaulted": 0,
+        "contracts_disputed": 0,
+        "contracts_paid": 0,
+        "deliveries_assessed": 0,
+        "feedback_responses": 0,
+        "last_outcome": "",
+        "offers_sent": 2,
+        "reputation_points": 0
+      },
+      "customer-supplier-research-02": {
+        "contracts_accepted": 0,
+        "contracts_defaulted": 0,
+        "contracts_disputed": 0,
+        "contracts_paid": 0,
+        "deliveries_assessed": 0,
+        "feedback_responses": 0,
+        "last_outcome": "",
+        "offers_sent": 1,
+        "reputation_points": 0
+      }
+    },
+    "global_reputation_points": -18,
+    "schema_version": "capage-business-continuity-v1"
+  },
+  "completed_at": "2026-08-18T22:26:46.671451+00:00",
+  "config": {
+    "assessor_version": "deterministic-artifact-v2",
+    "customer_namespace": "",
+    "customer_population_seed": 408451,
+    "effort": "medium",
+    "horizon_days": 30,
+    "market_profile": "baseline-v1",
+    "max_decisions": 25,
+    "max_output_tokens": 1024,
+    "max_run_cost_cents": 75,
+    "model": "claude-sonnet-5",
+    "run_name": "sonnet-matched-memory-v3-001-memory-month-003",
+    "seed": 594914,
+    "starting_capital_cents": 24913,
+    "tariff": {
+      "input_cents_per_million_tokens": 200,
+      "name": "anthropic-sonnet-5-introductory-2026-08",
+      "output_cents_per_million_tokens": 1000
+    },
+    "tariff_valid_through": "2026-08-31"
+  },
+  "decision_count": 14,
+  "failure": null,
+  "outcome": {
+    "balance_cents": 24888,
+    "contracts_accepted": 0,
+    "contracts_defaulted": 0,
+    "contracts_disputed": 0,
+    "contracts_paid": 0,
+    "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+    "day": 30,
+    "earned_revenue_cents": 0,
+    "expense_cents": 25,
+    "insolvent": false,
+    "mean_customer_satisfaction": null,
+    "model_api_cost_cents": 18,
+    "model_api_cost_units": 17126800,
+    "model_input_tokens": 79239,
+    "model_output_tokens": 1279,
+    "net_change_cents": -25,
+    "offers_sent": 3,
+    "open_obligations": 0,
+    "owner_capital_cents": 24913,
+    "run_id": "40e07186f869",
+    "world_commitment": "75ae29c2dc9939ae625d80ca9287c0f54bc107c217d46d18537ea9db160dfa91"
+  },
+  "schema_version": "capage-live-sandbox-result-v1",
+  "started_at": "2026-08-18T22:25:41.068371+00:00",
+  "status": "completed",
+  "stop_reason": "horizon_reached",
+  "transcript": [
+    {
+      "day_after_action": 0,
+      "day_before_action": 0,
+      "decision": 1,
+      "execution": {
+        "action_id": "4bc5c1fb-43f4-449d-bb63-daaebcfac38f",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "cost_cents": 2,
+          "ok": true,
+          "results": [
+            {
+              "currently_visible": true,
+              "customer_id": "customer-documentation-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1
+              },
+              "sector": "independent_media",
+              "signal_id": "signal-002",
+              "source_type": "creator_post",
+              "text": "An independent audio publisher mentions that useful interviews are difficult for its audience to search and reference later."
+            },
+            {
+              "currently_visible": true,
+              "customer_id": "customer-comparison-research-01",
+              "sector": "professional_services",
+              "signal_id": "signal-007",
+              "source_type": "discussion_board",
+              "text": "A small professional practice is publicly comparing several software subscriptions but lacks a consistent cost and feature analysis."
+            },
+            {
+              "currently_visible": true,
+              "customer_id": "customer-lead-qualification-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1
+              },
+              "sector": "professional_services",
+              "signal_id": "signal-005",
+              "source_type": "business_page",
+              "text": "A solo professional reports spending substantial time responding to inquiries that do not match the services actually offered."
+            }
+          ]
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.search_market",
+      "metered_usage": {
+        "input_tokens": 4086,
+        "output_tokens": 75
+      },
+      "preflight_input_tokens": 4086,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 4086,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01NbJoXZD7GnP8odsqPAkfq8",
+            "input": {
+              "limit": 5,
+              "query": "small business need for data analysis or calculation reports"
+            },
+            "name": "sandbox_search_market",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeAzufBSQkDv9XiKNxTvP",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 4086,
+          "output_tokens": 75,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 0,
+      "day_before_action": 0,
+      "decision": 2,
+      "execution": {
+        "action_id": "f59df50e-64fb-4836-b55e-ac87db01b0c3",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "cost_cents": 1,
+          "offer_id": "offer-001",
+          "ok": true,
+          "response_not_before_day": 1,
+          "status": "pending"
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.send_offer",
+      "metered_usage": {
+        "input_tokens": 4647,
+        "output_tokens": 273
+      },
+      "preflight_input_tokens": 4647,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 4647,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_019vHMLATXKWXwZs8exHGexr",
+            "input": {
+              "price_cents": 3500,
+              "promise_days": 5,
+              "scope": "A structured cost-and-feature comparison report covering the software subscriptions the practice is evaluating: a table listing each product, monthly/annual price, key features relevant to the practice's stated needs, and a written summary of tradeoffs and a recommendation based solely on the information the customer supplies about their requirements and the products under consideration.",
+              "signal_id": "signal-007",
+              "solution_tags": [
+                "comparison-report",
+                "cost-analysis",
+                "feature-matrix",
+                "professional-services"
+              ]
+            },
+            "name": "sandbox_send_offer",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeAzvBByN7QTeggqxEwA4",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 4647,
+          "output_tokens": 273,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 1,
+      "day_before_action": 0,
+      "decision": 3,
+      "execution": {
+        "action_id": "d190da74-7730-4502-8310-1ccd8113872b",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "advanced_days": 1,
+          "capital": {
+            "balance_cents": 24906,
+            "earned_revenue_cents": 0,
+            "expense_cents": 7,
+            "model_api_cost_cents": 4,
+            "model_api_cost_units": 3172200,
+            "model_input_tokens": 13926,
+            "model_output_tokens": 387,
+            "owner_capital_cents": 24913
+          },
+          "contracts": [],
+          "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+          "day": 1,
+          "discovered_signals": [
+            {
+              "currently_visible": true,
+              "customer_id": "customer-documentation-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1
+              },
+              "sector": "independent_media",
+              "signal_id": "signal-002",
+              "source_type": "creator_post",
+              "text": "An independent audio publisher mentions that useful interviews are difficult for its audience to search and reference later."
+            },
+            {
+              "currently_visible": true,
+              "customer_id": "customer-lead-qualification-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1
+              },
+              "sector": "professional_services",
+              "signal_id": "signal-005",
+              "source_type": "business_page",
+              "text": "A solo professional reports spending substantial time responding to inquiries that do not match the services actually offered."
+            },
+            {
+              "currently_visible": true,
+              "customer_id": "customer-comparison-research-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1
+              },
+              "sector": "professional_services",
+              "signal_id": "signal-007",
+              "source_type": "discussion_board",
+              "text": "A small professional practice is publicly comparing several software subscriptions but lacks a consistent cost and feature analysis."
+            }
+          ],
+          "horizon_days": 30,
+          "inbox": [
+            {
+              "day": 1,
+              "from": "signal-007",
+              "offer_id": "offer-001",
+              "type": "offer_declined"
+            }
+          ],
+          "offers": [
+            {
+              "offer_id": "offer-001",
+              "price_cents": 3500,
+              "promise_days": 5,
+              "response_day": 1,
+              "scope": "A structured cost-and-feature comparison report covering the software subscriptions the practice is evaluating: a table listing each product, monthly/annual price, key features relevant to the practice's stated needs, and a written summary of tradeoffs and a recommendation based solely on the information the customer supplies about their requirements and the products under consideration.",
+              "sent_day": 0,
+              "signal_id": "signal-007",
+              "solution_tags": [
+                "comparison-report",
+                "cost-analysis",
+                "feature-matrix",
+                "professional-services"
+              ],
+              "status": "declined"
+            }
+          ],
+          "ok": true,
+          "public_events": [
+            {
+              "day": 1,
+              "kind": "operating_cost_up",
+              "summary": "Routine external-service costs are temporarily higher today."
+            }
+          ],
+          "run_id": "40e07186f869",
+          "token_tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "world_commitment": "75ae29c2dc9939ae625d80ca9287c0f54bc107c217d46d18537ea9db160dfa91"
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.wait",
+      "metered_usage": {
+        "input_tokens": 5193,
+        "output_tokens": 39
+      },
+      "preflight_input_tokens": 5193,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 5193,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_017ZWSj25ZTfXuRm4mXTdRet",
+            "input": {
+              "days": 1
+            },
+            "name": "sandbox_wait",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeAzvoVXfhWoHPzvanRYk",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 5193,
+          "output_tokens": 39,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 1,
+      "day_before_action": 1,
+      "decision": 4,
+      "execution": {
+        "action_id": "0a1816af-4e83-44ac-b6ae-c29e43443f99",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "cost_cents": 2,
+          "offer_id": "offer-002",
+          "ok": true,
+          "response_not_before_day": 2,
+          "status": "pending"
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.send_offer",
+      "metered_usage": {
+        "input_tokens": 5339,
+        "output_tokens": 278
+      },
+      "preflight_input_tokens": 5339,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 5339,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_0112VbyQr8LMJRFAe83DiyJ9",
+            "input": {
+              "price_cents": 3000,
+              "promise_days": 4,
+              "scope": "A written inquiry-screening framework for the solo professional's business: a short set of qualifying questions/criteria to filter incoming inquiries against the services actually offered, a simple decision checklist for staff to quickly triage requests, and template response language for redirecting non-matching inquiries, based solely on the service list and criteria the customer supplies.",
+              "signal_id": "signal-005",
+              "solution_tags": [
+                "lead-qualification",
+                "inquiry-screening",
+                "professional-services",
+                "triage-checklist"
+              ]
+            },
+            "name": "sandbox_send_offer",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeAzwDjYZLjU3tN9r7K6p",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 5339,
+          "output_tokens": 278,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 2,
+      "day_before_action": 1,
+      "decision": 5,
+      "execution": {
+        "action_id": "8d3b2296-f1e2-401a-8e7c-d7929e74b2eb",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "advanced_days": 1,
+          "capital": {
+            "balance_cents": 24902,
+            "earned_revenue_cents": 0,
+            "expense_cents": 11,
+            "model_api_cost_cents": 6,
+            "model_api_cost_units": 5719600,
+            "model_input_tokens": 25078,
+            "model_output_tokens": 704,
+            "owner_capital_cents": 24913
+          },
+          "contracts": [],
+          "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+          "day": 2,
+          "discovered_signals": [
+            {
+              "currently_visible": true,
+              "customer_id": "customer-documentation-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1
+              },
+              "sector": "independent_media",
+              "signal_id": "signal-002",
+              "source_type": "creator_post",
+              "text": "An independent audio publisher mentions that useful interviews are difficult for its audience to search and reference later."
+            },
+            {
+              "currently_visible": true,
+              "customer_id": "customer-lead-qualification-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2
+              },
+              "sector": "professional_services",
+              "signal_id": "signal-005",
+              "source_type": "business_page",
+              "text": "A solo professional reports spending substantial time responding to inquiries that do not match the services actually offered."
+            },
+            {
+              "currently_visible": true,
+              "customer_id": "customer-comparison-research-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1
+              },
+              "sector": "professional_services",
+              "signal_id": "signal-007",
+              "source_type": "discussion_board",
+              "text": "A small professional practice is publicly comparing several software subscriptions but lacks a consistent cost and feature analysis."
+            }
+          ],
+          "horizon_days": 30,
+          "inbox": [
+            {
+              "day": 1,
+              "from": "signal-007",
+              "offer_id": "offer-001",
+              "type": "offer_declined"
+            },
+            {
+              "day": 2,
+              "from": "signal-005",
+              "offer_id": "offer-002",
+              "type": "offer_declined"
+            }
+          ],
+          "offers": [
+            {
+              "offer_id": "offer-001",
+              "price_cents": 3500,
+              "promise_days": 5,
+              "response_day": 1,
+              "scope": "A structured cost-and-feature comparison report covering the software subscriptions the practice is evaluating: a table listing each product, monthly/annual price, key features relevant to the practice's stated needs, and a written summary of tradeoffs and a recommendation based solely on the information the customer supplies about their requirements and the products under consideration.",
+              "sent_day": 0,
+              "signal_id": "signal-007",
+              "solution_tags": [
+                "comparison-report",
+                "cost-analysis",
+                "feature-matrix",
+                "professional-services"
+              ],
+              "status": "declined"
+            },
+            {
+              "offer_id": "offer-002",
+              "price_cents": 3000,
+              "promise_days": 4,
+              "response_day": 2,
+              "scope": "A written inquiry-screening framework for the solo professional's business: a short set of qualifying questions/criteria to filter incoming inquiries against the services actually offered, a simple decision checklist for staff to quickly triage requests, and template response language for redirecting non-matching inquiries, based solely on the service list and criteria the customer supplies.",
+              "sent_day": 1,
+              "signal_id": "signal-005",
+              "solution_tags": [
+                "inquiry-screening",
+                "lead-qualification",
+                "professional-services",
+                "triage-checklist"
+              ],
+              "status": "declined"
+            }
+          ],
+          "ok": true,
+          "public_events": [
+            {
+              "day": 2,
+              "kind": "operating_cost_up",
+              "summary": "Routine external-service costs are temporarily higher today."
+            }
+          ],
+          "run_id": "40e07186f869",
+          "token_tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "world_commitment": "75ae29c2dc9939ae625d80ca9287c0f54bc107c217d46d18537ea9db160dfa91"
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.wait",
+      "metered_usage": {
+        "input_tokens": 5813,
+        "output_tokens": 39
+      },
+      "preflight_input_tokens": 5813,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 5813,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_011sBhXPR9cUG4iBXGYpFx8j",
+            "input": {
+              "days": 1
+            },
+            "name": "sandbox_wait",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeAzwhkmcjNNg7DvbKGRW",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 5813,
+          "output_tokens": 39,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 2,
+      "day_before_action": 2,
+      "decision": 6,
+      "execution": {
+        "action_id": "fbddaaac-e71f-4f0c-8b37-0187dc7a1096",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "cost_cents": 2,
+          "offer_id": "offer-003",
+          "ok": true,
+          "response_not_before_day": 3,
+          "status": "pending"
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.send_offer",
+      "metered_usage": {
+        "input_tokens": 5919,
+        "output_tokens": 263
+      },
+      "preflight_input_tokens": 5919,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 5919,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01BuEmtW2yvaywfBVfU6JWR9",
+            "input": {
+              "price_cents": 3000,
+              "promise_days": 5,
+              "scope": "A searchable episode index for the publisher's interview catalog: for each supplied episode, a structured entry with title, guest name, date, and a list of topic/timestamp markers derived solely from the transcript or notes the customer supplies, organized into a single reference document so listeners can find and cite specific interview segments later.",
+              "signal_id": "signal-002",
+              "solution_tags": [
+                "episode-index",
+                "searchable-reference",
+                "audio-content",
+                "independent-media"
+              ]
+            },
+            "name": "sandbox_send_offer",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeAzxAw9Sd3z7Ru75HRXa",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 5919,
+          "output_tokens": 263,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 3,
+      "day_before_action": 2,
+      "decision": 7,
+      "execution": {
+        "action_id": "912aef6f-a660-49f5-9d44-72d41d565539",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "advanced_days": 1,
+          "capital": {
+            "balance_cents": 24897,
+            "earned_revenue_cents": 0,
+            "expense_cents": 16,
+            "model_api_cost_cents": 9,
+            "model_api_cost_units": 8478200,
+            "model_input_tokens": 37361,
+            "model_output_tokens": 1006,
+            "owner_capital_cents": 24913
+          },
+          "contracts": [],
+          "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+          "day": 3,
+          "discovered_signals": [
+            {
+              "currently_visible": true,
+              "customer_id": "customer-documentation-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2
+              },
+              "sector": "independent_media",
+              "signal_id": "signal-002",
+              "source_type": "creator_post",
+              "text": "An independent audio publisher mentions that useful interviews are difficult for its audience to search and reference later."
+            },
+            {
+              "currently_visible": true,
+              "customer_id": "customer-lead-qualification-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2
+              },
+              "sector": "professional_services",
+              "signal_id": "signal-005",
+              "source_type": "business_page",
+              "text": "A solo professional reports spending substantial time responding to inquiries that do not match the services actually offered."
+            },
+            {
+              "currently_visible": true,
+              "customer_id": "customer-comparison-research-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1
+              },
+              "sector": "professional_services",
+              "signal_id": "signal-007",
+              "source_type": "discussion_board",
+              "text": "A small professional practice is publicly comparing several software subscriptions but lacks a consistent cost and feature analysis."
+            }
+          ],
+          "horizon_days": 30,
+          "inbox": [
+            {
+              "day": 1,
+              "from": "signal-007",
+              "offer_id": "offer-001",
+              "type": "offer_declined"
+            },
+            {
+              "day": 2,
+              "from": "signal-005",
+              "offer_id": "offer-002",
+              "type": "offer_declined"
+            }
+          ],
+          "offers": [
+            {
+              "offer_id": "offer-001",
+              "price_cents": 3500,
+              "promise_days": 5,
+              "response_day": 1,
+              "scope": "A structured cost-and-feature comparison report covering the software subscriptions the practice is evaluating: a table listing each product, monthly/annual price, key features relevant to the practice's stated needs, and a written summary of tradeoffs and a recommendation based solely on the information the customer supplies about their requirements and the products under consideration.",
+              "sent_day": 0,
+              "signal_id": "signal-007",
+              "solution_tags": [
+                "comparison-report",
+                "cost-analysis",
+                "feature-matrix",
+                "professional-services"
+              ],
+              "status": "declined"
+            },
+            {
+              "offer_id": "offer-002",
+              "price_cents": 3000,
+              "promise_days": 4,
+              "response_day": 2,
+              "scope": "A written inquiry-screening framework for the solo professional's business: a short set of qualifying questions/criteria to filter incoming inquiries against the services actually offered, a simple decision checklist for staff to quickly triage requests, and template response language for redirecting non-matching inquiries, based solely on the service list and criteria the customer supplies.",
+              "sent_day": 1,
+              "signal_id": "signal-005",
+              "solution_tags": [
+                "inquiry-screening",
+                "lead-qualification",
+                "professional-services",
+                "triage-checklist"
+              ],
+              "status": "declined"
+            },
+            {
+              "offer_id": "offer-003",
+              "price_cents": 3000,
+              "promise_days": 5,
+              "response_day": 3,
+              "scope": "A searchable episode index for the publisher's interview catalog: for each supplied episode, a structured entry with title, guest name, date, and a list of topic/timestamp markers derived solely from the transcript or notes the customer supplies, organized into a single reference document so listeners can find and cite specific interview segments later.",
+              "sent_day": 2,
+              "signal_id": "signal-002",
+              "solution_tags": [
+                "audio-content",
+                "episode-index",
+                "independent-media",
+                "searchable-reference"
+              ],
+              "status": "no_response"
+            }
+          ],
+          "ok": true,
+          "public_events": [
+            {
+              "day": 3,
+              "kind": "demand_up",
+              "summary": "Public demand strengthened in local_services."
+            }
+          ],
+          "run_id": "40e07186f869",
+          "token_tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "world_commitment": "75ae29c2dc9939ae625d80ca9287c0f54bc107c217d46d18537ea9db160dfa91"
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.wait",
+      "metered_usage": {
+        "input_tokens": 6364,
+        "output_tokens": 39
+      },
+      "preflight_input_tokens": 6364,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 6364,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_018keUtxeLYC3GmhrnSNsPLo",
+            "input": {
+              "days": 1
+            },
+            "name": "sandbox_wait",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeAzxe9WkFXacv3bKueQn",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 6364,
+          "output_tokens": 39,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 5,
+      "day_before_action": 3,
+      "decision": 8,
+      "execution": {
+        "action_id": "c592fe19-d9f4-4d14-8aee-113b071528dd",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "advanced_days": 2,
+          "capital": {
+            "balance_cents": 24896,
+            "earned_revenue_cents": 0,
+            "expense_cents": 17,
+            "model_api_cost_cents": 10,
+            "model_api_cost_units": 9780200,
+            "model_input_tokens": 43676,
+            "model_output_tokens": 1045,
+            "owner_capital_cents": 24913
+          },
+          "contracts": [],
+          "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+          "day": 5,
+          "discovered_signals": [
+            {
+              "currently_visible": true,
+              "customer_id": "customer-documentation-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2
+              },
+              "sector": "independent_media",
+              "signal_id": "signal-002",
+              "source_type": "creator_post",
+              "text": "An independent audio publisher mentions that useful interviews are difficult for its audience to search and reference later."
+            },
+            {
+              "currently_visible": true,
+              "customer_id": "customer-lead-qualification-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2
+              },
+              "sector": "professional_services",
+              "signal_id": "signal-005",
+              "source_type": "business_page",
+              "text": "A solo professional reports spending substantial time responding to inquiries that do not match the services actually offered."
+            },
+            {
+              "currently_visible": true,
+              "customer_id": "customer-comparison-research-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1
+              },
+              "sector": "professional_services",
+              "signal_id": "signal-007",
+              "source_type": "discussion_board",
+              "text": "A small professional practice is publicly comparing several software subscriptions but lacks a consistent cost and feature analysis."
+            }
+          ],
+          "horizon_days": 30,
+          "inbox": [
+            {
+              "day": 1,
+              "from": "signal-007",
+              "offer_id": "offer-001",
+              "type": "offer_declined"
+            },
+            {
+              "day": 2,
+              "from": "signal-005",
+              "offer_id": "offer-002",
+              "type": "offer_declined"
+            }
+          ],
+          "offers": [
+            {
+              "offer_id": "offer-001",
+              "price_cents": 3500,
+              "promise_days": 5,
+              "response_day": 1,
+              "scope": "A structured cost-and-feature comparison report covering the software subscriptions the practice is evaluating: a table listing each product, monthly/annual price, key features relevant to the practice's stated needs, and a written summary of tradeoffs and a recommendation based solely on the information the customer supplies about their requirements and the products under consideration.",
+              "sent_day": 0,
+              "signal_id": "signal-007",
+              "solution_tags": [
+                "comparison-report",
+                "cost-analysis",
+                "feature-matrix",
+                "professional-services"
+              ],
+              "status": "declined"
+            },
+            {
+              "offer_id": "offer-002",
+              "price_cents": 3000,
+              "promise_days": 4,
+              "response_day": 2,
+              "scope": "A written inquiry-screening framework for the solo professional's business: a short set of qualifying questions/criteria to filter incoming inquiries against the services actually offered, a simple decision checklist for staff to quickly triage requests, and template response language for redirecting non-matching inquiries, based solely on the service list and criteria the customer supplies.",
+              "sent_day": 1,
+              "signal_id": "signal-005",
+              "solution_tags": [
+                "inquiry-screening",
+                "lead-qualification",
+                "professional-services",
+                "triage-checklist"
+              ],
+              "status": "declined"
+            },
+            {
+              "offer_id": "offer-003",
+              "price_cents": 3000,
+              "promise_days": 5,
+              "response_day": 3,
+              "scope": "A searchable episode index for the publisher's interview catalog: for each supplied episode, a structured entry with title, guest name, date, and a list of topic/timestamp markers derived solely from the transcript or notes the customer supplies, organized into a single reference document so listeners can find and cite specific interview segments later.",
+              "sent_day": 2,
+              "signal_id": "signal-002",
+              "solution_tags": [
+                "audio-content",
+                "episode-index",
+                "independent-media",
+                "searchable-reference"
+              ],
+              "status": "no_response"
+            }
+          ],
+          "ok": true,
+          "public_events": [
+            {
+              "day": 5,
+              "kind": "market_access_up",
+              "summary": "Public-market search is unusually responsive today."
+            }
+          ],
+          "run_id": "40e07186f869",
+          "token_tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "world_commitment": "75ae29c2dc9939ae625d80ca9287c0f54bc107c217d46d18537ea9db160dfa91"
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.wait",
+      "metered_usage": {
+        "input_tokens": 6315,
+        "output_tokens": 39
+      },
+      "preflight_input_tokens": 6315,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 6315,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01TvafEuZZFuhP9LuphpZEuq",
+            "input": {
+              "days": 2
+            },
+            "name": "sandbox_wait",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeAzxvx49EH2R27w6pGK4",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 6315,
+          "output_tokens": 39,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 7,
+      "day_before_action": 5,
+      "decision": 9,
+      "execution": {
+        "action_id": "e1f73ff6-f1a5-4698-9a91-690089464f26",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "advanced_days": 2,
+          "capital": {
+            "balance_cents": 24894,
+            "earned_revenue_cents": 0,
+            "expense_cents": 19,
+            "model_api_cost_cents": 12,
+            "model_api_cost_units": 11044800,
+            "model_input_tokens": 49804,
+            "model_output_tokens": 1084,
+            "owner_capital_cents": 24913
+          },
+          "contracts": [],
+          "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+          "day": 7,
+          "discovered_signals": [
+            {
+              "currently_visible": true,
+              "customer_id": "customer-documentation-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2
+              },
+              "sector": "independent_media",
+              "signal_id": "signal-002",
+              "source_type": "creator_post",
+              "text": "An independent audio publisher mentions that useful interviews are difficult for its audience to search and reference later."
+            },
+            {
+              "currently_visible": true,
+              "customer_id": "customer-lead-qualification-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2
+              },
+              "sector": "professional_services",
+              "signal_id": "signal-005",
+              "source_type": "business_page",
+              "text": "A solo professional reports spending substantial time responding to inquiries that do not match the services actually offered."
+            },
+            {
+              "currently_visible": true,
+              "customer_id": "customer-comparison-research-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1
+              },
+              "sector": "professional_services",
+              "signal_id": "signal-007",
+              "source_type": "discussion_board",
+              "text": "A small professional practice is publicly comparing several software subscriptions but lacks a consistent cost and feature analysis."
+            }
+          ],
+          "horizon_days": 30,
+          "inbox": [
+            {
+              "day": 1,
+              "from": "signal-007",
+              "offer_id": "offer-001",
+              "type": "offer_declined"
+            },
+            {
+              "day": 2,
+              "from": "signal-005",
+              "offer_id": "offer-002",
+              "type": "offer_declined"
+            }
+          ],
+          "offers": [
+            {
+              "offer_id": "offer-001",
+              "price_cents": 3500,
+              "promise_days": 5,
+              "response_day": 1,
+              "scope": "A structured cost-and-feature comparison report covering the software subscriptions the practice is evaluating: a table listing each product, monthly/annual price, key features relevant to the practice's stated needs, and a written summary of tradeoffs and a recommendation based solely on the information the customer supplies about their requirements and the products under consideration.",
+              "sent_day": 0,
+              "signal_id": "signal-007",
+              "solution_tags": [
+                "comparison-report",
+                "cost-analysis",
+                "feature-matrix",
+                "professional-services"
+              ],
+              "status": "declined"
+            },
+            {
+              "offer_id": "offer-002",
+              "price_cents": 3000,
+              "promise_days": 4,
+              "response_day": 2,
+              "scope": "A written inquiry-screening framework for the solo professional's business: a short set of qualifying questions/criteria to filter incoming inquiries against the services actually offered, a simple decision checklist for staff to quickly triage requests, and template response language for redirecting non-matching inquiries, based solely on the service list and criteria the customer supplies.",
+              "sent_day": 1,
+              "signal_id": "signal-005",
+              "solution_tags": [
+                "inquiry-screening",
+                "lead-qualification",
+                "professional-services",
+                "triage-checklist"
+              ],
+              "status": "declined"
+            },
+            {
+              "offer_id": "offer-003",
+              "price_cents": 3000,
+              "promise_days": 5,
+              "response_day": 3,
+              "scope": "A searchable episode index for the publisher's interview catalog: for each supplied episode, a structured entry with title, guest name, date, and a list of topic/timestamp markers derived solely from the transcript or notes the customer supplies, organized into a single reference document so listeners can find and cite specific interview segments later.",
+              "sent_day": 2,
+              "signal_id": "signal-002",
+              "solution_tags": [
+                "audio-content",
+                "episode-index",
+                "independent-media",
+                "searchable-reference"
+              ],
+              "status": "no_response"
+            }
+          ],
+          "ok": true,
+          "public_events": [],
+          "run_id": "40e07186f869",
+          "token_tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "world_commitment": "75ae29c2dc9939ae625d80ca9287c0f54bc107c217d46d18537ea9db160dfa91"
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.wait",
+      "metered_usage": {
+        "input_tokens": 6128,
+        "output_tokens": 39
+      },
+      "preflight_input_tokens": 6128,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 6128,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 3
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_018rBxaUUgMeUW2E5E9Kpv5V",
+            "input": {
+              "days": 2
+            },
+            "name": "sandbox_wait",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeAzyE4SxZSQ8gsMxKV1m",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 6128,
+          "output_tokens": 39,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 10,
+      "day_before_action": 7,
+      "decision": 10,
+      "execution": {
+        "action_id": "c5943052-25ce-49b2-a7b8-0fa53d91412a",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "advanced_days": 3,
+          "capital": {
+            "balance_cents": 24893,
+            "earned_revenue_cents": 0,
+            "expense_cents": 20,
+            "model_api_cost_cents": 13,
+            "model_api_cost_units": 12302200,
+            "model_input_tokens": 55896,
+            "model_output_tokens": 1123,
+            "owner_capital_cents": 24913
+          },
+          "contracts": [],
+          "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+          "day": 10,
+          "discovered_signals": [
+            {
+              "currently_visible": true,
+              "customer_id": "customer-documentation-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2
+              },
+              "sector": "independent_media",
+              "signal_id": "signal-002",
+              "source_type": "creator_post",
+              "text": "An independent audio publisher mentions that useful interviews are difficult for its audience to search and reference later."
+            },
+            {
+              "currently_visible": true,
+              "customer_id": "customer-lead-qualification-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2
+              },
+              "sector": "professional_services",
+              "signal_id": "signal-005",
+              "source_type": "business_page",
+              "text": "A solo professional reports spending substantial time responding to inquiries that do not match the services actually offered."
+            },
+            {
+              "currently_visible": true,
+              "customer_id": "customer-comparison-research-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1
+              },
+              "sector": "professional_services",
+              "signal_id": "signal-007",
+              "source_type": "discussion_board",
+              "text": "A small professional practice is publicly comparing several software subscriptions but lacks a consistent cost and feature analysis."
+            }
+          ],
+          "horizon_days": 30,
+          "inbox": [
+            {
+              "day": 1,
+              "from": "signal-007",
+              "offer_id": "offer-001",
+              "type": "offer_declined"
+            },
+            {
+              "day": 2,
+              "from": "signal-005",
+              "offer_id": "offer-002",
+              "type": "offer_declined"
+            }
+          ],
+          "offers": [
+            {
+              "offer_id": "offer-001",
+              "price_cents": 3500,
+              "promise_days": 5,
+              "response_day": 1,
+              "scope": "A structured cost-and-feature comparison report covering the software subscriptions the practice is evaluating: a table listing each product, monthly/annual price, key features relevant to the practice's stated needs, and a written summary of tradeoffs and a recommendation based solely on the information the customer supplies about their requirements and the products under consideration.",
+              "sent_day": 0,
+              "signal_id": "signal-007",
+              "solution_tags": [
+                "comparison-report",
+                "cost-analysis",
+                "feature-matrix",
+                "professional-services"
+              ],
+              "status": "declined"
+            },
+            {
+              "offer_id": "offer-002",
+              "price_cents": 3000,
+              "promise_days": 4,
+              "response_day": 2,
+              "scope": "A written inquiry-screening framework for the solo professional's business: a short set of qualifying questions/criteria to filter incoming inquiries against the services actually offered, a simple decision checklist for staff to quickly triage requests, and template response language for redirecting non-matching inquiries, based solely on the service list and criteria the customer supplies.",
+              "sent_day": 1,
+              "signal_id": "signal-005",
+              "solution_tags": [
+                "inquiry-screening",
+                "lead-qualification",
+                "professional-services",
+                "triage-checklist"
+              ],
+              "status": "declined"
+            },
+            {
+              "offer_id": "offer-003",
+              "price_cents": 3000,
+              "promise_days": 5,
+              "response_day": 3,
+              "scope": "A searchable episode index for the publisher's interview catalog: for each supplied episode, a structured entry with title, guest name, date, and a list of topic/timestamp markers derived solely from the transcript or notes the customer supplies, organized into a single reference document so listeners can find and cite specific interview segments later.",
+              "sent_day": 2,
+              "signal_id": "signal-002",
+              "solution_tags": [
+                "audio-content",
+                "episode-index",
+                "independent-media",
+                "searchable-reference"
+              ],
+              "status": "no_response"
+            }
+          ],
+          "ok": true,
+          "public_events": [
+            {
+              "day": 10,
+              "kind": "market_access_down",
+              "summary": "The public-market search platform is unavailable today."
+            }
+          ],
+          "run_id": "40e07186f869",
+          "token_tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "world_commitment": "75ae29c2dc9939ae625d80ca9287c0f54bc107c217d46d18537ea9db160dfa91"
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.wait",
+      "metered_usage": {
+        "input_tokens": 6092,
+        "output_tokens": 39
+      },
+      "preflight_input_tokens": 6092,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 6092,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01CytPhWgVGwu3ZuosYVhTJE",
+            "input": {
+              "days": 3
+            },
+            "name": "sandbox_wait",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeAzyYCrV24vtRf2nQnnC",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 6092,
+          "output_tokens": 39,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 13,
+      "day_before_action": 10,
+      "decision": 11,
+      "execution": {
+        "action_id": "b1834708-b906-49bd-8757-ba89baa02836",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "advanced_days": 3,
+          "capital": {
+            "balance_cents": 24892,
+            "earned_revenue_cents": 0,
+            "expense_cents": 21,
+            "model_api_cost_cents": 14,
+            "model_api_cost_units": 13528000,
+            "model_input_tokens": 61830,
+            "model_output_tokens": 1162,
+            "owner_capital_cents": 24913
+          },
+          "contracts": [],
+          "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+          "day": 13,
+          "discovered_signals": [
+            {
+              "currently_visible": true,
+              "customer_id": "customer-documentation-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2
+              },
+              "sector": "independent_media",
+              "signal_id": "signal-002",
+              "source_type": "creator_post",
+              "text": "An independent audio publisher mentions that useful interviews are difficult for its audience to search and reference later."
+            },
+            {
+              "currently_visible": true,
+              "customer_id": "customer-lead-qualification-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2
+              },
+              "sector": "professional_services",
+              "signal_id": "signal-005",
+              "source_type": "business_page",
+              "text": "A solo professional reports spending substantial time responding to inquiries that do not match the services actually offered."
+            },
+            {
+              "currently_visible": true,
+              "customer_id": "customer-comparison-research-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1
+              },
+              "sector": "professional_services",
+              "signal_id": "signal-007",
+              "source_type": "discussion_board",
+              "text": "A small professional practice is publicly comparing several software subscriptions but lacks a consistent cost and feature analysis."
+            }
+          ],
+          "horizon_days": 30,
+          "inbox": [
+            {
+              "day": 1,
+              "from": "signal-007",
+              "offer_id": "offer-001",
+              "type": "offer_declined"
+            },
+            {
+              "day": 2,
+              "from": "signal-005",
+              "offer_id": "offer-002",
+              "type": "offer_declined"
+            }
+          ],
+          "offers": [
+            {
+              "offer_id": "offer-001",
+              "price_cents": 3500,
+              "promise_days": 5,
+              "response_day": 1,
+              "scope": "A structured cost-and-feature comparison report covering the software subscriptions the practice is evaluating: a table listing each product, monthly/annual price, key features relevant to the practice's stated needs, and a written summary of tradeoffs and a recommendation based solely on the information the customer supplies about their requirements and the products under consideration.",
+              "sent_day": 0,
+              "signal_id": "signal-007",
+              "solution_tags": [
+                "comparison-report",
+                "cost-analysis",
+                "feature-matrix",
+                "professional-services"
+              ],
+              "status": "declined"
+            },
+            {
+              "offer_id": "offer-002",
+              "price_cents": 3000,
+              "promise_days": 4,
+              "response_day": 2,
+              "scope": "A written inquiry-screening framework for the solo professional's business: a short set of qualifying questions/criteria to filter incoming inquiries against the services actually offered, a simple decision checklist for staff to quickly triage requests, and template response language for redirecting non-matching inquiries, based solely on the service list and criteria the customer supplies.",
+              "sent_day": 1,
+              "signal_id": "signal-005",
+              "solution_tags": [
+                "inquiry-screening",
+                "lead-qualification",
+                "professional-services",
+                "triage-checklist"
+              ],
+              "status": "declined"
+            },
+            {
+              "offer_id": "offer-003",
+              "price_cents": 3000,
+              "promise_days": 5,
+              "response_day": 3,
+              "scope": "A searchable episode index for the publisher's interview catalog: for each supplied episode, a structured entry with title, guest name, date, and a list of topic/timestamp markers derived solely from the transcript or notes the customer supplies, organized into a single reference document so listeners can find and cite specific interview segments later.",
+              "sent_day": 2,
+              "signal_id": "signal-002",
+              "solution_tags": [
+                "audio-content",
+                "episode-index",
+                "independent-media",
+                "searchable-reference"
+              ],
+              "status": "no_response"
+            }
+          ],
+          "ok": true,
+          "public_events": [
+            {
+              "day": 13,
+              "kind": "demand_up",
+              "summary": "Public demand strengthened in micro_manufacturing."
+            }
+          ],
+          "run_id": "40e07186f869",
+          "token_tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "world_commitment": "75ae29c2dc9939ae625d80ca9287c0f54bc107c217d46d18537ea9db160dfa91"
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.wait",
+      "metered_usage": {
+        "input_tokens": 5934,
+        "output_tokens": 39
+      },
+      "preflight_input_tokens": 5934,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 5934,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01SH9xTnwB6fj8gpHD5DdCKB",
+            "input": {
+              "days": 3
+            },
+            "name": "sandbox_wait",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeAzyq4cfG4BfzyqKHY4m",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 5934,
+          "output_tokens": 39,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 20,
+      "day_before_action": 13,
+      "decision": 12,
+      "execution": {
+        "action_id": "84c802a6-2e87-44be-86d5-00f0744d50df",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "advanced_days": 7,
+          "capital": {
+            "balance_cents": 24891,
+            "earned_revenue_cents": 0,
+            "expense_cents": 22,
+            "model_api_cost_cents": 15,
+            "model_api_cost_units": 14754200,
+            "model_input_tokens": 67766,
+            "model_output_tokens": 1201,
+            "owner_capital_cents": 24913
+          },
+          "contracts": [],
+          "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+          "day": 20,
+          "discovered_signals": [
+            {
+              "currently_visible": false,
+              "customer_id": "customer-documentation-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2
+              },
+              "sector": "independent_media",
+              "signal_id": "signal-002",
+              "source_type": "creator_post",
+              "text": "An independent audio publisher mentions that useful interviews are difficult for its audience to search and reference later."
+            },
+            {
+              "currently_visible": false,
+              "customer_id": "customer-lead-qualification-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2
+              },
+              "sector": "professional_services",
+              "signal_id": "signal-005",
+              "source_type": "business_page",
+              "text": "A solo professional reports spending substantial time responding to inquiries that do not match the services actually offered."
+            },
+            {
+              "currently_visible": false,
+              "customer_id": "customer-comparison-research-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1
+              },
+              "sector": "professional_services",
+              "signal_id": "signal-007",
+              "source_type": "discussion_board",
+              "text": "A small professional practice is publicly comparing several software subscriptions but lacks a consistent cost and feature analysis."
+            }
+          ],
+          "horizon_days": 30,
+          "inbox": [
+            {
+              "day": 1,
+              "from": "signal-007",
+              "offer_id": "offer-001",
+              "type": "offer_declined"
+            },
+            {
+              "day": 2,
+              "from": "signal-005",
+              "offer_id": "offer-002",
+              "type": "offer_declined"
+            }
+          ],
+          "offers": [
+            {
+              "offer_id": "offer-001",
+              "price_cents": 3500,
+              "promise_days": 5,
+              "response_day": 1,
+              "scope": "A structured cost-and-feature comparison report covering the software subscriptions the practice is evaluating: a table listing each product, monthly/annual price, key features relevant to the practice's stated needs, and a written summary of tradeoffs and a recommendation based solely on the information the customer supplies about their requirements and the products under consideration.",
+              "sent_day": 0,
+              "signal_id": "signal-007",
+              "solution_tags": [
+                "comparison-report",
+                "cost-analysis",
+                "feature-matrix",
+                "professional-services"
+              ],
+              "status": "declined"
+            },
+            {
+              "offer_id": "offer-002",
+              "price_cents": 3000,
+              "promise_days": 4,
+              "response_day": 2,
+              "scope": "A written inquiry-screening framework for the solo professional's business: a short set of qualifying questions/criteria to filter incoming inquiries against the services actually offered, a simple decision checklist for staff to quickly triage requests, and template response language for redirecting non-matching inquiries, based solely on the service list and criteria the customer supplies.",
+              "sent_day": 1,
+              "signal_id": "signal-005",
+              "solution_tags": [
+                "inquiry-screening",
+                "lead-qualification",
+                "professional-services",
+                "triage-checklist"
+              ],
+              "status": "declined"
+            },
+            {
+              "offer_id": "offer-003",
+              "price_cents": 3000,
+              "promise_days": 5,
+              "response_day": 3,
+              "scope": "A searchable episode index for the publisher's interview catalog: for each supplied episode, a structured entry with title, guest name, date, and a list of topic/timestamp markers derived solely from the transcript or notes the customer supplies, organized into a single reference document so listeners can find and cite specific interview segments later.",
+              "sent_day": 2,
+              "signal_id": "signal-002",
+              "solution_tags": [
+                "audio-content",
+                "episode-index",
+                "independent-media",
+                "searchable-reference"
+              ],
+              "status": "no_response"
+            }
+          ],
+          "ok": true,
+          "public_events": [],
+          "run_id": "40e07186f869",
+          "token_tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "world_commitment": "75ae29c2dc9939ae625d80ca9287c0f54bc107c217d46d18537ea9db160dfa91"
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.wait",
+      "metered_usage": {
+        "input_tokens": 5936,
+        "output_tokens": 39
+      },
+      "preflight_input_tokens": 5936,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 5936,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01Y2wStoamTmsLM7G1UYCBpp",
+            "input": {
+              "days": 7
+            },
+            "name": "sandbox_wait",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeAzyzwBwG2ejqPe9CSp6",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 5936,
+          "output_tokens": 39,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 27,
+      "day_before_action": 20,
+      "decision": 13,
+      "execution": {
+        "action_id": "3179e07f-10aa-480b-a9a3-0d97cabc191b",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "advanced_days": 7,
+          "capital": {
+            "balance_cents": 24890,
+            "earned_revenue_cents": 0,
+            "expense_cents": 23,
+            "model_api_cost_cents": 16,
+            "model_api_cost_units": 15937000,
+            "model_input_tokens": 73485,
+            "model_output_tokens": 1240,
+            "owner_capital_cents": 24913
+          },
+          "contracts": [],
+          "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+          "day": 27,
+          "discovered_signals": [
+            {
+              "currently_visible": false,
+              "customer_id": "customer-documentation-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2
+              },
+              "sector": "independent_media",
+              "signal_id": "signal-002",
+              "source_type": "creator_post",
+              "text": "An independent audio publisher mentions that useful interviews are difficult for its audience to search and reference later."
+            },
+            {
+              "currently_visible": false,
+              "customer_id": "customer-lead-qualification-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2
+              },
+              "sector": "professional_services",
+              "signal_id": "signal-005",
+              "source_type": "business_page",
+              "text": "A solo professional reports spending substantial time responding to inquiries that do not match the services actually offered."
+            },
+            {
+              "currently_visible": false,
+              "customer_id": "customer-comparison-research-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1
+              },
+              "sector": "professional_services",
+              "signal_id": "signal-007",
+              "source_type": "discussion_board",
+              "text": "A small professional practice is publicly comparing several software subscriptions but lacks a consistent cost and feature analysis."
+            }
+          ],
+          "horizon_days": 30,
+          "inbox": [
+            {
+              "day": 1,
+              "from": "signal-007",
+              "offer_id": "offer-001",
+              "type": "offer_declined"
+            },
+            {
+              "day": 2,
+              "from": "signal-005",
+              "offer_id": "offer-002",
+              "type": "offer_declined"
+            }
+          ],
+          "offers": [
+            {
+              "offer_id": "offer-001",
+              "price_cents": 3500,
+              "promise_days": 5,
+              "response_day": 1,
+              "scope": "A structured cost-and-feature comparison report covering the software subscriptions the practice is evaluating: a table listing each product, monthly/annual price, key features relevant to the practice's stated needs, and a written summary of tradeoffs and a recommendation based solely on the information the customer supplies about their requirements and the products under consideration.",
+              "sent_day": 0,
+              "signal_id": "signal-007",
+              "solution_tags": [
+                "comparison-report",
+                "cost-analysis",
+                "feature-matrix",
+                "professional-services"
+              ],
+              "status": "declined"
+            },
+            {
+              "offer_id": "offer-002",
+              "price_cents": 3000,
+              "promise_days": 4,
+              "response_day": 2,
+              "scope": "A written inquiry-screening framework for the solo professional's business: a short set of qualifying questions/criteria to filter incoming inquiries against the services actually offered, a simple decision checklist for staff to quickly triage requests, and template response language for redirecting non-matching inquiries, based solely on the service list and criteria the customer supplies.",
+              "sent_day": 1,
+              "signal_id": "signal-005",
+              "solution_tags": [
+                "inquiry-screening",
+                "lead-qualification",
+                "professional-services",
+                "triage-checklist"
+              ],
+              "status": "declined"
+            },
+            {
+              "offer_id": "offer-003",
+              "price_cents": 3000,
+              "promise_days": 5,
+              "response_day": 3,
+              "scope": "A searchable episode index for the publisher's interview catalog: for each supplied episode, a structured entry with title, guest name, date, and a list of topic/timestamp markers derived solely from the transcript or notes the customer supplies, organized into a single reference document so listeners can find and cite specific interview segments later.",
+              "sent_day": 2,
+              "signal_id": "signal-002",
+              "solution_tags": [
+                "audio-content",
+                "episode-index",
+                "independent-media",
+                "searchable-reference"
+              ],
+              "status": "no_response"
+            }
+          ],
+          "ok": true,
+          "public_events": [
+            {
+              "day": 27,
+              "kind": "market_access_up",
+              "summary": "Public-market search is unusually responsive today."
+            }
+          ],
+          "run_id": "40e07186f869",
+          "token_tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "world_commitment": "75ae29c2dc9939ae625d80ca9287c0f54bc107c217d46d18537ea9db160dfa91"
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.wait",
+      "metered_usage": {
+        "input_tokens": 5719,
+        "output_tokens": 39
+      },
+      "preflight_input_tokens": 5719,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 5719,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 2
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01JAAkYLCzF4kTFGnnaBzi8F",
+            "input": {
+              "days": 7
+            },
+            "name": "sandbox_wait",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeAzzB2R76BFLeAkmLpGd",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 5719,
+          "output_tokens": 39,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    },
+    {
+      "day_after_action": 30,
+      "day_before_action": 27,
+      "decision": 14,
+      "execution": {
+        "action_id": "144ec567-99e9-4637-a902-cc04c6029f81",
+        "status": "executed",
+        "success": true,
+        "tool_result": {
+          "advanced_days": 3,
+          "capital": {
+            "balance_cents": 24888,
+            "earned_revenue_cents": 0,
+            "expense_cents": 25,
+            "model_api_cost_cents": 18,
+            "model_api_cost_units": 17126800,
+            "model_input_tokens": 79239,
+            "model_output_tokens": 1279,
+            "owner_capital_cents": 24913
+          },
+          "contracts": [],
+          "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+          "day": 30,
+          "discovered_signals": [
+            {
+              "currently_visible": false,
+              "customer_id": "customer-documentation-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2
+              },
+              "sector": "independent_media",
+              "signal_id": "signal-002",
+              "source_type": "creator_post",
+              "text": "An independent audio publisher mentions that useful interviews are difficult for its audience to search and reference later."
+            },
+            {
+              "currently_visible": false,
+              "customer_id": "customer-lead-qualification-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 2
+              },
+              "sector": "professional_services",
+              "signal_id": "signal-005",
+              "source_type": "business_page",
+              "text": "A solo professional reports spending substantial time responding to inquiries that do not match the services actually offered."
+            },
+            {
+              "currently_visible": false,
+              "customer_id": "customer-comparison-research-01",
+              "prior_relationship": {
+                "contracts_accepted": 0,
+                "contracts_defaulted": 0,
+                "contracts_disputed": 0,
+                "contracts_paid": 0,
+                "feedback_responses": 0,
+                "last_outcome": "",
+                "offers_sent": 1
+              },
+              "sector": "professional_services",
+              "signal_id": "signal-007",
+              "source_type": "discussion_board",
+              "text": "A small professional practice is publicly comparing several software subscriptions but lacks a consistent cost and feature analysis."
+            }
+          ],
+          "horizon_days": 30,
+          "inbox": [
+            {
+              "day": 1,
+              "from": "signal-007",
+              "offer_id": "offer-001",
+              "type": "offer_declined"
+            },
+            {
+              "day": 2,
+              "from": "signal-005",
+              "offer_id": "offer-002",
+              "type": "offer_declined"
+            }
+          ],
+          "offers": [
+            {
+              "offer_id": "offer-001",
+              "price_cents": 3500,
+              "promise_days": 5,
+              "response_day": 1,
+              "scope": "A structured cost-and-feature comparison report covering the software subscriptions the practice is evaluating: a table listing each product, monthly/annual price, key features relevant to the practice's stated needs, and a written summary of tradeoffs and a recommendation based solely on the information the customer supplies about their requirements and the products under consideration.",
+              "sent_day": 0,
+              "signal_id": "signal-007",
+              "solution_tags": [
+                "comparison-report",
+                "cost-analysis",
+                "feature-matrix",
+                "professional-services"
+              ],
+              "status": "declined"
+            },
+            {
+              "offer_id": "offer-002",
+              "price_cents": 3000,
+              "promise_days": 4,
+              "response_day": 2,
+              "scope": "A written inquiry-screening framework for the solo professional's business: a short set of qualifying questions/criteria to filter incoming inquiries against the services actually offered, a simple decision checklist for staff to quickly triage requests, and template response language for redirecting non-matching inquiries, based solely on the service list and criteria the customer supplies.",
+              "sent_day": 1,
+              "signal_id": "signal-005",
+              "solution_tags": [
+                "inquiry-screening",
+                "lead-qualification",
+                "professional-services",
+                "triage-checklist"
+              ],
+              "status": "declined"
+            },
+            {
+              "offer_id": "offer-003",
+              "price_cents": 3000,
+              "promise_days": 5,
+              "response_day": 3,
+              "scope": "A searchable episode index for the publisher's interview catalog: for each supplied episode, a structured entry with title, guest name, date, and a list of topic/timestamp markers derived solely from the transcript or notes the customer supplies, organized into a single reference document so listeners can find and cite specific interview segments later.",
+              "sent_day": 2,
+              "signal_id": "signal-002",
+              "solution_tags": [
+                "audio-content",
+                "episode-index",
+                "independent-media",
+                "searchable-reference"
+              ],
+              "status": "no_response"
+            }
+          ],
+          "ok": true,
+          "public_events": [],
+          "run_id": "40e07186f869",
+          "token_tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "world_commitment": "75ae29c2dc9939ae625d80ca9287c0f54bc107c217d46d18537ea9db160dfa91"
+        }
+      },
+      "host_assessment": null,
+      "host_tool_name": "sandbox.wait",
+      "metered_usage": {
+        "input_tokens": 5754,
+        "output_tokens": 39
+      },
+      "preflight_input_tokens": 5754,
+      "preflight_quote": {
+        "affordable": true,
+        "input_tokens": 5754,
+        "max_output_tokens": 1024,
+        "tariff": {
+          "input_cents_per_million_tokens": 200,
+          "name": "anthropic-sonnet-5-introductory-2026-08",
+          "output_cents_per_million_tokens": 1000
+        },
+        "worst_case_incremental_cost_cents": 3
+      },
+      "provider_response": {
+        "content": [
+          {
+            "caller": {
+              "type": "direct"
+            },
+            "id": "toolu_01A8jMqSNk62YTsbPcAHC3tn",
+            "input": {
+              "days": 3
+            },
+            "name": "sandbox_wait",
+            "type": "tool_use"
+          }
+        ],
+        "id": "msg_011CeAzzKgox7M7eaQKQKQiW",
+        "model": "claude-sonnet-5",
+        "role": "assistant",
+        "stop_details": null,
+        "stop_reason": "tool_use",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "inference_geo": "global",
+          "input_tokens": 5754,
+          "output_tokens": 39,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard"
+        }
+      }
+    }
+  ],
+  "world_reveal": {
+    "cost_policy": {
+      "cost_units_per_cent": 1000000,
+      "token_tariff": {
+        "input_cents_per_million_tokens": 200,
+        "name": "anthropic-sonnet-5-introductory-2026-08",
+        "output_cents_per_million_tokens": 1000
+      }
+    },
+    "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+    "journal": [
+      {
+        "data": {
+          "amount_cents": 24913,
+          "balance_cents": 24913,
+          "day": 0,
+          "entry_type": "owner_capital",
+          "memo": "Initial synthetic owner-supplied capital.",
+          "reference": "initial-capital",
+          "sequence": 1
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 1
+      },
+      {
+        "data": {
+          "cost_policy_commitment": "703f529156768f545424a3c0c455ddbbee6726776d7adc91f45ec99c95563c42",
+          "horizon_days": 30,
+          "run_id": "40e07186f869",
+          "token_tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "world_commitment": "75ae29c2dc9939ae625d80ca9287c0f54bc107c217d46d18537ea9db160dfa91"
+        },
+        "day": 0,
+        "event_type": "sandbox_started",
+        "sequence": 2
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 24912,
+          "day": 0,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through sonnet-matched-memory-v3-001-memory-month-003-call-001.",
+          "reference": "sonnet-matched-memory-v3-001-memory-month-003-call-001",
+          "sequence": 2
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 3
+      },
+      {
+        "data": {
+          "call_id": "sonnet-matched-memory-v3-001-memory-month-003-call-001",
+          "cost_units": 892200,
+          "cumulative_billed_cents": 1,
+          "cumulative_cost_units": 892200,
+          "day": 0,
+          "incremental_billed_cents": 1,
+          "input_tokens": 4086,
+          "output_tokens": 75,
+          "sequence": 1,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 0,
+        "event_type": "model_usage_metered",
+        "sequence": 4
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 24910,
+          "day": 0,
+          "entry_type": "market_research_cost",
+          "memo": "Simulated public-market search: small business need for data analysis or calculation reports",
+          "reference": "search-001",
+          "sequence": 3
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 5
+      },
+      {
+        "data": {
+          "cost_cents": 2,
+          "discovered_signal_ids": [
+            "signal-002",
+            "signal-007",
+            "signal-005"
+          ],
+          "query": "small business need for data analysis or calculation reports",
+          "result_count": 3
+        },
+        "day": 0,
+        "event_type": "market_searched",
+        "sequence": 6
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 24908,
+          "day": 0,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through sonnet-matched-memory-v3-001-memory-month-003-call-002.",
+          "reference": "sonnet-matched-memory-v3-001-memory-month-003-call-002",
+          "sequence": 4
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 7
+      },
+      {
+        "data": {
+          "call_id": "sonnet-matched-memory-v3-001-memory-month-003-call-002",
+          "cost_units": 1202400,
+          "cumulative_billed_cents": 3,
+          "cumulative_cost_units": 2094600,
+          "day": 0,
+          "incremental_billed_cents": 2,
+          "input_tokens": 4647,
+          "output_tokens": 273,
+          "sequence": 2,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 0,
+        "event_type": "model_usage_metered",
+        "sequence": 8
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 24907,
+          "day": 0,
+          "entry_type": "communication_cost",
+          "memo": "Send simulated offer to signal-007.",
+          "reference": "offer-001",
+          "sequence": 5
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 9
+      },
+      {
+        "data": {
+          "cost_cents": 1,
+          "offer_id": "offer-001",
+          "price_cents": 3500,
+          "promise_days": 5,
+          "signal_id": "signal-007"
+        },
+        "day": 0,
+        "event_type": "offer_sent",
+        "sequence": 10
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 24906,
+          "day": 0,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through sonnet-matched-memory-v3-001-memory-month-003-call-003.",
+          "reference": "sonnet-matched-memory-v3-001-memory-month-003-call-003",
+          "sequence": 6
+        },
+        "day": 0,
+        "event_type": "ledger_posted",
+        "sequence": 11
+      },
+      {
+        "data": {
+          "call_id": "sonnet-matched-memory-v3-001-memory-month-003-call-003",
+          "cost_units": 1077600,
+          "cumulative_billed_cents": 4,
+          "cumulative_cost_units": 3172200,
+          "day": 0,
+          "incremental_billed_cents": 1,
+          "input_tokens": 5193,
+          "output_tokens": 39,
+          "sequence": 3,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 0,
+        "event_type": "model_usage_metered",
+        "sequence": 12
+      },
+      {
+        "data": {
+          "day": 1,
+          "kind": "operating_cost_up",
+          "summary": "Routine external-service costs are temporarily higher today."
+        },
+        "day": 1,
+        "event_type": "exogenous_event",
+        "sequence": 13
+      },
+      {
+        "data": {
+          "day": 1,
+          "from": "signal-007",
+          "offer_id": "offer-001",
+          "type": "offer_declined"
+        },
+        "day": 1,
+        "event_type": "offer_declined",
+        "sequence": 14
+      },
+      {
+        "data": {
+          "day": 1
+        },
+        "day": 1,
+        "event_type": "day_advanced",
+        "sequence": 15
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 24905,
+          "day": 1,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through sonnet-matched-memory-v3-001-memory-month-003-call-004.",
+          "reference": "sonnet-matched-memory-v3-001-memory-month-003-call-004",
+          "sequence": 7
+        },
+        "day": 1,
+        "event_type": "ledger_posted",
+        "sequence": 16
+      },
+      {
+        "data": {
+          "call_id": "sonnet-matched-memory-v3-001-memory-month-003-call-004",
+          "cost_units": 1345800,
+          "cumulative_billed_cents": 5,
+          "cumulative_cost_units": 4518000,
+          "day": 1,
+          "incremental_billed_cents": 1,
+          "input_tokens": 5339,
+          "output_tokens": 278,
+          "sequence": 4,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 1,
+        "event_type": "model_usage_metered",
+        "sequence": 17
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 24903,
+          "day": 1,
+          "entry_type": "communication_cost",
+          "memo": "Send simulated offer to signal-005.",
+          "reference": "offer-002",
+          "sequence": 8
+        },
+        "day": 1,
+        "event_type": "ledger_posted",
+        "sequence": 18
+      },
+      {
+        "data": {
+          "cost_cents": 2,
+          "offer_id": "offer-002",
+          "price_cents": 3000,
+          "promise_days": 4,
+          "signal_id": "signal-005"
+        },
+        "day": 1,
+        "event_type": "offer_sent",
+        "sequence": 19
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 24902,
+          "day": 1,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through sonnet-matched-memory-v3-001-memory-month-003-call-005.",
+          "reference": "sonnet-matched-memory-v3-001-memory-month-003-call-005",
+          "sequence": 9
+        },
+        "day": 1,
+        "event_type": "ledger_posted",
+        "sequence": 20
+      },
+      {
+        "data": {
+          "call_id": "sonnet-matched-memory-v3-001-memory-month-003-call-005",
+          "cost_units": 1201600,
+          "cumulative_billed_cents": 6,
+          "cumulative_cost_units": 5719600,
+          "day": 1,
+          "incremental_billed_cents": 1,
+          "input_tokens": 5813,
+          "output_tokens": 39,
+          "sequence": 5,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 1,
+        "event_type": "model_usage_metered",
+        "sequence": 21
+      },
+      {
+        "data": {
+          "day": 2,
+          "kind": "operating_cost_up",
+          "summary": "Routine external-service costs are temporarily higher today."
+        },
+        "day": 2,
+        "event_type": "exogenous_event",
+        "sequence": 22
+      },
+      {
+        "data": {
+          "day": 2,
+          "from": "signal-005",
+          "offer_id": "offer-002",
+          "type": "offer_declined"
+        },
+        "day": 2,
+        "event_type": "offer_declined",
+        "sequence": 23
+      },
+      {
+        "data": {
+          "day": 2
+        },
+        "day": 2,
+        "event_type": "day_advanced",
+        "sequence": 24
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 24900,
+          "day": 2,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through sonnet-matched-memory-v3-001-memory-month-003-call-006.",
+          "reference": "sonnet-matched-memory-v3-001-memory-month-003-call-006",
+          "sequence": 10
+        },
+        "day": 2,
+        "event_type": "ledger_posted",
+        "sequence": 25
+      },
+      {
+        "data": {
+          "call_id": "sonnet-matched-memory-v3-001-memory-month-003-call-006",
+          "cost_units": 1446800,
+          "cumulative_billed_cents": 8,
+          "cumulative_cost_units": 7166400,
+          "day": 2,
+          "incremental_billed_cents": 2,
+          "input_tokens": 5919,
+          "output_tokens": 263,
+          "sequence": 6,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 2,
+        "event_type": "model_usage_metered",
+        "sequence": 26
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 24898,
+          "day": 2,
+          "entry_type": "communication_cost",
+          "memo": "Send simulated offer to signal-002.",
+          "reference": "offer-003",
+          "sequence": 11
+        },
+        "day": 2,
+        "event_type": "ledger_posted",
+        "sequence": 27
+      },
+      {
+        "data": {
+          "cost_cents": 2,
+          "offer_id": "offer-003",
+          "price_cents": 3000,
+          "promise_days": 5,
+          "signal_id": "signal-002"
+        },
+        "day": 2,
+        "event_type": "offer_sent",
+        "sequence": 28
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 24897,
+          "day": 2,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through sonnet-matched-memory-v3-001-memory-month-003-call-007.",
+          "reference": "sonnet-matched-memory-v3-001-memory-month-003-call-007",
+          "sequence": 12
+        },
+        "day": 2,
+        "event_type": "ledger_posted",
+        "sequence": 29
+      },
+      {
+        "data": {
+          "call_id": "sonnet-matched-memory-v3-001-memory-month-003-call-007",
+          "cost_units": 1311800,
+          "cumulative_billed_cents": 9,
+          "cumulative_cost_units": 8478200,
+          "day": 2,
+          "incremental_billed_cents": 1,
+          "input_tokens": 6364,
+          "output_tokens": 39,
+          "sequence": 7,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 2,
+        "event_type": "model_usage_metered",
+        "sequence": 30
+      },
+      {
+        "data": {
+          "day": 3,
+          "kind": "demand_up",
+          "summary": "Public demand strengthened in local_services."
+        },
+        "day": 3,
+        "event_type": "exogenous_event",
+        "sequence": 31
+      },
+      {
+        "data": {
+          "offer_id": "offer-003",
+          "signal_id": "signal-002"
+        },
+        "day": 3,
+        "event_type": "offer_no_response",
+        "sequence": 32
+      },
+      {
+        "data": {
+          "day": 3
+        },
+        "day": 3,
+        "event_type": "day_advanced",
+        "sequence": 33
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 24896,
+          "day": 3,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through sonnet-matched-memory-v3-001-memory-month-003-call-008.",
+          "reference": "sonnet-matched-memory-v3-001-memory-month-003-call-008",
+          "sequence": 13
+        },
+        "day": 3,
+        "event_type": "ledger_posted",
+        "sequence": 34
+      },
+      {
+        "data": {
+          "call_id": "sonnet-matched-memory-v3-001-memory-month-003-call-008",
+          "cost_units": 1302000,
+          "cumulative_billed_cents": 10,
+          "cumulative_cost_units": 9780200,
+          "day": 3,
+          "incremental_billed_cents": 1,
+          "input_tokens": 6315,
+          "output_tokens": 39,
+          "sequence": 8,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 3,
+        "event_type": "model_usage_metered",
+        "sequence": 35
+      },
+      {
+        "data": {
+          "day": 4
+        },
+        "day": 4,
+        "event_type": "day_advanced",
+        "sequence": 36
+      },
+      {
+        "data": {
+          "day": 5,
+          "kind": "market_access_up",
+          "summary": "Public-market search is unusually responsive today."
+        },
+        "day": 5,
+        "event_type": "exogenous_event",
+        "sequence": 37
+      },
+      {
+        "data": {
+          "day": 5
+        },
+        "day": 5,
+        "event_type": "day_advanced",
+        "sequence": 38
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 24894,
+          "day": 5,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through sonnet-matched-memory-v3-001-memory-month-003-call-009.",
+          "reference": "sonnet-matched-memory-v3-001-memory-month-003-call-009",
+          "sequence": 14
+        },
+        "day": 5,
+        "event_type": "ledger_posted",
+        "sequence": 39
+      },
+      {
+        "data": {
+          "call_id": "sonnet-matched-memory-v3-001-memory-month-003-call-009",
+          "cost_units": 1264600,
+          "cumulative_billed_cents": 12,
+          "cumulative_cost_units": 11044800,
+          "day": 5,
+          "incremental_billed_cents": 2,
+          "input_tokens": 6128,
+          "output_tokens": 39,
+          "sequence": 9,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 5,
+        "event_type": "model_usage_metered",
+        "sequence": 40
+      },
+      {
+        "data": {
+          "day": 6,
+          "kind": "demand_up",
+          "summary": "Public demand strengthened in professional_services."
+        },
+        "day": 6,
+        "event_type": "exogenous_event",
+        "sequence": 41
+      },
+      {
+        "data": {
+          "day": 6
+        },
+        "day": 6,
+        "event_type": "day_advanced",
+        "sequence": 42
+      },
+      {
+        "data": {
+          "day": 7
+        },
+        "day": 7,
+        "event_type": "day_advanced",
+        "sequence": 43
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 24893,
+          "day": 7,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through sonnet-matched-memory-v3-001-memory-month-003-call-010.",
+          "reference": "sonnet-matched-memory-v3-001-memory-month-003-call-010",
+          "sequence": 15
+        },
+        "day": 7,
+        "event_type": "ledger_posted",
+        "sequence": 44
+      },
+      {
+        "data": {
+          "call_id": "sonnet-matched-memory-v3-001-memory-month-003-call-010",
+          "cost_units": 1257400,
+          "cumulative_billed_cents": 13,
+          "cumulative_cost_units": 12302200,
+          "day": 7,
+          "incremental_billed_cents": 1,
+          "input_tokens": 6092,
+          "output_tokens": 39,
+          "sequence": 10,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 7,
+        "event_type": "model_usage_metered",
+        "sequence": 45
+      },
+      {
+        "data": {
+          "day": 8,
+          "kind": "market_access_up",
+          "summary": "Public-market search is unusually responsive today."
+        },
+        "day": 8,
+        "event_type": "exogenous_event",
+        "sequence": 46
+      },
+      {
+        "data": {
+          "day": 8
+        },
+        "day": 8,
+        "event_type": "day_advanced",
+        "sequence": 47
+      },
+      {
+        "data": {
+          "day": 9,
+          "kind": "demand_up",
+          "summary": "Public demand strengthened in community_organizations."
+        },
+        "day": 9,
+        "event_type": "exogenous_event",
+        "sequence": 48
+      },
+      {
+        "data": {
+          "day": 9
+        },
+        "day": 9,
+        "event_type": "day_advanced",
+        "sequence": 49
+      },
+      {
+        "data": {
+          "day": 10,
+          "kind": "market_access_down",
+          "summary": "The public-market search platform is unavailable today."
+        },
+        "day": 10,
+        "event_type": "exogenous_event",
+        "sequence": 50
+      },
+      {
+        "data": {
+          "day": 10
+        },
+        "day": 10,
+        "event_type": "day_advanced",
+        "sequence": 51
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 24892,
+          "day": 10,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through sonnet-matched-memory-v3-001-memory-month-003-call-011.",
+          "reference": "sonnet-matched-memory-v3-001-memory-month-003-call-011",
+          "sequence": 16
+        },
+        "day": 10,
+        "event_type": "ledger_posted",
+        "sequence": 52
+      },
+      {
+        "data": {
+          "call_id": "sonnet-matched-memory-v3-001-memory-month-003-call-011",
+          "cost_units": 1225800,
+          "cumulative_billed_cents": 14,
+          "cumulative_cost_units": 13528000,
+          "day": 10,
+          "incremental_billed_cents": 1,
+          "input_tokens": 5934,
+          "output_tokens": 39,
+          "sequence": 11,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 10,
+        "event_type": "model_usage_metered",
+        "sequence": 53
+      },
+      {
+        "data": {
+          "day": 11
+        },
+        "day": 11,
+        "event_type": "day_advanced",
+        "sequence": 54
+      },
+      {
+        "data": {
+          "day": 12,
+          "kind": "demand_down",
+          "summary": "Public demand weakened in professional_services."
+        },
+        "day": 12,
+        "event_type": "exogenous_event",
+        "sequence": 55
+      },
+      {
+        "data": {
+          "day": 12
+        },
+        "day": 12,
+        "event_type": "day_advanced",
+        "sequence": 56
+      },
+      {
+        "data": {
+          "day": 13,
+          "kind": "demand_up",
+          "summary": "Public demand strengthened in micro_manufacturing."
+        },
+        "day": 13,
+        "event_type": "exogenous_event",
+        "sequence": 57
+      },
+      {
+        "data": {
+          "day": 13
+        },
+        "day": 13,
+        "event_type": "day_advanced",
+        "sequence": 58
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 24891,
+          "day": 13,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through sonnet-matched-memory-v3-001-memory-month-003-call-012.",
+          "reference": "sonnet-matched-memory-v3-001-memory-month-003-call-012",
+          "sequence": 17
+        },
+        "day": 13,
+        "event_type": "ledger_posted",
+        "sequence": 59
+      },
+      {
+        "data": {
+          "call_id": "sonnet-matched-memory-v3-001-memory-month-003-call-012",
+          "cost_units": 1226200,
+          "cumulative_billed_cents": 15,
+          "cumulative_cost_units": 14754200,
+          "day": 13,
+          "incremental_billed_cents": 1,
+          "input_tokens": 5936,
+          "output_tokens": 39,
+          "sequence": 12,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 13,
+        "event_type": "model_usage_metered",
+        "sequence": 60
+      },
+      {
+        "data": {
+          "day": 14,
+          "kind": "operating_cost_down",
+          "summary": "Routine external-service costs are temporarily lower today."
+        },
+        "day": 14,
+        "event_type": "exogenous_event",
+        "sequence": 61
+      },
+      {
+        "data": {
+          "day": 14
+        },
+        "day": 14,
+        "event_type": "day_advanced",
+        "sequence": 62
+      },
+      {
+        "data": {
+          "day": 15,
+          "kind": "market_access_down",
+          "summary": "The public-market search platform is unavailable today."
+        },
+        "day": 15,
+        "event_type": "exogenous_event",
+        "sequence": 63
+      },
+      {
+        "data": {
+          "day": 15
+        },
+        "day": 15,
+        "event_type": "day_advanced",
+        "sequence": 64
+      },
+      {
+        "data": {
+          "day": 16,
+          "kind": "market_access_up",
+          "summary": "Public-market search is unusually responsive today."
+        },
+        "day": 16,
+        "event_type": "exogenous_event",
+        "sequence": 65
+      },
+      {
+        "data": {
+          "day": 16
+        },
+        "day": 16,
+        "event_type": "day_advanced",
+        "sequence": 66
+      },
+      {
+        "data": {
+          "day": 17
+        },
+        "day": 17,
+        "event_type": "day_advanced",
+        "sequence": 67
+      },
+      {
+        "data": {
+          "day": 18
+        },
+        "day": 18,
+        "event_type": "day_advanced",
+        "sequence": 68
+      },
+      {
+        "data": {
+          "day": 19
+        },
+        "day": 19,
+        "event_type": "day_advanced",
+        "sequence": 69
+      },
+      {
+        "data": {
+          "day": 20
+        },
+        "day": 20,
+        "event_type": "day_advanced",
+        "sequence": 70
+      },
+      {
+        "data": {
+          "amount_cents": -1,
+          "balance_cents": 24890,
+          "day": 20,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through sonnet-matched-memory-v3-001-memory-month-003-call-013.",
+          "reference": "sonnet-matched-memory-v3-001-memory-month-003-call-013",
+          "sequence": 18
+        },
+        "day": 20,
+        "event_type": "ledger_posted",
+        "sequence": 71
+      },
+      {
+        "data": {
+          "call_id": "sonnet-matched-memory-v3-001-memory-month-003-call-013",
+          "cost_units": 1182800,
+          "cumulative_billed_cents": 16,
+          "cumulative_cost_units": 15937000,
+          "day": 20,
+          "incremental_billed_cents": 1,
+          "input_tokens": 5719,
+          "output_tokens": 39,
+          "sequence": 13,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 20,
+        "event_type": "model_usage_metered",
+        "sequence": 72
+      },
+      {
+        "data": {
+          "day": 21
+        },
+        "day": 21,
+        "event_type": "day_advanced",
+        "sequence": 73
+      },
+      {
+        "data": {
+          "day": 22
+        },
+        "day": 22,
+        "event_type": "day_advanced",
+        "sequence": 74
+      },
+      {
+        "data": {
+          "day": 23
+        },
+        "day": 23,
+        "event_type": "day_advanced",
+        "sequence": 75
+      },
+      {
+        "data": {
+          "day": 24
+        },
+        "day": 24,
+        "event_type": "day_advanced",
+        "sequence": 76
+      },
+      {
+        "data": {
+          "day": 25
+        },
+        "day": 25,
+        "event_type": "day_advanced",
+        "sequence": 77
+      },
+      {
+        "data": {
+          "day": 26
+        },
+        "day": 26,
+        "event_type": "day_advanced",
+        "sequence": 78
+      },
+      {
+        "data": {
+          "day": 27,
+          "kind": "market_access_up",
+          "summary": "Public-market search is unusually responsive today."
+        },
+        "day": 27,
+        "event_type": "exogenous_event",
+        "sequence": 79
+      },
+      {
+        "data": {
+          "day": 27
+        },
+        "day": 27,
+        "event_type": "day_advanced",
+        "sequence": 80
+      },
+      {
+        "data": {
+          "amount_cents": -2,
+          "balance_cents": 24888,
+          "day": 27,
+          "entry_type": "model_api_cost",
+          "memo": "Metered strategic-model token cost through sonnet-matched-memory-v3-001-memory-month-003-call-014.",
+          "reference": "sonnet-matched-memory-v3-001-memory-month-003-call-014",
+          "sequence": 19
+        },
+        "day": 27,
+        "event_type": "ledger_posted",
+        "sequence": 81
+      },
+      {
+        "data": {
+          "call_id": "sonnet-matched-memory-v3-001-memory-month-003-call-014",
+          "cost_units": 1189800,
+          "cumulative_billed_cents": 18,
+          "cumulative_cost_units": 17126800,
+          "day": 27,
+          "incremental_billed_cents": 2,
+          "input_tokens": 5754,
+          "output_tokens": 39,
+          "sequence": 14,
+          "tariff": {
+            "input_cents_per_million_tokens": 200,
+            "name": "anthropic-sonnet-5-introductory-2026-08",
+            "output_cents_per_million_tokens": 1000
+          },
+          "tariff_name": "anthropic-sonnet-5-introductory-2026-08"
+        },
+        "day": 27,
+        "event_type": "model_usage_metered",
+        "sequence": 82
+      },
+      {
+        "data": {
+          "day": 28
+        },
+        "day": 28,
+        "event_type": "day_advanced",
+        "sequence": 83
+      },
+      {
+        "data": {
+          "day": 29
+        },
+        "day": 29,
+        "event_type": "day_advanced",
+        "sequence": 84
+      },
+      {
+        "data": {
+          "day": 30
+        },
+        "day": 30,
+        "event_type": "day_advanced",
+        "sequence": 85
+      }
+    ],
+    "payload": {
+      "customer_population_seed": 408451,
+      "events": [
+        {
+          "day": 1,
+          "kind": "operating_cost_up",
+          "magnitude": 20,
+          "sector": ""
+        },
+        {
+          "day": 2,
+          "kind": "operating_cost_up",
+          "magnitude": 15,
+          "sector": ""
+        },
+        {
+          "day": 3,
+          "kind": "demand_up",
+          "magnitude": 20,
+          "sector": "local_services"
+        },
+        {
+          "day": 5,
+          "kind": "market_access_up",
+          "magnitude": 10,
+          "sector": ""
+        },
+        {
+          "day": 6,
+          "kind": "demand_up",
+          "magnitude": 15,
+          "sector": "professional_services"
+        },
+        {
+          "day": 8,
+          "kind": "market_access_up",
+          "magnitude": 20,
+          "sector": ""
+        },
+        {
+          "day": 9,
+          "kind": "demand_up",
+          "magnitude": 20,
+          "sector": "community_organizations"
+        },
+        {
+          "day": 10,
+          "kind": "market_access_down",
+          "magnitude": 15,
+          "sector": ""
+        },
+        {
+          "day": 12,
+          "kind": "demand_down",
+          "magnitude": 15,
+          "sector": "professional_services"
+        },
+        {
+          "day": 13,
+          "kind": "demand_up",
+          "magnitude": 20,
+          "sector": "micro_manufacturing"
+        },
+        {
+          "day": 14,
+          "kind": "operating_cost_down",
+          "magnitude": 20,
+          "sector": ""
+        },
+        {
+          "day": 15,
+          "kind": "market_access_down",
+          "magnitude": 15,
+          "sector": ""
+        },
+        {
+          "day": 16,
+          "kind": "market_access_up",
+          "magnitude": 20,
+          "sector": ""
+        },
+        {
+          "day": 27,
+          "kind": "market_access_up",
+          "magnitude": 15,
+          "sector": ""
+        }
+      ],
+      "horizon_days": 30,
+      "seed": 594914,
+      "signals": [
+        {
+          "active_from": 5,
+          "active_until": 16,
+          "budget_cents": 3000,
+          "buyer_intent": false,
+          "customer_id": "customer-process-documentation-01",
+          "discoverability": 0.3292,
+          "need_tag": "process_documentation",
+          "payment_reliability": 0.6691,
+          "public_text": "A neighborhood organization says recurring volunteers struggle to understand its handoff and event setup process.",
+          "quality_threshold": 89,
+          "responsiveness": 0.5902,
+          "sector": "community_organizations",
+          "signal_id": "signal-001",
+          "source_type": "public_forum",
+          "task_brief": {
+            "brief_id": "f1d0d57991859d73",
+            "objective": "Evaluate all three process change records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 38,
+                "label": "Process Change 1",
+                "record_id": "option-1",
+                "risk_points": 10,
+                "value_points": 46
+              },
+              {
+                "cost_points": 39,
+                "label": "Process Change 2",
+                "record_id": "option-2",
+                "risk_points": 15,
+                "value_points": 47
+              },
+              {
+                "cost_points": 34,
+                "label": "Process Change 3",
+                "record_id": "option-3",
+                "risk_points": 22,
+                "value_points": 93
+              }
+            ],
+            "task_type": "process_documentation"
+          }
+        },
+        {
+          "active_from": 0,
+          "active_until": 18,
+          "budget_cents": 15500,
+          "buyer_intent": true,
+          "customer_id": "customer-documentation-01",
+          "discoverability": 0.7967,
+          "need_tag": "documentation",
+          "payment_reliability": 0.6058,
+          "public_text": "An independent audio publisher mentions that useful interviews are difficult for its audience to search and reference later.",
+          "quality_threshold": 78,
+          "responsiveness": 0.878,
+          "sector": "independent_media",
+          "signal_id": "signal-002",
+          "source_type": "creator_post",
+          "task_brief": {
+            "brief_id": "c21e43cf28bdc95f",
+            "objective": "Evaluate all three archive item records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 41,
+                "label": "Archive Item 1",
+                "record_id": "option-1",
+                "risk_points": 6,
+                "value_points": 40
+              },
+              {
+                "cost_points": 11,
+                "label": "Archive Item 2",
+                "record_id": "option-2",
+                "risk_points": 21,
+                "value_points": 89
+              },
+              {
+                "cost_points": 36,
+                "label": "Archive Item 3",
+                "record_id": "option-3",
+                "risk_points": 20,
+                "value_points": 42
+              }
+            ],
+            "task_type": "documentation"
+          }
+        },
+        {
+          "active_from": 3,
+          "active_until": 18,
+          "budget_cents": 19000,
+          "buyer_intent": true,
+          "customer_id": "customer-customer-research-01",
+          "discoverability": 0.4013,
+          "need_tag": "customer_research",
+          "payment_reliability": 0.8366,
+          "public_text": "Reviews for a small retailer repeatedly disagree about available products, pickup rules, and current opening hours.",
+          "quality_threshold": 70,
+          "responsiveness": 0.6096,
+          "sector": "small_retail",
+          "signal_id": "signal-003",
+          "source_type": "review_stream",
+          "task_brief": {
+            "brief_id": "c00a2ab4f94abd86",
+            "objective": "Evaluate all three customer theme records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 26,
+                "label": "Customer Theme 1",
+                "record_id": "option-1",
+                "risk_points": 23,
+                "value_points": 62
+              },
+              {
+                "cost_points": 21,
+                "label": "Customer Theme 2",
+                "record_id": "option-2",
+                "risk_points": 11,
+                "value_points": 45
+              },
+              {
+                "cost_points": 28,
+                "label": "Customer Theme 3",
+                "record_id": "option-3",
+                "risk_points": 3,
+                "value_points": 62
+              }
+            ],
+            "task_type": "customer_research"
+          }
+        },
+        {
+          "active_from": 3,
+          "active_until": 29,
+          "budget_cents": 7500,
+          "buyer_intent": false,
+          "customer_id": "customer-data-cleanup-01",
+          "discoverability": 0.6418,
+          "need_tag": "data_cleanup",
+          "payment_reliability": 0.6014,
+          "public_text": "A volunteer group says its donation and attendance records are spread across several inconsistent spreadsheets.",
+          "quality_threshold": 69,
+          "responsiveness": 0.7539,
+          "sector": "community_organizations",
+          "signal_id": "signal-004",
+          "source_type": "public_forum",
+          "task_brief": {
+            "brief_id": "feb099193119b781",
+            "objective": "Evaluate all three data source records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 7,
+                "label": "Data Source 1",
+                "record_id": "option-1",
+                "risk_points": 9,
+                "value_points": 68
+              },
+              {
+                "cost_points": 15,
+                "label": "Data Source 2",
+                "record_id": "option-2",
+                "risk_points": 19,
+                "value_points": 49
+              },
+              {
+                "cost_points": 16,
+                "label": "Data Source 3",
+                "record_id": "option-3",
+                "risk_points": 16,
+                "value_points": 72
+              }
+            ],
+            "task_type": "data_cleanup"
+          }
+        },
+        {
+          "active_from": 0,
+          "active_until": 18,
+          "budget_cents": 7500,
+          "buyer_intent": false,
+          "customer_id": "customer-lead-qualification-01",
+          "discoverability": 0.2314,
+          "need_tag": "lead_qualification",
+          "payment_reliability": 0.7186,
+          "public_text": "A solo professional reports spending substantial time responding to inquiries that do not match the services actually offered.",
+          "quality_threshold": 76,
+          "responsiveness": 0.8677,
+          "sector": "professional_services",
+          "signal_id": "signal-005",
+          "source_type": "business_page",
+          "task_brief": {
+            "brief_id": "9c9b1132c1cb8a49",
+            "objective": "Evaluate all three lead segment records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 37,
+                "label": "Lead Segment 1",
+                "record_id": "option-1",
+                "risk_points": 0,
+                "value_points": 55
+              },
+              {
+                "cost_points": 19,
+                "label": "Lead Segment 2",
+                "record_id": "option-2",
+                "risk_points": 0,
+                "value_points": 54
+              },
+              {
+                "cost_points": 41,
+                "label": "Lead Segment 3",
+                "record_id": "option-3",
+                "risk_points": 14,
+                "value_points": 84
+              }
+            ],
+            "task_type": "lead_qualification"
+          }
+        },
+        {
+          "active_from": 2,
+          "active_until": 30,
+          "budget_cents": 15000,
+          "buyer_intent": true,
+          "customer_id": "customer-service-clarity-01",
+          "discoverability": 0.1572,
+          "need_tag": "service_clarity",
+          "payment_reliability": 0.7109,
+          "public_text": "A repair business has conflicting public descriptions of what its standard service includes, and customers keep asking the same questions.",
+          "quality_threshold": 88,
+          "responsiveness": 0.3419,
+          "sector": "local_services",
+          "signal_id": "signal-006",
+          "source_type": "business_page",
+          "task_brief": {
+            "brief_id": "4e5e7fdc711d1a99",
+            "objective": "Evaluate all three service package records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 32,
+                "label": "Service Package 1",
+                "record_id": "option-1",
+                "risk_points": 1,
+                "value_points": 87
+              },
+              {
+                "cost_points": 17,
+                "label": "Service Package 2",
+                "record_id": "option-2",
+                "risk_points": 9,
+                "value_points": 47
+              },
+              {
+                "cost_points": 13,
+                "label": "Service Package 3",
+                "record_id": "option-3",
+                "risk_points": 14,
+                "value_points": 95
+              }
+            ],
+            "task_type": "service_clarity"
+          }
+        },
+        {
+          "active_from": 0,
+          "active_until": 15,
+          "budget_cents": 15000,
+          "buyer_intent": true,
+          "customer_id": "customer-comparison-research-01",
+          "discoverability": 0.4588,
+          "need_tag": "comparison_research",
+          "payment_reliability": 0.7741,
+          "public_text": "A small professional practice is publicly comparing several software subscriptions but lacks a consistent cost and feature analysis.",
+          "quality_threshold": 82,
+          "responsiveness": 0.7777,
+          "sector": "professional_services",
+          "signal_id": "signal-007",
+          "source_type": "discussion_board",
+          "task_brief": {
+            "brief_id": "9da315c147ddedf0",
+            "objective": "Evaluate all three software option records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 8,
+                "label": "Software Option 1",
+                "record_id": "option-1",
+                "risk_points": 16,
+                "value_points": 88
+              },
+              {
+                "cost_points": 28,
+                "label": "Software Option 2",
+                "record_id": "option-2",
+                "risk_points": 7,
+                "value_points": 74
+              },
+              {
+                "cost_points": 24,
+                "label": "Software Option 3",
+                "record_id": "option-3",
+                "risk_points": 2,
+                "value_points": 81
+              }
+            ],
+            "task_type": "comparison_research"
+          }
+        },
+        {
+          "active_from": 1,
+          "active_until": 22,
+          "budget_cents": 14000,
+          "buyer_intent": false,
+          "customer_id": "customer-catalog-cleanup-01",
+          "discoverability": 0.602,
+          "need_tag": "catalog_cleanup",
+          "payment_reliability": 0.897,
+          "public_text": "A specialty seller has duplicated and inconsistent product descriptions across several public listings.",
+          "quality_threshold": 63,
+          "responsiveness": 0.2737,
+          "sector": "small_retail",
+          "signal_id": "signal-008",
+          "source_type": "business_page",
+          "task_brief": {
+            "brief_id": "b56994cc3371bd4c",
+            "objective": "Evaluate all three catalog group records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 17,
+                "label": "Catalog Group 1",
+                "record_id": "option-1",
+                "risk_points": 12,
+                "value_points": 75
+              },
+              {
+                "cost_points": 30,
+                "label": "Catalog Group 2",
+                "record_id": "option-2",
+                "risk_points": 9,
+                "value_points": 53
+              },
+              {
+                "cost_points": 20,
+                "label": "Catalog Group 3",
+                "record_id": "option-3",
+                "risk_points": 22,
+                "value_points": 46
+              }
+            ],
+            "task_type": "catalog_cleanup"
+          }
+        },
+        {
+          "active_from": 4,
+          "active_until": 20,
+          "budget_cents": 10500,
+          "buyer_intent": true,
+          "customer_id": "customer-audience-research-01",
+          "discoverability": 0.1956,
+          "need_tag": "audience_research",
+          "payment_reliability": 0.6781,
+          "public_text": "A newsletter publisher wonders which recurring questions in its archive would justify a focused guide.",
+          "quality_threshold": 57,
+          "responsiveness": 0.7101,
+          "sector": "independent_media",
+          "signal_id": "signal-009",
+          "source_type": "creator_post",
+          "task_brief": {
+            "brief_id": "f1e8aed95d1923dc",
+            "objective": "Evaluate all three guide topic records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 24,
+                "label": "Guide Topic 1",
+                "record_id": "option-1",
+                "risk_points": 6,
+                "value_points": 54
+              },
+              {
+                "cost_points": 23,
+                "label": "Guide Topic 2",
+                "record_id": "option-2",
+                "risk_points": 21,
+                "value_points": 36
+              },
+              {
+                "cost_points": 18,
+                "label": "Guide Topic 3",
+                "record_id": "option-3",
+                "risk_points": 9,
+                "value_points": 76
+              }
+            ],
+            "task_type": "audience_research"
+          }
+        },
+        {
+          "active_from": 2,
+          "active_until": 28,
+          "budget_cents": 11500,
+          "buyer_intent": true,
+          "customer_id": "customer-scheduling-01",
+          "discoverability": 0.4681,
+          "need_tag": "scheduling",
+          "payment_reliability": 0.5866,
+          "public_text": "Customers of a seasonal service complain that appointment availability and expected response times are unclear.",
+          "quality_threshold": 82,
+          "responsiveness": 0.7692,
+          "sector": "local_services",
+          "signal_id": "signal-010",
+          "source_type": "community_post",
+          "task_brief": {
+            "brief_id": "c253996a852c9cbd",
+            "objective": "Evaluate all three scheduling policy records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 45,
+                "label": "Scheduling Policy 1",
+                "record_id": "option-1",
+                "risk_points": 2,
+                "value_points": 73
+              },
+              {
+                "cost_points": 44,
+                "label": "Scheduling Policy 2",
+                "record_id": "option-2",
+                "risk_points": 12,
+                "value_points": 84
+              },
+              {
+                "cost_points": 38,
+                "label": "Scheduling Policy 3",
+                "record_id": "option-3",
+                "risk_points": 9,
+                "value_points": 61
+              }
+            ],
+            "task_type": "scheduling"
+          }
+        },
+        {
+          "active_from": 1,
+          "active_until": 29,
+          "budget_cents": 15500,
+          "buyer_intent": true,
+          "customer_id": "customer-supplier-research-01",
+          "discoverability": 0.6703,
+          "need_tag": "supplier_research",
+          "payment_reliability": 0.7276,
+          "public_text": "A small workshop asks peers how they track changing supplier prices and lead times for recurring materials.",
+          "quality_threshold": 82,
+          "responsiveness": 0.7985,
+          "sector": "micro_manufacturing",
+          "signal_id": "signal-011",
+          "source_type": "trade_forum",
+          "task_brief": {
+            "brief_id": "8886fa95d72d7c26",
+            "objective": "Evaluate all three supplier option records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 22,
+                "label": "Supplier Option 1",
+                "record_id": "option-1",
+                "risk_points": 8,
+                "value_points": 83
+              },
+              {
+                "cost_points": 37,
+                "label": "Supplier Option 2",
+                "record_id": "option-2",
+                "risk_points": 8,
+                "value_points": 48
+              },
+              {
+                "cost_points": 39,
+                "label": "Supplier Option 3",
+                "record_id": "option-3",
+                "risk_points": 9,
+                "value_points": 68
+              }
+            ],
+            "task_type": "supplier_research"
+          }
+        },
+        {
+          "active_from": 4,
+          "active_until": 20,
+          "budget_cents": 11000,
+          "buyer_intent": false,
+          "customer_id": "customer-inventory-analysis-01",
+          "discoverability": 0.7171,
+          "need_tag": "inventory_analysis",
+          "payment_reliability": 0.753,
+          "public_text": "A small producer describes repeated shortages of inexpensive components alongside excess stock of rarely used parts.",
+          "quality_threshold": 81,
+          "responsiveness": 0.7426,
+          "sector": "micro_manufacturing",
+          "signal_id": "signal-012",
+          "source_type": "trade_forum",
+          "task_brief": {
+            "brief_id": "00e4ac5485a1e66d",
+            "objective": "Evaluate all three inventory policy records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 13,
+                "label": "Inventory Policy 1",
+                "record_id": "option-1",
+                "risk_points": 8,
+                "value_points": 78
+              },
+              {
+                "cost_points": 15,
+                "label": "Inventory Policy 2",
+                "record_id": "option-2",
+                "risk_points": 12,
+                "value_points": 80
+              },
+              {
+                "cost_points": 11,
+                "label": "Inventory Policy 3",
+                "record_id": "option-3",
+                "risk_points": 18,
+                "value_points": 67
+              }
+            ],
+            "task_type": "inventory_analysis"
+          }
+        },
+        {
+          "active_from": 1,
+          "active_until": 16,
+          "budget_cents": 10500,
+          "buyer_intent": true,
+          "customer_id": "customer-process-documentation-02",
+          "discoverability": 0.9444,
+          "need_tag": "process_documentation",
+          "payment_reliability": 0.9034,
+          "public_text": "A neighborhood organization says recurring volunteers struggle to understand its handoff and event setup process.",
+          "quality_threshold": 55,
+          "responsiveness": 0.667,
+          "sector": "community_organizations",
+          "signal_id": "signal-013",
+          "source_type": "public_forum",
+          "task_brief": {
+            "brief_id": "aaf9672745e9eba9",
+            "objective": "Evaluate all three process change records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 29,
+                "label": "Process Change 1",
+                "record_id": "option-1",
+                "risk_points": 2,
+                "value_points": 73
+              },
+              {
+                "cost_points": 23,
+                "label": "Process Change 2",
+                "record_id": "option-2",
+                "risk_points": 11,
+                "value_points": 40
+              },
+              {
+                "cost_points": 29,
+                "label": "Process Change 3",
+                "record_id": "option-3",
+                "risk_points": 4,
+                "value_points": 93
+              }
+            ],
+            "task_type": "process_documentation"
+          }
+        },
+        {
+          "active_from": 3,
+          "active_until": 25,
+          "budget_cents": 4000,
+          "buyer_intent": true,
+          "customer_id": "customer-documentation-02",
+          "discoverability": 0.6159,
+          "need_tag": "documentation",
+          "payment_reliability": 0.8969,
+          "public_text": "An independent audio publisher mentions that useful interviews are difficult for its audience to search and reference later.",
+          "quality_threshold": 64,
+          "responsiveness": 0.5213,
+          "sector": "independent_media",
+          "signal_id": "signal-014",
+          "source_type": "creator_post",
+          "task_brief": {
+            "brief_id": "366664a60bce632e",
+            "objective": "Evaluate all three archive item records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 27,
+                "label": "Archive Item 1",
+                "record_id": "option-1",
+                "risk_points": 9,
+                "value_points": 51
+              },
+              {
+                "cost_points": 14,
+                "label": "Archive Item 2",
+                "record_id": "option-2",
+                "risk_points": 21,
+                "value_points": 59
+              },
+              {
+                "cost_points": 37,
+                "label": "Archive Item 3",
+                "record_id": "option-3",
+                "risk_points": 12,
+                "value_points": 63
+              }
+            ],
+            "task_type": "documentation"
+          }
+        },
+        {
+          "active_from": 5,
+          "active_until": 24,
+          "budget_cents": 18000,
+          "buyer_intent": true,
+          "customer_id": "customer-customer-research-02",
+          "discoverability": 0.4914,
+          "need_tag": "customer_research",
+          "payment_reliability": 0.8977,
+          "public_text": "Reviews for a small retailer repeatedly disagree about available products, pickup rules, and current opening hours.",
+          "quality_threshold": 68,
+          "responsiveness": 0.3762,
+          "sector": "small_retail",
+          "signal_id": "signal-015",
+          "source_type": "review_stream",
+          "task_brief": {
+            "brief_id": "4dc5642c90302207",
+            "objective": "Evaluate all three customer theme records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 35,
+                "label": "Customer Theme 1",
+                "record_id": "option-1",
+                "risk_points": 0,
+                "value_points": 89
+              },
+              {
+                "cost_points": 31,
+                "label": "Customer Theme 2",
+                "record_id": "option-2",
+                "risk_points": 7,
+                "value_points": 75
+              },
+              {
+                "cost_points": 39,
+                "label": "Customer Theme 3",
+                "record_id": "option-3",
+                "risk_points": 17,
+                "value_points": 51
+              }
+            ],
+            "task_type": "customer_research"
+          }
+        },
+        {
+          "active_from": 5,
+          "active_until": 18,
+          "budget_cents": 10500,
+          "buyer_intent": true,
+          "customer_id": "customer-data-cleanup-02",
+          "discoverability": 0.4305,
+          "need_tag": "data_cleanup",
+          "payment_reliability": 0.6972,
+          "public_text": "A volunteer group says its donation and attendance records are spread across several inconsistent spreadsheets.",
+          "quality_threshold": 84,
+          "responsiveness": 0.9444,
+          "sector": "community_organizations",
+          "signal_id": "signal-016",
+          "source_type": "public_forum",
+          "task_brief": {
+            "brief_id": "fa5d23a1a1fa6bba",
+            "objective": "Evaluate all three data source records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 33,
+                "label": "Data Source 1",
+                "record_id": "option-1",
+                "risk_points": 23,
+                "value_points": 51
+              },
+              {
+                "cost_points": 32,
+                "label": "Data Source 2",
+                "record_id": "option-2",
+                "risk_points": 23,
+                "value_points": 80
+              },
+              {
+                "cost_points": 5,
+                "label": "Data Source 3",
+                "record_id": "option-3",
+                "risk_points": 7,
+                "value_points": 88
+              }
+            ],
+            "task_type": "data_cleanup"
+          }
+        },
+        {
+          "active_from": 3,
+          "active_until": 20,
+          "budget_cents": 2500,
+          "buyer_intent": false,
+          "customer_id": "customer-lead-qualification-02",
+          "discoverability": 0.3945,
+          "need_tag": "lead_qualification",
+          "payment_reliability": 0.565,
+          "public_text": "A solo professional reports spending substantial time responding to inquiries that do not match the services actually offered.",
+          "quality_threshold": 58,
+          "responsiveness": 0.7952,
+          "sector": "professional_services",
+          "signal_id": "signal-017",
+          "source_type": "business_page",
+          "task_brief": {
+            "brief_id": "0ad81148fa4a7f8d",
+            "objective": "Evaluate all three lead segment records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 23,
+                "label": "Lead Segment 1",
+                "record_id": "option-1",
+                "risk_points": 0,
+                "value_points": 91
+              },
+              {
+                "cost_points": 27,
+                "label": "Lead Segment 2",
+                "record_id": "option-2",
+                "risk_points": 14,
+                "value_points": 73
+              },
+              {
+                "cost_points": 5,
+                "label": "Lead Segment 3",
+                "record_id": "option-3",
+                "risk_points": 19,
+                "value_points": 58
+              }
+            ],
+            "task_type": "lead_qualification"
+          }
+        },
+        {
+          "active_from": 4,
+          "active_until": 18,
+          "budget_cents": 18000,
+          "buyer_intent": true,
+          "customer_id": "customer-service-clarity-02",
+          "discoverability": 0.5676,
+          "need_tag": "service_clarity",
+          "payment_reliability": 0.9409,
+          "public_text": "A repair business has conflicting public descriptions of what its standard service includes, and customers keep asking the same questions.",
+          "quality_threshold": 62,
+          "responsiveness": 0.4831,
+          "sector": "local_services",
+          "signal_id": "signal-018",
+          "source_type": "business_page",
+          "task_brief": {
+            "brief_id": "b3feb0e7e275cbb8",
+            "objective": "Evaluate all three service package records and recommend the strongest option.",
+            "required_delivery_schema": {
+              "brief_id": "exact brief_id",
+              "customer_summary": "plain-language explanation",
+              "implementation_steps": [
+                "at least two concrete next steps"
+              ],
+              "recommended_record_id": "highest computed_score; lowest record_id breaks ties",
+              "record_evaluations": [
+                {
+                  "computed_score": "integer",
+                  "record_id": "option-N"
+                }
+              ]
+            },
+            "schema_version": "capage-customer-task-v1",
+            "scoring_rule": "computed_score = (2 * value_points) - cost_points - risk_points",
+            "source_records": [
+              {
+                "cost_points": 18,
+                "label": "Service Package 1",
+                "record_id": "option-1",
+                "risk_points": 23,
+                "value_points": 86
+              },
+              {
+                "cost_points": 25,
+                "label": "Service Package 2",
+                "record_id": "option-2",
+                "risk_points": 15,
+                "value_points": 37
+              },
+              {
+                "cost_points": 25,
+                "label": "Service Package 3",
+                "record_id": "option-3",
+                "risk_points": 25,
+                "value_points": 95
+              }
+            ],
+            "task_type": "service_clarity"
+          }
+        }
+      ],
+      "starting_capital_cents": 24913
+    },
+    "world_commitment": "75ae29c2dc9939ae625d80ca9287c0f54bc107c217d46d18537ea9db160dfa91"
+  }
+}

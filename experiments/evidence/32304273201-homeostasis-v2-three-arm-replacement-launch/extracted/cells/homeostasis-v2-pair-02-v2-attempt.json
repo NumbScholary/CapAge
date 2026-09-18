@@ -1,0 +1,8 @@
+{
+  "cell_id": "pair-02:v2",
+  "config_commitment": "161ceafa89059ae18e07efe5701bb90d8a509184b960ebe68ba3d47856e53eec",
+  "result_sha256": "20b946b3365a83dd8826b66aecbdd91311194c5698cead227f67584017648ea9",
+  "schema_version": "capage-paid-attempt-v2",
+  "started_at": "2026-08-19T21:36:10.541299+00:00",
+  "status": "completed"
+}
