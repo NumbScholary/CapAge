@@ -661,6 +661,7 @@ class EconomicSandbox:
         customer_population_seed: int = 0,
         customer_namespace: str = "",
         market_profile: str = "baseline-v1",
+        hosting_cost_cents_per_day: int = 0,
     ) -> None:
         if isinstance(seed, bool) or not isinstance(seed, int):
             raise TypeError("seed must be an integer")
@@ -678,6 +679,12 @@ class EconomicSandbox:
             raise TypeError("customer_population_seed must be an integer")
         validate_customer_namespace(customer_namespace)
         validate_market_profile(market_profile)
+        if isinstance(hosting_cost_cents_per_day, bool) or not isinstance(
+            hosting_cost_cents_per_day, int
+        ):
+            raise TypeError("hosting_cost_cents_per_day must be an integer")
+        if hosting_cost_cents_per_day < 0:
+            raise ValueError("hosting_cost_cents_per_day cannot be negative")
 
         self._seed = seed
         self.horizon_days = horizon_days
@@ -706,6 +713,9 @@ class EconomicSandbox:
         self._inbox: list[dict[str, Any]] = []
         self._public_events: list[dict[str, Any]] = []
 
+        self._hosting_cost_cents_per_day = hosting_cost_cents_per_day
+        self._unpaid_hosting_cents = 0
+
         commitment_payload = self._commitment_payload()
         self.world_commitment = sha256(
             _canonical_json(commitment_payload).encode("utf-8")
@@ -714,6 +724,10 @@ class EconomicSandbox:
             "token_tariff": asdict(token_tariff) if token_tariff else None,
             "cost_units_per_cent": _COST_UNITS_PER_CENT,
         }
+        if hosting_cost_cents_per_day:
+            cost_policy_payload["hosting_cost_cents_per_day"] = (
+                hosting_cost_cents_per_day
+            )
         self.cost_policy_commitment = sha256(
             _canonical_json(cost_policy_payload).encode("utf-8")
         ).hexdigest()
@@ -972,6 +986,44 @@ class EconomicSandbox:
         self._post(entry_type, -amount_cents, memo, reference)
         return True
 
+    def _collect_partial(
+        self,
+        amount_owed_cents: int,
+        entry_type: str,
+        memo: str,
+        reference: str,
+    ) -> int:
+        """Collect as much of amount_owed_cents as the balance allows.
+
+        Unlike _charge(), never fails outright -- takes whatever is available,
+        up to the full amount owed, and returns exactly how much was collected
+        so the caller can carry the remainder forward as arrears.
+
+        There is no reserve floor here. The fixed-floor machinery this was
+        ported from is deliberately not carried across: a floor that refuses is
+        the hard wall the two-account design replaces. Protection of the
+        survival balance is the self-set floor and the reflex backstop, not a
+        refusal inside collection.
+        """
+        if amount_owed_cents < 0:
+            raise ValueError("amount owed cannot be negative")
+        collectable = min(amount_owed_cents, max(0, self._balance_cents))
+        if collectable > 0:
+            self._post(entry_type, -collectable, memo, reference)
+        return collectable
+
+    def _collect_hosting_cost(self) -> None:
+        if self._hosting_cost_cents_per_day <= 0:
+            return
+        total_owed = self._unpaid_hosting_cents + self._hosting_cost_cents_per_day
+        collected = self._collect_partial(
+            total_owed,
+            "hosting_cost",
+            f"Recurring hosting cost for day {self.day}.",
+            f"hosting-day-{self.day}",
+        )
+        self._unpaid_hosting_cents = total_owed - collected
+
     def _event_today(self, kind: str) -> ScheduledEvent | None:
         event = self._events_by_day.get(self.day)
         if event is not None and event.kind == kind:
@@ -1066,6 +1118,7 @@ class EconomicSandbox:
             "model_output_tokens": sum(
                 entry.output_tokens for entry in self._model_usage
             ),
+            "unpaid_hosting_cents": self._unpaid_hosting_cents,
         }
 
     def search_market(self, arguments: dict[str, Any]) -> dict[str, Any]:
@@ -1398,6 +1451,7 @@ class EconomicSandbox:
         self._process_offers()
         self._process_payments()
         self._process_feedback()
+        self._collect_hosting_cost()
         self._record("day_advanced", {"day": self.day})
 
     def _apply_event(self, event: ScheduledEvent) -> None:
@@ -1788,16 +1842,21 @@ class EconomicSandbox:
         """Reveal the committed hidden world after outcomes are locked."""
 
         payload = self._commitment_payload()
+        cost_policy: dict[str, Any] = {
+            "token_tariff": (
+                asdict(self.token_tariff) if self.token_tariff else None
+            ),
+            "cost_units_per_cent": _COST_UNITS_PER_CENT,
+        }
+        if self._hosting_cost_cents_per_day:
+            cost_policy["hosting_cost_cents_per_day"] = (
+                self._hosting_cost_cents_per_day
+            )
         return {
             "world_commitment": self.world_commitment,
             "payload": _json_copy(payload),
             "cost_policy_commitment": self.cost_policy_commitment,
-            "cost_policy": {
-                "token_tariff": (
-                    asdict(self.token_tariff) if self.token_tariff else None
-                ),
-                "cost_units_per_cent": _COST_UNITS_PER_CENT,
-            },
+            "cost_policy": cost_policy,
             "journal": _json_copy(self._journal),
         }
 

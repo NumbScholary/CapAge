@@ -115,6 +115,18 @@ REFERENCE_IMPLEMENTATION_SHA256_CURRENT = {
     "capage/policy.py": (
         "9a5bbef90b46ae90897d36f49914335866ba29bbfeb92671abebde7d685242ba"
     ),
+    # 2026-09-18, two-account build stage 0: recurring hosting-cost collection
+    # added to EconomicSandbox (hosting_cost_cents_per_day, _collect_partial,
+    # _collect_hosting_cost, unpaid_hosting_cents). Ported from the
+    # hosting-liability experiment branch WITHOUT its fixed reserve-floor
+    # machinery, which the two-account design replaces. This follows the
+    # documented procedure above -- a deliberate, on-the-record change updates
+    # its entry here, never the frozen constant -- so run 32349482559's
+    # evidentiary record is untouched and its own plan still validates against
+    # REFERENCE_IMPLEMENTATION_SHA256_HOMEOSTASIS_V2_REPLICATION_32349482559.
+    "capage/sandbox.py": (
+        "e2cdbd8d37d0fea851fd36e3c407386d5c2779c7a4825b6d10dbbed9197d3d4f"
+    ),
 }
 
 

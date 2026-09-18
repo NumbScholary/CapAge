@@ -459,3 +459,89 @@ def test_distribution_summary_preserves_spread_and_bad_runs():
     assert summary["ending_balance_cents"]["minimum"] == 24_000
     assert summary["ending_balance_cents"]["maximum"] == 29_000
     assert summary["loss_rate"] == 1 / 3
+
+
+def test_hosting_cost_posts_a_labelled_line_every_day():
+    world = EconomicSandbox(6, hosting_cost_cents_per_day=45)
+
+    world.wait({"days": 3})
+
+    ledger = world.inspect_ledger()
+    hosting = [
+        entry for entry in ledger["entries"] if entry["entry_type"] == "hosting_cost"
+    ]
+    assert [entry["day"] for entry in hosting] == [1, 2, 3]
+    assert [entry["amount_cents"] for entry in hosting] == [-45, -45, -45]
+    assert [entry["reference"] for entry in hosting] == [
+        "hosting-day-1",
+        "hosting-day-2",
+        "hosting-day-3",
+    ]
+    assert hosting[0]["memo"] == "Recurring hosting cost for day 1."
+    assert ledger["capital"]["balance_cents"] == 25_000 - 135
+    assert ledger["capital"]["unpaid_hosting_cents"] == 0
+
+
+def test_no_hosting_tariff_posts_nothing():
+    world = EconomicSandbox(6)
+
+    world.wait({"days": 5})
+
+    ledger = world.inspect_ledger()
+    assert not [
+        entry for entry in ledger["entries"] if entry["entry_type"] == "hosting_cost"
+    ]
+    assert ledger["capital"]["unpaid_hosting_cents"] == 0
+
+
+def test_hosting_cost_takes_what_it_can_and_carries_arrears_forward():
+    """Collection never refuses: it takes the balance to zero and accrues the rest.
+
+    This is the two-account design's premise -- a floor is pressure, not a
+    fence. The fixed reserve floor that used to sit inside collection is
+    deliberately absent, so the balance is drawn down to zero rather than
+    stopped above a wall.
+    """
+    world = EconomicSandbox(6, starting_capital_cents=100, hosting_cost_cents_per_day=80)
+
+    world.wait({"days": 1})
+    assert world.inspect_ledger()["capital"]["balance_cents"] == 20
+    assert world.inspect_ledger()["capital"]["unpaid_hosting_cents"] == 0
+
+    world.wait({"days": 1})
+    capital = world.inspect_ledger()["capital"]
+    assert capital["balance_cents"] == 0
+    assert capital["unpaid_hosting_cents"] == 60
+
+    world.wait({"days": 1})
+    capital = world.inspect_ledger()["capital"]
+    assert capital["balance_cents"] == 0
+    assert capital["unpaid_hosting_cents"] == 140
+
+
+def test_unpaid_hosting_is_visible_to_the_agent_in_observe():
+    world = EconomicSandbox(6, starting_capital_cents=100, hosting_cost_cents_per_day=80)
+
+    world.wait({"days": 2})
+
+    assert world.observe()["capital"]["unpaid_hosting_cents"] == 60
+
+
+def test_hosting_tariff_enters_the_cost_policy_commitment():
+    plain = EconomicSandbox(6)
+    charged = EconomicSandbox(6, hosting_cost_cents_per_day=45)
+    other = EconomicSandbox(6, hosting_cost_cents_per_day=135)
+
+    assert plain.cost_policy_commitment != charged.cost_policy_commitment
+    assert charged.cost_policy_commitment != other.cost_policy_commitment
+    assert charged.reveal_world()["cost_policy"]["hosting_cost_cents_per_day"] == 45
+    assert "hosting_cost_cents_per_day" not in plain.reveal_world()["cost_policy"]
+
+
+def test_hosting_tariff_rejects_invalid_values():
+    for bad in (-1, True, 1.5, "45"):
+        try:
+            EconomicSandbox(6, hosting_cost_cents_per_day=bad)
+        except (TypeError, ValueError):
+            continue
+        raise AssertionError(f"hosting_cost_cents_per_day accepted {bad!r}")
