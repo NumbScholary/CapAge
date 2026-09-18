@@ -545,3 +545,49 @@ def test_hosting_tariff_rejects_invalid_values():
         except (TypeError, ValueError):
             continue
         raise AssertionError(f"hosting_cost_cents_per_day accepted {bad!r}")
+
+
+def test_a_zero_balance_agent_cannot_think_at_all():
+    """The lockout the reflex backstop exists to prevent. Pinned, not fixed.
+
+    An agent whose recurring hosting cost has drawn its balance to zero cannot
+    meter another model call: record_model_usage() routes through _charge(),
+    which refuses outright below the amount owed. quote_model_call() reports
+    the next call unaffordable, so the runner stops with
+    insufficient_synthetic_capital_for_next_call.
+
+    This is total lockout, which is what zero does -- 1533 section 1. It is the
+    condition the backstop fires on, and this test is the target stage 4 has to
+    change. Until then it documents the current behaviour honestly rather than
+    leaving it to be discovered.
+    """
+    tariff = TokenTariff(
+        name="lockout-test",
+        input_cents_per_million_tokens=200,
+        output_cents_per_million_tokens=1_000,
+    )
+    world = EconomicSandbox(
+        6,
+        starting_capital_cents=100,
+        hosting_cost_cents_per_day=80,
+        token_tariff=tariff,
+    )
+
+    world.wait({"days": 2})
+    assert world.inspect_ledger()["capital"]["balance_cents"] == 0
+    assert world.inspect_ledger()["capital"]["unpaid_hosting_cents"] == 60
+
+    assert world.quote_model_call(
+        input_tokens=10_000, max_output_tokens=1_000
+    )["affordable"] is False
+
+    try:
+        world.record_model_usage("call-001", input_tokens=10_000, output_tokens=1_000)
+    except ValueError as error:
+        assert "insufficient synthetic capital" in str(error)
+    else:
+        raise AssertionError(
+            "record_model_usage succeeded at zero balance; the lockout this test "
+            "pins is gone. If stage 4 landed the backstop, replace this test "
+            "with one asserting the backstop fired."
+        )
