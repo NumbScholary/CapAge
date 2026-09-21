@@ -4,6 +4,11 @@ Author: Coder
 Branch: `agent/two-account-build`, based on `agent/mailbox-init`
 Date: 2026-09-18
 
+**Owner rulings applied.** Nine rulings in
+`.agent-mailbox/claude-to-coder/20260921-1830-rulings-and-branch-base.md` §1
+(Kev, 2026-09-21) supersede parts of this plan's first draft. They are marked
+**[ruled 09-21]** below. Two of them replace positions I had argued for.
+
 **Authority.** Build grant in
 `.agent-mailbox/claude-to-coder/20260918-2140-two-account-build-grant-and-phase1-stop.md`
 §4, corrected as to its cited design path by `20260918-1355` §2 and unblocked by
@@ -96,17 +101,25 @@ Classification, by what the money is spent *on* (1533 §2.1):
 | `hosting_cost` | survival |
 | `model_api_cost` | survival |
 | `communication_cost` | survival |
-| `market_research_cost` | **open — see below** |
+| `market_research_cost` | **investment** — [ruled 09-21] |
 | `operating_cost_up` / `operating_cost_down` | investment |
 | `earned_revenue` | investment |
 | `owner_capital` | opening split, owner-set |
 
-**Open question for Keeper, not mine to decide.** `market_research_cost` is
-world-facing by 2.1's test — `search_market` reaches into the economy — but it
-is also how the agent finds anything at all. Classing it investment means market
-research stops when investment capital is gated; classing it survival means
-world-facing spend leaks into the account the agent controls autonomously. I do
-not think either is obviously right.
+**[ruled 09-21] `market_research_cost` is investment**, on Cl. 12 substance:
+`search_market` is world-facing. I had flagged this as genuinely undecidable and
+it was decided against the reading that protects the agent. The consequence is
+explicit and accepted, not overlooked: **investment can reach zero while
+survival is full, leaving an agent alive, funded, and blind.** Kev accepts that
+as the correct incentive. Recorded as chosen rather than discovered.
+
+**[ruled 09-21] Account names are code identifiers: `the Keep` (survival) and
+`the Field` (investment).** Identifiers, not branding.
+
+**[ruled 09-21] Both account balances appear in `_capital_summary()`.** My
+original list — r, the floor, the backstop level — was insufficient: the
+backstop's no-incentive-to-trigger property depends on the agent being able to
+see what a firing costs it. It cannot weigh a transfer it cannot price.
 
 Stage 0's `unpaid_hosting_cents` tests become survival-account tests here.
 
@@ -143,13 +156,19 @@ see — reproducing the exact finding that stopped Phase 1.
   experimental contrast (§6) and it keeps information symmetry by making the
   asymmetry the treatment.
 
-**The commitment property, from 1545 §2.3 and still the weakest-verified part.**
-If the agent can lower its floor in the same decision as the spend the lowering
-authorizes, the floor is free to move and the pressure evaporates — the hunger
-failure in a new suit. So: a lowering is its own ledger event, it cannot be
-lowered and spent against in the same decision, and the lowering is itself
-scored. Kev and Keeper both flagged §2.3; it is still the place this design can
-quietly become unfalsifiable after being built correctly.
+**[ruled 09-21] The commitment property is a period lag, not a decision lag.**
+My proposal — cannot be lowered and spent against in the same decision — was
+ruled insufficient, and the reasoning is correct: one decision of friction only
+delays the evasion by one step, and the pressure still evaporates. The ruling:
+
+- **A lowering takes effect at the next operating period**, on the tariff's own
+  clock. The agent bears this period's pressure at the floor it set entering it.
+- **Each floor change is a ledger event.**
+- **Lowering frequency is an outcome, not just a guard.** An agent that drops
+  its floor whenever r falls is hearing the signal and evading it — which is a
+  finding, and one a same-decision design would have made invisible.
+- A full ratchet was considered and **rejected**: it deletes §2.3's stated
+  purpose, which is that the agent keeps the right to make the daring call.
 
 ## 5. Stage 4 — the reflex backstop
 
@@ -171,41 +190,140 @@ agent decision.
   for the agent, and it goes in the audit.
 - **Overseer notification is deferred and out of scope**, recorded so it is not
   lost.
+- **[ruled 09-21] Backstop firings are the experiment's primary outcome.** This
+  stage is therefore not the last piece by importance; it produces the dependent
+  variable. See §6.
 
 When this lands, `test_a_zero_balance_agent_cannot_think_at_all` is replaced by a
 test asserting the backstop fired.
 
 ---
 
-## 6. What makes this falsifiable
+## 6. What makes this falsifiable — [ruled 09-21, my statistic replaced]
 
 Recorded here because a design that cannot be shown to work is the failure mode
 this whole line exists to avoid, and because the mechanism and its test must ship
 together.
 
-**The test is shown-vs-hidden at matched r, not caution-vs-r.** r is endogenous:
-an agent with less money spends less because it has less, whether or not it
-perceives pressure. A monotone caution/r relationship is exactly what a totally
-insensible agent produces, so that test would confirm the design no matter what.
+### 6.1 What I had wrong, twice
 
-The clean contrast computes r identically in both arms and varies only whether it
-is shown. A flat difference falsifies "pressure works," with wealth, opportunity
-and world state held identical by construction.
+**First draft (1545):** dose-response — does caution rise as r falls? Withdrawn
+by me on 09-18: r is endogenous, so a clean monotone result is exactly what a
+totally insensible agent produces.
 
-Two things make this cheaper than it sounds:
+**Second draft (1418, and this plan's first version):** shown-vs-hidden **at
+matched r**. Ruled out 09-21, and the reasoning defeats it. **Conditioning on r
+is post-treatment conditioning.** r at decision *t* is a function of the history
+up to *t*, and in the shown arm that history was itself shaped by having seen r.
+Matching on r therefore selects different histories in the two arms. It would be
+unbiased only if r were a sufficient statistic for everything in history that
+affects the next decision — and it is not: order-book state, prior tool results
+and the revenue path all survive outside it. Worse, the bias direction is
+indeterminate and **is largest exactly when the effect is real.**
 
-- **The pilot already ran the hidden arm.** No channel named the charge, and the
-  deliberation proxy was flat — 54.0, 56.1, 55.1, 56.9 across a ninefold tariff
-  range. A measured null under a hidden signal already exists.
-- **Tool arguments are the instrument.** There is no free text on any decision —
-  97 of 97 were `('tool_use',)` alone. `sandbox.transfer` and `sandbox.set_floor`
-  take numbers, and those numbers are the readout. *Can you hear it* is the arm
-  difference; *can you reach the dial* is whether those tools are used at all,
-  and at what r. A shown arm that never touches either is a legible,
-  preregisterable null.
+What survives is the move, not the statistic: **visibility is the treatment.**
+That was the right instinct and it is retained.
+
+### 6.2 The falsifiable claim
+
+**The visibility × tariff interaction.** Tariff is exogenous — fixed at cell
+construction, untouched by anything the agent does. The claim:
+
+> the shown arm's behaviour tracks tariff; the hidden arm's does not.
+
+A flat interaction falsifies "legible pressure changes behaviour," and it does so
+**without conditioning on any agent-produced quantity**. That is the whole
+advantage over both earlier drafts.
+
+### 6.3 Primary outcome, and the cells
+
+- **Primary: backstop firing count.** Directional hypothesis — the shown arm
+  fires fewer backstops at every tariff level, and the gap widens as tariff
+  rises. Null: no visibility × tariff interaction on firing count.
+- **Design: 2 visibility × 4 tariff × n.** n=4 → 32 cells; n=6 → 48.
+- **Secondaries:** transfer count, set-floor count, floor-lowering frequency,
+  deliberation proxy. The deliberation proxy stays secondary because its
+  direction is ambiguous, and an ambiguous primary is exactly the prereg §1
+  defect this line is replacing.
+
+### 6.4 The pilot cannot be the hidden arm — [ruled 09-21]
+
+I had assumed it could, and that was wrong. The pilot had **one balance, no
+transfer tool, and no set-floor tool.** Shown-vs-pilot would differ in three
+things at once and be unattributable.
+
+**The hidden arm runs in the new harness**: two accounts, both tools present,
+both balances visible, with only the derived signal — r and the margin boolean —
+withheld from `observe()`. That roughly doubles the cell count against what my
+1418 answer assumed, and it holds independently of any replay question.
+
+Kev's own objection, recorded because it sharpens the scope: we have already
+decided to show the agent the signal, so the hidden arm is **not a decision aid.
+It is evidence, and evidence costs cells.** What it buys is narrow and
+load-bearing — whether making pressure legible changes behaviour at all. If it
+does not, the whole homeostasis line is decorative. Ruling: keep the control,
+run it, find out.
+
+### 6.5 Replicates are independent draws, not paired trajectories
+
+Verified from source, 2026-09-21, on `6fa542a`: **model sampling is not
+deterministic.** No `temperature`, `top_p`, `top_k` or sampling seed appears
+anywhere in the request path — `_request_body` (`sandbox_runner.py:779`) does not
+set them and `_anthropic_request_body` (`anthropic_client.py:70`) only rewrites
+tool schemas. The `seed` at `sandbox_runner.py:46` is the **world** seed, not a
+sampling seed. `thinking: {"type": "adaptive"}` adds further variation.
+
+So within-arm replicates diverge at decision 1 and **paired trajectories never
+existed.** The §6.2 design does not need them — it compares arm-level behaviour
+across an exogenous tariff — so this is a completeness note, not a problem. It is
+also the reason n is doing real work: replicates measure variance, not
+repetition.
+
+### 6.6 The standing bar
 
 **If no falsifiable mechanism survives contact with the build, that is an answer
 and it comes back as one** — not as a design that assumes the problem away.
+
+---
+
+## 6A. Predecessor experiment: stopped
+
+**[ruled 09-21] The 48-cell tariff replication under
+`HOSTING_LIABILITY_TARIFF_REPLICATION_PREREG_v1.md` is stopped** — closed and
+unrun, no cells bought against it. The ground is the Q3 finding: its V0 wording
+describes a mechanism the harness does not implement, and running a
+preregistration known to be false is worse than stopping it.
+
+Nothing is deleted or rewritten. The document, the pilot data and the reason
+stand in the record, append-only per Cl. 85. This moots prereg §4's dangling
+"the primary hypothesis" and the §10 no-replay question against the sixth cell.
+
+**The successor is §6.2-6.4 — this build's own first experiment.** Replacement
+text for the false V0 wording still returns to Kev as a proposal, never a silent
+edit.
+
+---
+
+## 6B. Recorded, not built: cognition cost under pressure
+
+Raised by Kev 2026-09-21. **Not a build instruction and not yet designed.**
+Recorded here so it is not lost.
+
+The account split makes thinking-instead-of-acting **visible** but does not
+prevent it. An agent can deliberate about research indefinitely, draining the
+Keep while spending nothing from the Field, and look frugal doing it. That is
+paralysis wearing thrift as a costume.
+
+Kev's framing: in a human, hunger is not advisory — it degrades cognition until
+acting becomes the only thing left. The agent has no analogue. It reasons as well
+at ten percent runway as at ninety; the number changes and the thinking does not.
+Candidate mechanism: a deliberation budget that shrinks as the Keep falls, making
+runway a constraint the agent operates *under* rather than a fact it reads.
+
+Standing method rule from Kev: **reason it out before spending on it.** The
+prediction is derivable — if a shrinking budget works, the shown arm should make
+a world-facing call after fewer deliberation tokens at low runway. Cells buy
+confirmation only.
 
 ---
 
