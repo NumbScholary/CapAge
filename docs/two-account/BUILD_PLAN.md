@@ -247,7 +247,7 @@ the tool, with every refusal recorded.
 Gate: 238 tests, the same 10 pre-existing `frozen manifest` errors as the base
 branch and no others. Ten new tests.
 
-## 4. Stage 3 — legibility, and the self-set floor
+## 4. Stage 3 — legibility, and the self-set floor — done
 
 **This is the stage the whole design exists for, and it has a hard constraint.**
 
@@ -283,6 +283,61 @@ delays the evasion by one step, and the pressure still evaporates. The ruling:
   finding, and one a same-decision design would have made invisible.
 - A full ratchet was considered and **rejected**: it deletes §2.3's stated
   purpose, which is that the agent keeps the right to make the daring call.
+
+### 4.1 What landed, and the one definition the record did not fix
+
+`set_floor` is an agent tool, registered only when the partition exists.
+`pressure_signal_shown` is a constructor flag and a `SandboxRunConfig` field;
+it gates two keys in `_capital_summary()` and nothing else, and it enters the
+world commitment when a split is declared, because which arm a cell is in is
+fixed at construction.
+
+**The r decision, made inside the grant.** 1545 defined r as the fraction of
+the survival balance *a contemplated spend* would leave intact. `observe()` has
+no contemplated spend in hand, so r needs a reference point, and the record
+does not name one. Two candidates:
+
+- **(A)** against the next operating period's certain cost.
+- **(B)** against the agent's own floor: `(keep − floor) / keep`.
+
+**Chosen: (B).** Under (A) the floor is decorative — the agent would set a
+threshold and then read a number that ignored it. Under (B), lowering the floor
+visibly raises r, which is exactly the evasion ruling 5 wants recorded as an
+outcome. The move that survives from (A) is kept anyway:
+`next_operating_period_cost_cents` is exposed as a raw number, so the agent can
+compute r for any spend it is actually weighing — which is what the per-spend
+definition wanted and what an observation cannot do on its behalf.
+
+r goes **negative** below the floor and is **None** at an empty Keep. Neither
+is clamped: below-floor is information, and at zero the fraction is undefined
+and `insolvent` already says what there is to say.
+
+**The floor and the period cost appear in both arms.** Only `recoverability`
+and `clears_next_operating_period` — the derived signal named in ruling 3 — are
+withheld. The floor is not derived; the agent set it. An agent that can set a
+floor it cannot see is a third treatment, not the control.
+
+**r is journalled in both arms**, in `observe()`, as `pressure_signal`. Hiding
+it from the agent is the treatment; hiding it from the record would delete the
+measurement. `observe()` is the per-decision entry point, so this is one entry
+per decision — except `wait()`, which observes again after advancing, giving a
+second, post-advance reading. Honest rather than duplicated, and noted here so
+an analysis does not mistake it for double counting.
+
+**Ruling 5's ordering, made explicit in code.** The pending lowering is applied
+at the **top** of `_advance_one_day()`, before `_collect_hosting_cost()`. The
+agent bears the period it entered at the floor it entered with; the new floor
+governs from the next one. A second lowering replaces a pending one rather than
+queueing behind it — the agent's latest intention is the one that takes effect
+— and a raise supersedes any pending lowering, because tightening is always
+available (Cl. 35).
+
+**The floor never refuses.** No change to `_charge`. A test pins a spend that
+crosses the floor and succeeds, so no later reader adds the wall that stage 0
+deliberately removed.
+
+Gate: 252 tests, the same 10 pre-existing `frozen manifest` errors as the base
+branch and no others. Fourteen new tests.
 
 ## 5. Stage 4 — the reflex backstop
 

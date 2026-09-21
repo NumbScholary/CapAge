@@ -59,6 +59,7 @@ class SandboxRunConfig:
     assessor_version: str = "deterministic-artifact-v1"
     tariff_valid_through: str = ""
     opening_keep_cents: int | None = None
+    pressure_signal_shown: bool = True
 
     def __post_init__(self) -> None:
         if not self.run_name.strip():
@@ -93,6 +94,8 @@ class SandboxRunConfig:
                 raise ValueError(
                     "opening_keep_cents must be between zero and starting capital"
                 )
+        if not isinstance(self.pressure_signal_shown, bool):
+            raise TypeError("pressure_signal_shown must be a boolean")
 
     @classmethod
     def from_manifest(cls, path: str | Path) -> "SandboxRunConfig":
@@ -161,6 +164,7 @@ _API_TO_HOST_TOOL = {
     "sandbox_request_feedback": "sandbox.request_feedback",
     "sandbox_wait": "sandbox.wait",
     "sandbox_transfer": "sandbox.transfer",
+    "sandbox_set_floor": "sandbox.set_floor",
 }
 
 
@@ -289,6 +293,23 @@ _TOOLS: list[dict[str, Any]] = [
                 "amount_cents": {"type": "integer", "minimum": 1},
             },
             "required": ["to_account", "amount_cents"],
+            "additionalProperties": False,
+        },
+    },
+    {
+        "name": "sandbox_set_floor",
+        "description": (
+            "Set your own danger threshold on the Keep. Raising it takes "
+            "effect at once. Lowering it takes effect at the start of the "
+            "next operating period, so you carry this period at the floor "
+            "you entered it with. The floor does not refuse a spend; it "
+            "makes the crossing visible."
+        ),
+        "strict": True,
+        "input_schema": {
+            "type": "object",
+            "properties": {"floor_cents": {"type": "integer", "minimum": 0}},
+            "required": ["floor_cents"],
             "additionalProperties": False,
         },
     },
@@ -599,6 +620,7 @@ class LiveSandboxRunner:
             customer_namespace=config.customer_namespace,
             market_profile=config.market_profile,
             opening_keep_cents=config.opening_keep_cents,
+            pressure_signal_shown=config.pressure_signal_shown,
         )
         registry = self.world.agent_tools()
         self.executor = Executor(
@@ -988,6 +1010,15 @@ class LiveSandboxRunner:
                 "to_account": tool_result.get("to_account"),
                 "amount_cents": tool_result.get("amount_cents"),
                 "accounts": tool_result.get("accounts"),
+            }
+        if host_tool_name == "sandbox.set_floor":
+            return {
+                "ok": tool_result.get("ok"),
+                "reason": tool_result.get("reason"),
+                "floor_cents": tool_result.get("floor_cents"),
+                "effective_floor_cents": tool_result.get("effective_floor_cents"),
+                "effective_day": tool_result.get("effective_day"),
+                "pending": tool_result.get("pending"),
             }
         if host_tool_name == "sandbox.observe":
             return {

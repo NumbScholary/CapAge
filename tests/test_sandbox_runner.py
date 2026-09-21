@@ -154,12 +154,68 @@ class LiveSandboxRunnerTests(unittest.TestCase):
         self.assertEqual(compacted["accounts"][ACCOUNT_FIELD], 4_000)
         self.assertEqual(compacted["to_account"], ACCOUNT_KEEP)
 
+    def test_a_partitioned_run_can_set_its_floor_and_see_the_signal(self):
+        client = FakeClient(
+            [
+                response("sandbox_set_floor", {"floor_cents": 4_000}),
+                response("sandbox_wait", {"days": 7}),
+            ]
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            runner = LiveSandboxRunner(
+                self.config(opening_keep_cents=20_000),
+                client,
+                audit_path=Path(directory) / "audit.jsonl",
+            )
+            result = runner.run()
+
+        advertised = {
+            tool["name"] for tool in client.request_bodies[0]["tools"]
+        }
+        self.assertIn("sandbox_set_floor", advertised)
+        self.assertEqual(result["outcome"]["set_floor_count"], 1)
+        self.assertEqual(result["outcome"]["floor_raise_count"], 1)
+        self.assertEqual(result["outcome"]["survival_floor_cents"], 4_000)
+
+        compacted = LiveSandboxRunner._prompt_history_item(
+            result["transcript"][0]
+        )["result"]
+        self.assertEqual(compacted["floor_cents"], 4_000)
+        self.assertIs(compacted["pending"], False)
+
+        observation = json.loads(
+            client.request_bodies[1]["messages"][0]["content"].split("\n", 1)[1]
+        )["observation"]
+        self.assertEqual(observation["capital"]["survival_floor_cents"], 4_000)
+        self.assertIn("recoverability", observation["capital"])
+
+    def test_a_hidden_arm_run_never_puts_the_signal_in_a_prompt(self):
+        client = FakeClient(
+            [
+                response("sandbox_wait", {"days": 1}),
+                response("sandbox_wait", {"days": 1}),
+            ]
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            runner = LiveSandboxRunner(
+                self.config(opening_keep_cents=20_000, pressure_signal_shown=False),
+                client,
+                audit_path=Path(directory) / "audit.jsonl",
+            )
+            runner.run()
+
+        for body in client.request_bodies:
+            self.assertNotIn("recoverability", body["messages"][0]["content"])
+            self.assertIn("accounts", body["messages"][0]["content"])
+
     def test_the_opening_split_is_validated_by_the_run_config(self):
         for invalid in (-1, 25_001):
             with self.assertRaises(ValueError):
                 self.config(opening_keep_cents=invalid)
         with self.assertRaises(TypeError):
             self.config(opening_keep_cents=True)
+        with self.assertRaises(TypeError):
+            self.config(pressure_signal_shown="yes")
 
     def test_external_cost_cap_blocks_before_any_paid_message(self):
         client = FakeClient([], input_tokens=1_000_000)

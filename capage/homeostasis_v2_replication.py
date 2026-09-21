@@ -142,11 +142,16 @@ REFERENCE_IMPLEMENTATION_SHA256_CURRENT = {
     # with it -- it carries the tool schema, the split in SandboxRunConfig,
     # and the change from advertising every tool to advertising only the ones
     # the registry holds.
+    #
+    # 2026-09-21, two-account build stage 3: legibility and the self-set
+    # floor. EconomicSandbox gains set_floor(), the recoverability signal, and
+    # the pressure_signal_shown arm flag; capage/sandbox_runner.py carries the
+    # tool schema and the flag through SandboxRunConfig.
     "capage/sandbox.py": (
-        "39fcd0a36c3c7db19fd814b6276e39c31a1cd12d714deccbd759d67bd6ca97be"
+        "60c64b63c441eed8b805367080c1c9a81cfd7938534177b35db00e040a0e4cd8"
     ),
     "capage/sandbox_runner.py": (
-        "778b6cf3e9069d8005350ea3bc68daf29cd6d9a2bffbae2ea861ea46a42766b5"
+        "447863e5ebc54a7e6d171d1e810e5b6c2fc216ca8fd9c3c55daa20b3a3f7ab6e"
     ),
 }
 
