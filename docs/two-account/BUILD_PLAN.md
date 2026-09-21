@@ -244,6 +244,19 @@ there, and this section is the pointer to where.
 What the plan's §3 bullet asked for that *does* exist: the rejection path, in
 the tool, with every refusal recorded.
 
+> **Appended 2026-09-21, not a rewrite (Cl. 85).** Keeper corrected the
+> citation in `claude-to-coder/20260921-1545`: the anti-splitting language is
+> **Cl. 29** (*Correlated exposure* — not evading concentration or exposure
+> limits by partitioning a single underlying risk). **Cl. 41** (*Aggregation*)
+> says related actions are aggregated when determining whether a threshold
+> applies; it presupposes a threshold rather than creating one. The section
+> above says Cl. 41 throughout and stands as written. The correction does not
+> change the finding: Cl. 29 binds on evading a limit and there is none here,
+> Cl. 41 binds when a threshold applies and none does. Keeper added a third,
+> independent reason — **a transfer is not a spend.** It moves value between
+> two accounts inside the agent's own ledger; nothing leaves, so it creates
+> neither exposure nor a spending threshold.
+
 Gate: 238 tests, the same 10 pre-existing `frozen manifest` errors as the base
 branch and no others. Ten new tests.
 
@@ -319,10 +332,17 @@ floor it cannot see is a third treatment, not the control.
 
 **r is journalled in both arms**, in `observe()`, as `pressure_signal`. Hiding
 it from the agent is the treatment; hiding it from the record would delete the
-measurement. `observe()` is the per-decision entry point, so this is one entry
-per decision — except `wait()`, which observes again after advancing, giving a
-second, post-advance reading. Honest rather than duplicated, and noted here so
-an analysis does not mistake it for double counting.
+measurement.
+
+The entry count per decision is **not** always one, and an analysis has to know
+the callers rather than assume. `observe()` records once per call, and it is
+called from four places: the runner builds each prompt from one
+(`sandbox_runner.py:807`), `wait()` observes again after advancing, the host
+takes one while scoring a delivery (`sandbox_runner.py:902`), and the model can
+spend a decision on `sandbox.observe` itself. So a wait-decision leaves two
+readings and a plain decision leaves one. Every reading is honest — each is the
+true signal at the moment it was taken — but **count decisions from the
+transcript, not from `pressure_signal` entries.**
 
 **Ruling 5's ordering, made explicit in code.** The pending lowering is applied
 at the **top** of `_advance_one_day()`, before `_collect_hosting_cost()`. The
