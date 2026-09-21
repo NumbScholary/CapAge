@@ -124,8 +124,15 @@ REFERENCE_IMPLEMENTATION_SHA256_CURRENT = {
     # its entry here, never the frozen constant -- so run 32349482559's
     # evidentiary record is untouched and its own plan still validates against
     # REFERENCE_IMPLEMENTATION_SHA256_HOMEOSTASIS_V2_REPLICATION_32349482559.
+    # 2026-09-21, two-account build stage 1: the partition. LedgerEntry gains
+    # an account, EconomicSandbox gains an owner-set opening_keep_cents split,
+    # and every affordability check reads the account it spends from. The
+    # partition exists only when the owner declares a split, so an
+    # unpartitioned sandbox behaves exactly as before. Same documented
+    # procedure as stage 0 -- the current pin moves, the frozen constant does
+    # not.
     "capage/sandbox.py": (
-        "e2cdbd8d37d0fea851fd36e3c407386d5c2779c7a4825b6d10dbbed9197d3d4f"
+        "4d89acb90e88dd38cbecf89d3636073cf5acb2fb76f240932e2de3007abb5656"
     ),
 }
 

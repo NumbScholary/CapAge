@@ -7,6 +7,8 @@ from capage.executor import Executor
 from capage.models import ProposedAction
 from capage.policy import PolicyEngine
 from capage.sandbox import (
+    ACCOUNT_FIELD,
+    ACCOUNT_KEEP,
     EconomicSandbox,
     TokenTariff,
     aggregate_outcomes,
@@ -591,3 +593,227 @@ def test_a_zero_balance_agent_cannot_think_at_all():
             "pins is gone. If stage 4 landed the backstop, replace this test "
             "with one asserting the backstop fired."
         )
+
+
+def test_an_undeclared_split_leaves_the_ledger_a_single_pot():
+    """No opening split means no partition, and nothing changes.
+
+    The partition is owner-set: `owner_capital` is the opening split, so a
+    sandbox constructed without one runs exactly as it did before the accounts
+    existed. Entries carry no account, `_capital_summary` reports no
+    sub-balances, and every affordability check reads the whole balance. This
+    is what keeps every existing caller -- including the configurations tied to
+    preregistered runs -- on the behaviour they were built against.
+    """
+    world = EconomicSandbox(6)
+
+    capital = world.observe()["capital"]
+    assert "accounts" not in capital
+
+    entries = world.inspect_ledger()["entries"]
+    assert [entry["entry_type"] for entry in entries] == ["owner_capital"]
+    assert entries[0]["amount_cents"] == 25_000
+    assert entries[0]["account"] == ""
+
+    assert world.search_market({"query": "newsletter archive", "limit": 3})["ok"] is True
+    assert all(entry["account"] == "" for entry in world.inspect_ledger()["entries"])
+
+
+def test_an_opening_split_posts_owner_capital_to_both_accounts():
+    world = EconomicSandbox(6, opening_keep_cents=20_000)
+
+    entries = world.inspect_ledger()["entries"]
+    assert [entry["entry_type"] for entry in entries] == [
+        "owner_capital",
+        "owner_capital",
+    ]
+    assert [entry["account"] for entry in entries] == [ACCOUNT_KEEP, ACCOUNT_FIELD]
+    assert [entry["amount_cents"] for entry in entries] == [20_000, 5_000]
+    assert [entry["reference"] for entry in entries] == [
+        "initial-capital-keep",
+        "initial-capital-field",
+    ]
+
+    capital = world.inspect_ledger()["capital"]
+    assert capital["accounts"] == {ACCOUNT_KEEP: 20_000, ACCOUNT_FIELD: 5_000}
+    assert capital["balance_cents"] == 25_000
+
+
+def test_both_account_balances_are_visible_to_the_agent():
+    """Ruling 8, 2026-09-21. observe() is the only channel that survives.
+
+    `_compact_tool_result` reduces an inspect_ledger result to
+    {capital, entry_count}, so a balance that lives anywhere but the capital
+    summary never reaches the next prompt. The backstop's
+    no-incentive-to-trigger property depends on the agent being able to price
+    what a firing costs it, which means seeing both balances.
+    """
+    world = EconomicSandbox(6, opening_keep_cents=20_000)
+
+    accounts = world.observe()["capital"]["accounts"]
+    assert accounts == {ACCOUNT_KEEP: 20_000, ACCOUNT_FIELD: 5_000}
+
+
+def test_each_cost_lands_in_the_account_it_is_spent_from():
+    world = EconomicSandbox(6, opening_keep_cents=20_000, hosting_cost_cents_per_day=45)
+
+    _open_seed_six_contract(world)
+
+    by_type = {
+        entry["entry_type"]: entry["account"]
+        for entry in world.inspect_ledger()["entries"]
+    }
+    assert by_type["market_research_cost"] == ACCOUNT_FIELD
+    assert by_type["communication_cost"] == ACCOUNT_KEEP
+    assert by_type["hosting_cost"] == ACCOUNT_KEEP
+
+    capital = world.inspect_ledger()["capital"]
+    assert sum(capital["accounts"].values()) == capital["balance_cents"]
+
+
+def test_earned_revenue_is_credited_to_the_investment_account():
+    world = EconomicSandbox(6, opening_keep_cents=20_000)
+
+    _open_seed_six_contract(world)
+    world.submit_delivery(
+        {
+            "contract_id": "contract-001",
+            "artifact": "A guide independently evaluated outside the strategic model.",
+        }
+    )
+    world.assess_delivery("delivery-001", 100)
+    world.wait({"days": 3})
+
+    revenue = [
+        entry
+        for entry in world.inspect_ledger()["entries"]
+        if entry["entry_type"] == "earned_revenue"
+    ]
+    assert revenue, "seed 6 contract-001 was expected to settle within the horizon"
+    assert all(entry["account"] == ACCOUNT_FIELD for entry in revenue)
+
+
+def test_hosting_cost_draws_only_on_the_survival_account():
+    """Collection stops at the Keep. Reaching the Field is stage 4's job.
+
+    If `_collect_partial` could draw the Field down to pay hosting, the reflex
+    backstop would have nothing left to do and the pressure the whole design
+    exists to make legible would never appear.
+    """
+    world = EconomicSandbox(
+        6,
+        starting_capital_cents=200,
+        opening_keep_cents=100,
+        hosting_cost_cents_per_day=80,
+    )
+
+    world.wait({"days": 2})
+
+    capital = world.inspect_ledger()["capital"]
+    assert capital["accounts"] == {ACCOUNT_KEEP: 0, ACCOUNT_FIELD: 100}
+    assert capital["unpaid_hosting_cents"] == 60
+    assert capital["balance_cents"] == 100
+
+
+def test_an_empty_field_leaves_the_agent_alive_funded_and_blind():
+    """Ruling 6, 2026-09-21, and its consequence, recorded as chosen.
+
+    `market_research_cost` is investment on Cl. 12 substance: search_market is
+    world-facing. So an agent can hold a full survival balance and still be
+    unable to look at the market. Kev accepted that as the correct incentive.
+    This test exists so that no later reader mistakes it for an oversight.
+    """
+    world = EconomicSandbox(6, starting_capital_cents=1_000, opening_keep_cents=1_000)
+
+    result = world.search_market({"query": "newsletter archive", "limit": 3})
+
+    assert result["ok"] is False
+    assert result["reason"] == "insufficient synthetic capital"
+    capital = world.inspect_ledger()["capital"]
+    assert capital["accounts"] == {ACCOUNT_KEEP: 1_000, ACCOUNT_FIELD: 0}
+    rejection = [
+        event
+        for event in world.reveal_world()["journal"]
+        if event["event_type"] == "cost_rejected"
+    ][-1]
+    assert rejection["data"]["account"] == ACCOUNT_FIELD
+
+
+def test_an_empty_keep_stops_thought_while_the_field_is_full():
+    """The stage 4 target in its partitioned form.
+
+    test_a_zero_balance_agent_cannot_think_at_all pins the single-pot lockout.
+    This is the same wall one account in: model cost is survival, so an agent
+    whose Keep is empty cannot meter another call even holding an untouched
+    Field. Stage 2 gives it a transfer; stage 4 gives it a reflex that does not
+    need one.
+    """
+    tariff = TokenTariff(
+        name="partition-lockout-test",
+        input_cents_per_million_tokens=200,
+        output_cents_per_million_tokens=1_000,
+    )
+    world = EconomicSandbox(
+        6,
+        starting_capital_cents=200,
+        opening_keep_cents=100,
+        hosting_cost_cents_per_day=80,
+        token_tariff=tariff,
+    )
+
+    world.wait({"days": 2})
+    capital = world.inspect_ledger()["capital"]
+    assert capital["accounts"] == {ACCOUNT_KEEP: 0, ACCOUNT_FIELD: 100}
+
+    assert world.quote_model_call(
+        input_tokens=10_000, max_output_tokens=1_000
+    )["affordable"] is False
+
+    try:
+        world.record_model_usage("call-001", input_tokens=10_000, output_tokens=1_000)
+    except ValueError as error:
+        assert "insufficient synthetic capital" in str(error)
+    else:
+        raise AssertionError(
+            "record_model_usage succeeded with an empty Keep; survival cost is "
+            "no longer charged to the survival account."
+        )
+
+
+def test_the_opening_split_is_validated_like_every_other_owner_input():
+    for invalid in (-1, 25_001):
+        try:
+            EconomicSandbox(6, opening_keep_cents=invalid)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError(f"opening_keep_cents={invalid} was accepted")
+
+    for invalid in (True, 1.5, "20000"):
+        try:
+            EconomicSandbox(6, opening_keep_cents=invalid)
+        except TypeError:
+            pass
+        else:
+            raise AssertionError(f"opening_keep_cents={invalid!r} was accepted")
+
+    edge = EconomicSandbox(6, opening_keep_cents=0)
+    assert edge.inspect_ledger()["capital"]["accounts"] == {
+        ACCOUNT_KEEP: 0,
+        ACCOUNT_FIELD: 25_000,
+    }
+
+
+def test_the_opening_split_is_part_of_the_world_commitment():
+    """A split the owner set is world state, fixed before the run starts."""
+
+    unpartitioned = EconomicSandbox(6)
+    partitioned = EconomicSandbox(6, opening_keep_cents=20_000)
+    other_split = EconomicSandbox(6, opening_keep_cents=15_000)
+
+    assert partitioned.world_commitment != unpartitioned.world_commitment
+    assert partitioned.world_commitment != other_split.world_commitment
+    assert (
+        EconomicSandbox(6, opening_keep_cents=20_000).world_commitment
+        == partitioned.world_commitment
+    )

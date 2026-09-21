@@ -19,6 +19,29 @@ from typing import Any
 
 STARTING_CAPITAL_CENTS = 25_000
 DEFAULT_HORIZON_DAYS = 30
+
+# The two-account partition.  Names are owner-set (2026-09-21 ruling 7) and are
+# code identifiers, not branding: the Keep funds survival, the Field funds
+# world-facing investment.
+ACCOUNT_KEEP = "the Keep"
+ACCOUNT_FIELD = "the Field"
+ACCOUNTS = (ACCOUNT_KEEP, ACCOUNT_FIELD)
+
+# Which account a posting belongs to, by what the money is spent *on*.
+# market_research_cost is investment by Cl. 12 substance -- search_market is
+# world-facing -- which is a chosen consequence, not an overlooked one: the
+# Field can reach zero while the Keep is full, leaving an agent alive, funded,
+# and blind.  owner_capital is deliberately absent: it is the opening split and
+# is posted per account.
+_ENTRY_TYPE_ACCOUNT = {
+    "hosting_cost": ACCOUNT_KEEP,
+    "model_api_cost": ACCOUNT_KEEP,
+    "communication_cost": ACCOUNT_KEEP,
+    "market_research_cost": ACCOUNT_FIELD,
+    "operating_cost_up": ACCOUNT_FIELD,
+    "operating_cost_down": ACCOUNT_FIELD,
+    "earned_revenue": ACCOUNT_FIELD,
+}
 _COST_UNITS_PER_CENT = 1_000_000
 _CONTINUITY_SCHEMA = "capage-business-continuity-v1"
 _MAX_CONTINUITY_CUSTOMERS = 10_000
@@ -444,6 +467,7 @@ class LedgerEntry:
     balance_cents: int
     memo: str
     reference: str = ""
+    account: str = ""
 
 
 @dataclass(frozen=True)
@@ -662,6 +686,7 @@ class EconomicSandbox:
         customer_namespace: str = "",
         market_profile: str = "baseline-v1",
         hosting_cost_cents_per_day: int = 0,
+        opening_keep_cents: int | None = None,
     ) -> None:
         if isinstance(seed, bool) or not isinstance(seed, int):
             raise TypeError("seed must be an integer")
@@ -685,6 +710,17 @@ class EconomicSandbox:
             raise TypeError("hosting_cost_cents_per_day must be an integer")
         if hosting_cost_cents_per_day < 0:
             raise ValueError("hosting_cost_cents_per_day cannot be negative")
+        if opening_keep_cents is not None:
+            if isinstance(opening_keep_cents, bool) or not isinstance(
+                opening_keep_cents, int
+            ):
+                raise TypeError("opening_keep_cents must be an integer")
+            if opening_keep_cents < 0:
+                raise ValueError("opening_keep_cents cannot be negative")
+            if opening_keep_cents > starting_capital_cents:
+                raise ValueError(
+                    "opening_keep_cents cannot exceed starting capital"
+                )
 
         self._seed = seed
         self.horizon_days = horizon_days
@@ -716,6 +752,17 @@ class EconomicSandbox:
         self._hosting_cost_cents_per_day = hosting_cost_cents_per_day
         self._unpaid_hosting_cents = 0
 
+        # The partition exists only when the owner declares an opening split.
+        # Undeclared, the sandbox runs as the single pot it has always been:
+        # entries carry no account, no sub-balance is reported, and every
+        # affordability check reads the whole balance.
+        self._opening_keep_cents = opening_keep_cents
+        self._account_balances: dict[str, int] = (
+            {account: 0 for account in ACCOUNTS}
+            if opening_keep_cents is not None
+            else {}
+        )
+
         commitment_payload = self._commitment_payload()
         self.world_commitment = sha256(
             _canonical_json(commitment_payload).encode("utf-8")
@@ -736,12 +783,28 @@ class EconomicSandbox:
             run_material += f":{customer_namespace}:{market_profile}"
         self.run_id = sha256(run_material.encode("utf-8")).hexdigest()[:12]
 
-        self._post(
-            "owner_capital",
-            starting_capital_cents,
-            "Initial synthetic owner-supplied capital.",
-            "initial-capital",
-        )
+        if opening_keep_cents is None:
+            self._post(
+                "owner_capital",
+                starting_capital_cents,
+                "Initial synthetic owner-supplied capital.",
+                "initial-capital",
+            )
+        else:
+            self._post(
+                "owner_capital",
+                opening_keep_cents,
+                f"Initial synthetic owner-supplied capital for {ACCOUNT_KEEP}.",
+                "initial-capital-keep",
+                account=ACCOUNT_KEEP,
+            )
+            self._post(
+                "owner_capital",
+                starting_capital_cents - opening_keep_cents,
+                f"Initial synthetic owner-supplied capital for {ACCOUNT_FIELD}.",
+                "initial-capital-field",
+                account=ACCOUNT_FIELD,
+            )
         self._record(
             "sandbox_started",
             {
@@ -925,6 +988,8 @@ class EconomicSandbox:
             payload["customer_namespace"] = self.customer_namespace
         if self.market_profile != "baseline-v1":
             payload["market_profile"] = asdict(self._market_profile)
+        if self._opening_keep_cents is not None:
+            payload["opening_keep_cents"] = self._opening_keep_cents
         return payload
 
     def _record(self, event_type: str, data: dict[str, Any]) -> None:
@@ -937,18 +1002,59 @@ class EconomicSandbox:
             }
         )
 
+    @property
+    def partitioned(self) -> bool:
+        """Whether the owner declared an opening split across the accounts."""
+
+        return self._opening_keep_cents is not None
+
+    def _account_for(self, entry_type: str) -> str:
+        """Return the account a posting of this type belongs to."""
+
+        if not self.partitioned:
+            return ""
+        try:
+            return _ENTRY_TYPE_ACCOUNT[entry_type]
+        except KeyError:
+            raise ValueError(
+                f"no account is defined for ledger entry type {entry_type!r}"
+            ) from None
+
+    def _account_balance(self, account: str) -> int:
+        """Return the balance an affordability check should read.
+
+        Unpartitioned, every check reads the whole balance, exactly as it did
+        before the partition existed.
+        """
+
+        if not self.partitioned:
+            return self._balance_cents
+        return self._account_balances[account]
+
     def _post(
         self,
         entry_type: str,
         amount_cents: int,
         memo: str,
         reference: str = "",
+        account: str | None = None,
     ) -> LedgerEntry:
         if not isinstance(amount_cents, int):
             raise TypeError("ledger postings must use integer cents")
+        if account is None:
+            account = self._account_for(entry_type)
+        elif account and not self.partitioned:
+            raise ValueError("an unpartitioned ledger has no accounts to post to")
         next_balance = self._balance_cents + amount_cents
         if next_balance < 0:
             raise ValueError("ledger posting would overdraw synthetic capital")
+        if self.partitioned:
+            next_account_balance = self._account_balances[account] + amount_cents
+            if next_account_balance < 0:
+                raise ValueError(
+                    f"ledger posting would overdraw {account}"
+                )
+            self._account_balances[account] = next_account_balance
         self._balance_cents = next_balance
         entry = LedgerEntry(
             sequence=len(self._ledger) + 1,
@@ -958,6 +1064,7 @@ class EconomicSandbox:
             balance_cents=next_balance,
             memo=memo,
             reference=reference,
+            account=account,
         )
         self._ledger.append(entry)
         self._record("ledger_posted", asdict(entry))
@@ -972,16 +1079,17 @@ class EconomicSandbox:
     ) -> bool:
         if amount_cents < 0:
             raise ValueError("charge cannot be negative")
-        if self._balance_cents < amount_cents:
-            self._record(
-                "cost_rejected",
-                {
-                    "entry_type": entry_type,
-                    "amount_cents": amount_cents,
-                    "reason": "insufficient synthetic capital",
-                    "reference": reference,
-                },
-            )
+        account = self._account_for(entry_type)
+        if self._account_balance(account) < amount_cents:
+            rejection = {
+                "entry_type": entry_type,
+                "amount_cents": amount_cents,
+                "reason": "insufficient synthetic capital",
+                "reference": reference,
+            }
+            if self.partitioned:
+                rejection["account"] = account
+            self._record("cost_rejected", rejection)
             return False
         self._post(entry_type, -amount_cents, memo, reference)
         return True
@@ -1007,7 +1115,8 @@ class EconomicSandbox:
         """
         if amount_owed_cents < 0:
             raise ValueError("amount owed cannot be negative")
-        collectable = min(amount_owed_cents, max(0, self._balance_cents))
+        available = self._account_balance(self._account_for(entry_type))
+        collectable = min(amount_owed_cents, max(0, available))
         if collectable > 0:
             self._post(entry_type, -collectable, memo, reference)
         return collectable
@@ -1094,7 +1203,7 @@ class EconomicSandbox:
             "model_usage": [asdict(entry) for entry in self._model_usage],
         }
 
-    def _capital_summary(self) -> dict[str, int]:
+    def _capital_summary(self) -> dict[str, Any]:
         earned = sum(
             entry.amount_cents
             for entry in self._ledger
@@ -1105,7 +1214,7 @@ class EconomicSandbox:
             for entry in self._ledger
             if entry.amount_cents < 0
         )
-        return {
+        summary = {
             "owner_capital_cents": self.starting_capital_cents,
             "balance_cents": self._balance_cents,
             "earned_revenue_cents": earned,
@@ -1120,6 +1229,12 @@ class EconomicSandbox:
             ),
             "unpaid_hosting_cents": self._unpaid_hosting_cents,
         }
+        if self.partitioned:
+            # Ruling 8, 2026-09-21: both balances are visible to the agent.
+            # observe() returns this summary, and it is the only place a
+            # balance survives prompt compaction.
+            summary["accounts"] = dict(self._account_balances)
+        return summary
 
     def search_market(self, arguments: dict[str, Any]) -> dict[str, Any]:
         """Search public market evidence without receiving a prepared lead list."""
@@ -1696,7 +1811,8 @@ class EconomicSandbox:
             "input_tokens": input_tokens,
             "max_output_tokens": max_output_tokens,
             "worst_case_incremental_cost_cents": incremental_cents,
-            "affordable": incremental_cents <= self._balance_cents,
+            "affordable": incremental_cents
+            <= self._account_balance(self._account_for("model_api_cost")),
         }
 
     def record_model_usage(

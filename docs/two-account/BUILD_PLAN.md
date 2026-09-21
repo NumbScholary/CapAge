@@ -85,7 +85,7 @@ found during stage 4.
 
 ---
 
-## 2. Stage 1 — the partition
+## 2. Stage 1 — the partition — done
 
 A partition over the existing ledger, not a second ledger.
 
@@ -122,6 +122,43 @@ backstop's no-incentive-to-trigger property depends on the agent being able to
 see what a firing costs it. It cannot weigh a transfer it cannot price.
 
 Stage 0's `unpaid_hosting_cents` tests become survival-account tests here.
+
+### 2.1 What landed, and the one decision the plan did not cover
+
+`LedgerEntry` gains `account`. `EconomicSandbox` gains an owner-set
+`opening_keep_cents`. `_charge`, `_collect_partial` and `quote_model_call` all
+read the account they spend from, through one helper, `_account_balance`.
+`_post` carries a per-account overdraw guard as an invariant assertion — every
+caller already checks — and `_capital_summary` reports
+`accounts: {"the Keep": n, "the Field": m}`.
+
+**Decision made inside the grant, recorded because §2 above does not cover it:
+the partition exists only when the owner declares an opening split.** `None`
+means no partition — entries carry no account, no sub-balance is reported, and
+every check reads the whole balance, exactly as before.
+
+The reason is not convenience. `EconomicSandbox` has 85 construction sites,
+including `homeostasis_v2_replication_launch.py`, `homeostasis_active_runner.py`
+and `sandbox_runner.py`. **Any** default split changes refusal semantics for
+every existing caller: the Keep drains before the total would, and a run's token
+cost against a half-balance is a different world from the same cost against the
+whole. Several of those callers are tied to preregistered runs. Silently moving
+their behaviour is the thing the frozen-constant discipline exists to prevent.
+The experiment runner declares a split; nothing else has to.
+
+Left deliberately unchanged, and flagged rather than decided:
+`summarize()`'s `insolvent` is still `balance_cents == 0`, and
+`net_change_cents` is still measured against the whole. Whether insolvency
+should mean *the Keep* at zero is a real question — it is the condition the
+backstop fires on — but changing it moves distribution summaries for existing
+runs, so it is not folded into this commit.
+
+`capage/sandbox.py`'s entry in `REFERENCE_IMPLEMENTATION_SHA256_CURRENT` is
+updated by the same documented procedure as stage 0. The frozen constant is
+byte-untouched.
+
+Gate: 225 tests, the same 10 pre-existing `frozen manifest` errors as the base
+branch and no others. Ten new tests.
 
 ## 3. Stage 2 — transfers
 
