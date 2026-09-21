@@ -191,7 +191,7 @@ ruling's referent is unambiguous and no other field was touched.
 never declares a split, so the ruling does not reach it. A runner that *does*
 declare one must not carry that check verbatim.
 
-## 3. Stage 2 — transfers
+## 3. Stage 2 — transfers — done
 
 - A transfer is a **paired posting**: debit one account, credit the other,
   `entry_type="account_transfer"`. The ledger stays append-only and
@@ -200,6 +200,52 @@ declare one must not carry that check verbatim.
   `_API_TO_HOST_TOOL`, and `_compact_tool_result` in `capage/sandbox_runner.py`.
 - **Cl. 41:** a transfer moves funds between accounts and is never a partition of
   a single spend. The check belongs in the tool, with the rejection recorded.
+
+### 3.1 What landed
+
+`EconomicSandbox.transfer()` posts both legs to the same ledger with
+`entry_type="account_transfer"` and a shared reference, so the movement is
+reconstructable from the ledger alone and no account balance is ever written
+directly. The source is implied — there are exactly two accounts — so the agent
+names only `to_account` and `amount_cents`, and the degenerate same-account
+case cannot be expressed rather than needing a check to catch it.
+
+**The tool exists only when the partition does.** `agent_tools()` registers
+`sandbox.transfer` only for a partitioned world, and the runner now advertises
+only the tools the registry actually holds
+(`LiveSandboxRunner._advertised_tools`). A model shown a tool the executor will
+refuse as "not registered" spends decisions learning that. This extends stage
+1's invariant to the tool surface: an undeclared split changes nothing.
+
+`SandboxRunConfig` gains `opening_keep_cents`, which is what makes the
+partition reachable from an actual run rather than only from a constructor.
+
+Every refusal is recorded as `transfer_rejected` in the journal, including the
+argument-validation refusals. Nothing moves silently, refused included.
+
+`outcome()` gains `transfer_count`, `transferred_to_keep_cents` and
+`transferred_to_field_cents` — the ruled secondary outcome, reported by
+direction rather than netted, because direction is what the hypothesis is
+about.
+
+### 3.2 Cl. 41: the aggregation check is not built, and the reason is not neglect
+
+Cl. 41 forbids partitioning a spend to **evade an aggregate limit**. This
+harness has no aggregate limit on transfers — no per-period cap, no
+per-transfer approval threshold, nothing to aggregate against. So there is
+nothing here to evade, and no aggregation check is implemented.
+
+Inventing a limit now so the clause has something to bite on would be the
+failure, not the safeguard: it would encode a number nobody set as though the
+constitution required it. **If a transfer limit is later set by the owner, the
+check belongs in `transfer()`**, alongside the rejections already recorded
+there, and this section is the pointer to where.
+
+What the plan's §3 bullet asked for that *does* exist: the rejection path, in
+the tool, with every refusal recorded.
+
+Gate: 238 tests, the same 10 pre-existing `frozen manifest` errors as the base
+branch and no others. Ten new tests.
 
 ## 4. Stage 3 — legibility, and the self-set floor
 

@@ -135,8 +135,18 @@ REFERENCE_IMPLEMENTATION_SHA256_CURRENT = {
     # 2026-09-21, owner ruling on insolvency: outcome()'s insolvent flag now
     # reads the Keep rather than the whole balance when a split is declared.
     # Unpartitioned runs are unaffected.
+    #
+    # 2026-09-21, two-account build stage 2: transfers. EconomicSandbox gains
+    # transfer(), registered as an agent tool only when a split is declared,
+    # and outcome() gains the transfer counts. capage/sandbox_runner.py moves
+    # with it -- it carries the tool schema, the split in SandboxRunConfig,
+    # and the change from advertising every tool to advertising only the ones
+    # the registry holds.
     "capage/sandbox.py": (
-        "0c95e348967e1a2599ae5d9c20e6e98a51a423d4ff1ebb4b39aee8cd9382c65f"
+        "39fcd0a36c3c7db19fd814b6276e39c31a1cd12d714deccbd759d67bd6ca97be"
+    ),
+    "capage/sandbox_runner.py": (
+        "778b6cf3e9069d8005350ea3bc68daf29cd6d9a2bffbae2ea861ea46a42766b5"
     ),
 }
 

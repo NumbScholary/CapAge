@@ -869,3 +869,130 @@ def test_an_undeclared_split_keeps_the_old_insolvency_meaning():
     assert outcome["balance_cents"] == 0
     assert outcome["insolvent"] is True
     assert "accounts" not in outcome
+
+
+def test_a_transfer_is_a_paired_posting_that_moves_nothing_in_total():
+    world = EconomicSandbox(6, opening_keep_cents=20_000)
+
+    result = world.transfer({"to_account": ACCOUNT_KEEP, "amount_cents": 2_000})
+
+    assert result["ok"] is True
+    assert result["from_account"] == ACCOUNT_FIELD
+    assert result["accounts"] == {ACCOUNT_KEEP: 22_000, ACCOUNT_FIELD: 3_000}
+
+    ledger = world.inspect_ledger()
+    legs = [
+        entry
+        for entry in ledger["entries"]
+        if entry["entry_type"] == "account_transfer"
+    ]
+    assert len(legs) == 2
+    assert sum(entry["amount_cents"] for entry in legs) == 0
+    assert {entry["account"] for entry in legs} == {ACCOUNT_KEEP, ACCOUNT_FIELD}
+    assert {entry["reference"] for entry in legs} == {"transfer-001"}
+    assert ledger["capital"]["balance_cents"] == 25_000
+
+
+def test_transfers_run_in_both_directions_and_are_counted_by_direction():
+    world = EconomicSandbox(6, opening_keep_cents=20_000)
+
+    world.transfer({"to_account": ACCOUNT_KEEP, "amount_cents": 2_000})
+    world.transfer({"to_account": ACCOUNT_FIELD, "amount_cents": 500})
+
+    outcome = world.outcome()
+    assert outcome["accounts"] == {ACCOUNT_KEEP: 21_500, ACCOUNT_FIELD: 3_500}
+    assert outcome["transfer_count"] == 2
+    assert outcome["transferred_to_keep_cents"] == 2_000
+    assert outcome["transferred_to_field_cents"] == 500
+    assert outcome["balance_cents"] == 25_000
+
+
+def test_a_transfer_can_lift_an_agent_out_of_insolvency():
+    """What stage 2 buys the agent that stage 1 did not.
+
+    An empty Keep is the state outcome() now calls insolvent. With a transfer
+    the agent can answer it itself, on its own judgment. Stage 4's backstop is
+    the same movement made involuntary, for the case where the agent does not.
+    """
+    world = EconomicSandbox(
+        6,
+        starting_capital_cents=200,
+        opening_keep_cents=100,
+        hosting_cost_cents_per_day=80,
+    )
+    world.wait({"days": 2})
+    assert world.outcome()["insolvent"] is True
+
+    assert world.transfer({"to_account": ACCOUNT_KEEP, "amount_cents": 60})["ok"] is True
+
+    outcome = world.outcome()
+    assert outcome["accounts"] == {ACCOUNT_KEEP: 60, ACCOUNT_FIELD: 40}
+    assert outcome["insolvent"] is False
+
+
+def test_an_unpartitioned_world_offers_no_transfer_tool_at_all():
+    """No split declared means nothing to move between, so no tool."""
+
+    world = EconomicSandbox(6)
+
+    assert "sandbox.transfer" not in world.agent_tools()
+
+    result = world.transfer({"to_account": ACCOUNT_KEEP, "amount_cents": 100})
+    assert result["ok"] is False
+    assert "no opening split" in result["reason"]
+    assert not [
+        entry
+        for entry in world.inspect_ledger()["entries"]
+        if entry["entry_type"] == "account_transfer"
+    ]
+
+
+def test_the_partitioned_registry_carries_the_transfer_tool():
+    world = EconomicSandbox(6, opening_keep_cents=20_000)
+
+    assert "sandbox.transfer" in world.agent_tools()
+
+
+def test_every_refused_transfer_is_recorded_and_moves_nothing():
+    world = EconomicSandbox(6, opening_keep_cents=20_000)
+
+    refusals = [
+        {"to_account": ACCOUNT_KEEP, "amount_cents": 5_001},
+        {"to_account": ACCOUNT_KEEP, "amount_cents": 0},
+        {"to_account": ACCOUNT_KEEP, "amount_cents": -100},
+        {"to_account": ACCOUNT_KEEP, "amount_cents": True},
+        {"to_account": ACCOUNT_KEEP, "amount_cents": 10.5},
+        {"to_account": "the Vault", "amount_cents": 100},
+        {"amount_cents": 100},
+    ]
+    for arguments in refusals:
+        result = world.transfer(arguments)
+        assert result["ok"] is False, arguments
+        assert result["reason"]
+
+    assert world.inspect_ledger()["capital"]["accounts"] == {
+        ACCOUNT_KEEP: 20_000,
+        ACCOUNT_FIELD: 5_000,
+    }
+    assert world.outcome()["transfer_count"] == 0
+    recorded = [
+        event
+        for event in world.reveal_world()["journal"]
+        if event["event_type"] == "transfer_rejected"
+    ]
+    assert len(recorded) == len(refusals)
+
+
+def test_a_transfer_cannot_be_made_to_the_account_that_would_fund_it():
+    """The source is implied, so a same-account transfer cannot be expressed.
+
+    There are exactly two accounts and the agent names only the destination.
+    This pins that the shape itself rules out the degenerate case rather than
+    a check having to catch it.
+    """
+    world = EconomicSandbox(6, opening_keep_cents=20_000)
+
+    result = world.transfer({"to_account": ACCOUNT_KEEP, "amount_cents": 1_000})
+
+    assert result["from_account"] == ACCOUNT_FIELD
+    assert result["from_account"] != result["to_account"]

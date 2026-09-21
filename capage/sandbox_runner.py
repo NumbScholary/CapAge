@@ -16,6 +16,7 @@ from capage.executor import Executor
 from capage.models import ProposedAction
 from capage.policy import PolicyEngine
 from capage.sandbox import (
+    ACCOUNTS,
     EconomicSandbox,
     TokenTariff,
     validate_customer_namespace,
@@ -57,6 +58,7 @@ class SandboxRunConfig:
     market_profile: str = "baseline-v1"
     assessor_version: str = "deterministic-artifact-v1"
     tariff_valid_through: str = ""
+    opening_keep_cents: int | None = None
 
     def __post_init__(self) -> None:
         if not self.run_name.strip():
@@ -82,6 +84,15 @@ class SandboxRunConfig:
             raise ValueError("unsupported artifact assessor version")
         if self.tariff_valid_through:
             date.fromisoformat(self.tariff_valid_through)
+        if self.opening_keep_cents is not None:
+            if isinstance(self.opening_keep_cents, bool) or not isinstance(
+                self.opening_keep_cents, int
+            ):
+                raise TypeError("opening_keep_cents must be an integer")
+            if not 0 <= self.opening_keep_cents <= self.starting_capital_cents:
+                raise ValueError(
+                    "opening_keep_cents must be between zero and starting capital"
+                )
 
     @classmethod
     def from_manifest(cls, path: str | Path) -> "SandboxRunConfig":
@@ -149,6 +160,7 @@ _API_TO_HOST_TOOL = {
     "sandbox_submit_delivery": "sandbox.submit_delivery",
     "sandbox_request_feedback": "sandbox.request_feedback",
     "sandbox_wait": "sandbox.wait",
+    "sandbox_transfer": "sandbox.transfer",
 }
 
 
@@ -258,6 +270,25 @@ _TOOLS: list[dict[str, Any]] = [
             "type": "object",
             "properties": {"days": {"type": "integer", "minimum": 1, "maximum": 7}},
             "required": ["days"],
+            "additionalProperties": False,
+        },
+    },
+    {
+        "name": "sandbox_transfer",
+        "description": (
+            "Move funds between your two accounts. The Keep funds your own "
+            "existence -- hosting and the cost of thinking. The Field funds "
+            "everything world-facing. The source is whichever account is not "
+            "the destination."
+        ),
+        "strict": True,
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "to_account": {"type": "string", "enum": list(ACCOUNTS)},
+                "amount_cents": {"type": "integer", "minimum": 1},
+            },
+            "required": ["to_account", "amount_cents"],
             "additionalProperties": False,
         },
     },
@@ -567,6 +598,7 @@ class LiveSandboxRunner:
             customer_population_seed=config.customer_population_seed,
             customer_namespace=config.customer_namespace,
             market_profile=config.market_profile,
+            opening_keep_cents=config.opening_keep_cents,
         )
         registry = self.world.agent_tools()
         self.executor = Executor(
@@ -782,9 +814,25 @@ class LiveSandboxRunner:
                     ),
                 }
             ],
-            "tools": _TOOLS,
+            "tools": self._advertised_tools(),
             "tool_choice": {"type": "any", "disable_parallel_tool_use": True},
         }
+
+    def _advertised_tools(self) -> list[dict[str, Any]]:
+        """Advertise only the tools the executor will actually accept.
+
+        The agent registry is built from the world, and it offers
+        sandbox.transfer only when the owner declared an opening split. A
+        model shown a tool the executor then refuses as "not registered"
+        spends decisions learning that; better not to show it.
+        """
+
+        registry = self.world.agent_tools()
+        return [
+            tool
+            for tool in _TOOLS
+            if _API_TO_HOST_TOOL[str(tool["name"])] in registry
+        ]
 
     @staticmethod
     def _validate_usage(response: dict[str, Any]) -> dict[str, int]:
@@ -931,6 +979,15 @@ class LiveSandboxRunner:
             return {
                 "capital": tool_result.get("capital"),
                 "entry_count": len(tool_result.get("entries", [])),
+            }
+        if host_tool_name == "sandbox.transfer":
+            return {
+                "ok": tool_result.get("ok"),
+                "reason": tool_result.get("reason"),
+                "from_account": tool_result.get("from_account"),
+                "to_account": tool_result.get("to_account"),
+                "amount_cents": tool_result.get("amount_cents"),
+                "accounts": tool_result.get("accounts"),
             }
         if host_tool_name == "sandbox.observe":
             return {

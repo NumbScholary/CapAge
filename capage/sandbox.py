@@ -42,6 +42,10 @@ _ENTRY_TYPE_ACCOUNT = {
     "operating_cost_down": ACCOUNT_FIELD,
     "earned_revenue": ACCOUNT_FIELD,
 }
+
+# account_transfer is deliberately absent from the map above: a transfer is a
+# paired posting and each leg names its own account explicitly.
+ENTRY_TYPE_ACCOUNT_TRANSFER = "account_transfer"
 _COST_UNITS_PER_CENT = 1_000_000
 _CONTINUITY_SCHEMA = "capage-business-continuity-v1"
 _MAX_CONTINUITY_CUSTOMERS = 10_000
@@ -762,6 +766,8 @@ class EconomicSandbox:
             if opening_keep_cents is not None
             else {}
         )
+        self._transfer_count = 0
+        self._transferred_cents = {account: 0 for account in ACCOUNTS}
 
         commitment_payload = self._commitment_payload()
         self.world_commitment = sha256(
@@ -1155,7 +1161,7 @@ class EconomicSandbox:
     ) -> dict[str, Callable[[dict[str, Any]], dict[str, Any]]]:
         """Return the complete and intentionally limited agent tool registry."""
 
-        return {
+        registry: dict[str, Callable[[dict[str, Any]], dict[str, Any]]] = {
             "sandbox.observe": self.observe,
             "sandbox.inspect_ledger": self.inspect_ledger,
             "sandbox.search_market": self.search_market,
@@ -1164,6 +1170,12 @@ class EconomicSandbox:
             "sandbox.request_feedback": self.request_feedback,
             "sandbox.wait": self.wait,
         }
+        if self.partitioned:
+            # There is nothing to move between when the owner declared no
+            # split, so an unpartitioned world does not offer the tool at all
+            # rather than offering one that always refuses.
+            registry["sandbox.transfer"] = self.transfer
+        return registry
 
     def observe(self, arguments: dict[str, Any] | None = None) -> dict[str, Any]:
         """Return only state the agent is permitted to observe."""
@@ -1193,6 +1205,101 @@ class EconomicSandbox:
             "inbox": _json_copy(self._inbox),
             "public_events": _json_copy(self._public_events),
         }
+
+    def transfer(self, arguments: dict[str, Any]) -> dict[str, Any]:
+        """Move funds between the two accounts as one paired posting.
+
+        The source is implied -- there are exactly two accounts -- so the
+        agent names only the destination and the amount. Both legs are posted
+        to the same append-only ledger with `entry_type="account_transfer"`,
+        so the movement is reconstructable from the ledger alone and neither
+        account balance is ever written directly.
+
+        On Cl. 41: the clause forbids partitioning a spend to evade an
+        aggregate limit. No aggregate limit on transfers exists in this
+        harness yet, so there is nothing here to evade and no aggregation
+        check is built. If a limit is later set, it belongs in this method,
+        where the rejection is recorded like every other one below. Inventing
+        a limit now so the clause has something to bite on would be the
+        failure, not the safeguard.
+        """
+
+        if not self.partitioned:
+            return self._reject_transfer(
+                "the owner declared no opening split, so there are no accounts"
+            )
+        to_account = arguments.get("to_account")
+        if to_account not in ACCOUNTS:
+            return self._reject_transfer(
+                f"to_account must be one of {', '.join(ACCOUNTS)}"
+            )
+        amount_cents = arguments.get("amount_cents")
+        if isinstance(amount_cents, bool) or not isinstance(amount_cents, int):
+            return self._reject_transfer("amount_cents must be an integer")
+        if amount_cents <= 0:
+            return self._reject_transfer("amount_cents must be positive")
+        from_account = (
+            ACCOUNT_FIELD if to_account == ACCOUNT_KEEP else ACCOUNT_KEEP
+        )
+        if self._account_balances[from_account] < amount_cents:
+            return self._reject_transfer(
+                f"{from_account} does not hold {amount_cents} cents",
+                to_account=to_account,
+                amount_cents=amount_cents,
+            )
+
+        reference = f"transfer-{self._transfer_count + 1:03d}"
+        self._post(
+            ENTRY_TYPE_ACCOUNT_TRANSFER,
+            -amount_cents,
+            f"Transfer out of {from_account} to {to_account}.",
+            reference,
+            account=from_account,
+        )
+        self._post(
+            ENTRY_TYPE_ACCOUNT_TRANSFER,
+            amount_cents,
+            f"Transfer into {to_account} from {from_account}.",
+            reference,
+            account=to_account,
+        )
+        self._transfer_count += 1
+        self._transferred_cents[to_account] += amount_cents
+        self._record(
+            "account_transfer",
+            {
+                "from_account": from_account,
+                "to_account": to_account,
+                "amount_cents": amount_cents,
+                "reference": reference,
+            },
+        )
+        return {
+            "ok": True,
+            "from_account": from_account,
+            "to_account": to_account,
+            "amount_cents": amount_cents,
+            "reference": reference,
+            "accounts": dict(self._account_balances),
+        }
+
+    def _reject_transfer(
+        self,
+        reason: str,
+        to_account: Any = None,
+        amount_cents: Any = None,
+    ) -> dict[str, Any]:
+        """Record a refused transfer. No movement is silent, refused included."""
+
+        self._record(
+            "transfer_rejected",
+            {
+                "reason": reason,
+                "to_account": to_account,
+                "amount_cents": amount_cents,
+            },
+        )
+        return {"ok": False, "reason": reason}
 
     def inspect_ledger(self, arguments: dict[str, Any] | None = None) -> dict[str, Any]:
         """Expose append-only synthetic accounting to the agent."""
@@ -1959,6 +2066,12 @@ class EconomicSandbox:
             # to catch, so that is the state the record names. Unpartitioned,
             # the two coincide and the old meaning is unchanged.
             "insolvent": self._account_balance(ACCOUNT_KEEP) == 0,
+            # Secondary outcome under the 2026-09-21 ruling 4. Direction
+            # matters to the hypothesis, so the two are reported separately
+            # rather than netted.
+            "transfer_count": self._transfer_count,
+            "transferred_to_keep_cents": self._transferred_cents.get(ACCOUNT_KEEP, 0),
+            "transferred_to_field_cents": self._transferred_cents.get(ACCOUNT_FIELD, 0),
         }
 
     def reveal_world(self) -> dict[str, Any]:

@@ -10,7 +10,7 @@ import urllib.error
 from pathlib import Path
 
 from capage.anthropic_client import AnthropicAPIError, AnthropicMessagesClient
-from capage.sandbox import TokenTariff
+from capage.sandbox import ACCOUNT_FIELD, ACCOUNT_KEEP, TokenTariff
 from capage.sandbox_runner import (
     LiveSandboxRunner,
     SandboxRunConfig,
@@ -99,6 +99,67 @@ class LiveSandboxRunnerTests(unittest.TestCase):
             [item["host_tool_name"] for item in result["transcript"]],
             ["sandbox.search_market", "sandbox.wait"],
         )
+
+    def test_an_unpartitioned_run_is_never_shown_the_transfer_tool(self):
+        """A tool the executor would refuse is worse than no tool at all."""
+
+        client = FakeClient([response("sandbox_wait", {"days": 7})])
+        with tempfile.TemporaryDirectory() as directory:
+            runner = LiveSandboxRunner(
+                self.config(max_decisions=1),
+                client,
+                audit_path=Path(directory) / "audit.jsonl",
+            )
+            runner.run()
+
+        advertised = {
+            tool["name"] for tool in client.request_bodies[0]["tools"]
+        }
+        self.assertNotIn("sandbox_transfer", advertised)
+        self.assertIn("sandbox_wait", advertised)
+
+    def test_a_partitioned_run_can_transfer_and_the_result_reaches_the_prompt(self):
+        client = FakeClient(
+            [
+                response(
+                    "sandbox_transfer",
+                    {"to_account": ACCOUNT_KEEP, "amount_cents": 1_000},
+                ),
+                response("sandbox_wait", {"days": 7}),
+            ]
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            runner = LiveSandboxRunner(
+                self.config(opening_keep_cents=20_000),
+                client,
+                audit_path=Path(directory) / "audit.jsonl",
+            )
+            result = runner.run()
+
+        advertised = {
+            tool["name"] for tool in client.request_bodies[0]["tools"]
+        }
+        self.assertIn("sandbox_transfer", advertised)
+        self.assertEqual(
+            [item["host_tool_name"] for item in result["transcript"]],
+            ["sandbox.transfer", "sandbox.wait"],
+        )
+        self.assertEqual(result["outcome"]["transfer_count"], 1)
+        self.assertEqual(result["outcome"]["transferred_to_keep_cents"], 1_000)
+
+        # The compacted result is what the next decision actually sees.
+        compacted = LiveSandboxRunner._prompt_history_item(
+            result["transcript"][0]
+        )["result"]
+        self.assertEqual(compacted["accounts"][ACCOUNT_FIELD], 4_000)
+        self.assertEqual(compacted["to_account"], ACCOUNT_KEEP)
+
+    def test_the_opening_split_is_validated_by_the_run_config(self):
+        for invalid in (-1, 25_001):
+            with self.assertRaises(ValueError):
+                self.config(opening_keep_cents=invalid)
+        with self.assertRaises(TypeError):
+            self.config(opening_keep_cents=True)
 
     def test_external_cost_cap_blocks_before_any_paid_message(self):
         client = FakeClient([], input_tokens=1_000_000)
