@@ -359,7 +359,7 @@ deliberately removed.
 Gate: 252 tests, the same 10 pre-existing `frozen manifest` errors as the base
 branch and no others. Fourteen new tests.
 
-## 5. Stage 4 — the reflex backstop
+## 5. Stage 4 — the reflex backstop — done
 
 Hooks in `_charge` when the account is survival and the post-charge balance would
 fall below the owner-set backstop. A forced paired posting from investment to
@@ -385,6 +385,65 @@ agent decision.
 
 When this lands, `test_a_zero_balance_agent_cannot_think_at_all` is replaced by a
 test asserting the backstop fired.
+
+### 5.1 What landed, and two corrections to this section
+
+**Sizing is closed.** Kev ruled 2026-09-21
+(`claude-to-coder/20260921-1605`): **one operating period by default** —
+minimum viable rescue, enough to restore the ability to decide and no more,
+because a larger top-up relieves the pressure the design exists to create. It
+is a **parameter, not a constant**: small while the mechanism is being
+configured so it fires often and is observable; whatever the experiment
+specifies when it runs. **Whatever value an experiment uses is frozen before
+any cell**, in the preregistration — choosing it after seeing results would be
+tuning on the primary outcome. `backstop_operating_periods` is the parameter,
+`0` disables it, and **the experiment's value is not chosen here.**
+
+`_backstop_level_cents()` is `periods × hosting_cost_cents_per_day`. Arrears
+are deliberately excluded: a level that moved with what the agent already owes
+would rise exactly when the agent is in trouble, and the level is the one
+quantity the agent cannot influence.
+
+**Correction 1 — the hook in `_charge` alone would have been dead code.** This
+section said the backstop hooks `_charge`. It does, and the forced posting
+lands before the charge proceeds as written. But the runner checks
+`quote_model_call().affordable` **before** any charge and breaks the loop on a
+false (`sandbox_runner.py:647-649`), so an agent drained to zero by hosting
+never reaches `_charge` at all. A backstop living only there would never fire
+at the one moment it exists for. **It also fires from hosting collection**,
+which is where the Keep actually falls. Both sites call one helper.
+
+**Correction 2 — the test this replaces is the partitioned one.** This section
+said `test_a_zero_balance_agent_cannot_think_at_all` gets replaced. Written
+before §2.1's undeclared-split decision, that is wrong: that test declares no
+split, so it has no Field to be rescued from and no backstop at all. It stands
+unchanged. The test stage 4 actually replaces is
+`test_an_empty_keep_stops_thought_while_the_field_is_full` — the partitioned
+half of the same lockout — now
+`test_the_reflex_rescues_a_keep_that_hosting_would_have_emptied`.
+
+**Partial rescue.** If the Field cannot cover the shortfall, the backstop moves
+everything the Field has. A partial rescue is still a rescue, and what follows
+is genuine death rather than an accounting artifact.
+
+**The level is visible in both arms**, on ruling 8's reasoning: the
+no-incentive-to-trigger property depends on the agent being able to price what
+a firing costs it. It is an owner parameter, not a derived signal.
+
+**Recording.** Every firing writes a paired `backstop_fired` ledger entry under
+a shared reference **and** a `backstop_fired` audit line. Exempt from approval
+under the 2140 grant is not exempt from recording.
+
+**Not built, and still deferred:** Overseer notification on firing, as Kev left
+it.
+
+Four existing tests now pass `backstop_operating_periods=0` explicitly. Each
+one deliberately observes the unrescued path — where collection may draw from,
+what insolvency means, r below the floor, and the agent rescuing itself by
+transfer — and a silent rescue would have hidden what they pin.
+
+Gate: 259 tests, the same 10 pre-existing `frozen manifest` errors as the base
+branch and no others.
 
 ---
 

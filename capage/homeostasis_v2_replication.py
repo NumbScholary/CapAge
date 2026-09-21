@@ -147,11 +147,16 @@ REFERENCE_IMPLEMENTATION_SHA256_CURRENT = {
     # floor. EconomicSandbox gains set_floor(), the recoverability signal, and
     # the pressure_signal_shown arm flag; capage/sandbox_runner.py carries the
     # tool schema and the flag through SandboxRunConfig.
+    #
+    # 2026-09-21, two-account build stage 4: the reflex backstop. Fires from
+    # _charge and from hosting collection, sized in operating periods with a
+    # default of one, and never reachable by the agent.
+    # capage/sandbox_runner.py carries the sizing through SandboxRunConfig.
     "capage/sandbox.py": (
-        "60c64b63c441eed8b805367080c1c9a81cfd7938534177b35db00e040a0e4cd8"
+        "66ad6ccbd151715cc6cbf35bf1df53336b2437bb10bf521cadc6122c9d840a09"
     ),
     "capage/sandbox_runner.py": (
-        "447863e5ebc54a7e6d171d1e810e5b6c2fc216ca8fd9c3c55daa20b3a3f7ab6e"
+        "9fbdf8c510f1cc62ac0701d1976029e1362e8c20a213ac7326ad63bc01ba4e5d"
     ),
 }
 

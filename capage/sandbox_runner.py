@@ -60,6 +60,7 @@ class SandboxRunConfig:
     tariff_valid_through: str = ""
     opening_keep_cents: int | None = None
     pressure_signal_shown: bool = True
+    backstop_operating_periods: int = 1
 
     def __post_init__(self) -> None:
         if not self.run_name.strip():
@@ -96,6 +97,12 @@ class SandboxRunConfig:
                 )
         if not isinstance(self.pressure_signal_shown, bool):
             raise TypeError("pressure_signal_shown must be a boolean")
+        if isinstance(self.backstop_operating_periods, bool) or not isinstance(
+            self.backstop_operating_periods, int
+        ):
+            raise TypeError("backstop_operating_periods must be an integer")
+        if self.backstop_operating_periods < 0:
+            raise ValueError("backstop_operating_periods cannot be negative")
 
     @classmethod
     def from_manifest(cls, path: str | Path) -> "SandboxRunConfig":
@@ -621,6 +628,7 @@ class LiveSandboxRunner:
             market_profile=config.market_profile,
             opening_keep_cents=config.opening_keep_cents,
             pressure_signal_shown=config.pressure_signal_shown,
+            backstop_operating_periods=config.backstop_operating_periods,
         )
         registry = self.world.agent_tools()
         self.executor = Executor(

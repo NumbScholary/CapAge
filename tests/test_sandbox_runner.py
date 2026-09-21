@@ -216,6 +216,28 @@ class LiveSandboxRunnerTests(unittest.TestCase):
             self.config(opening_keep_cents=True)
         with self.assertRaises(TypeError):
             self.config(pressure_signal_shown="yes")
+        with self.assertRaises(ValueError):
+            self.config(backstop_operating_periods=-1)
+
+    def test_a_run_carries_its_backstop_sizing_into_the_world(self):
+        """Configurable per run, so a pilot can size it small and watch it."""
+
+        client = FakeClient([response("sandbox_wait", {"days": 7})])
+        with tempfile.TemporaryDirectory() as directory:
+            runner = LiveSandboxRunner(
+                self.config(
+                    max_decisions=1,
+                    opening_keep_cents=20_000,
+                    backstop_operating_periods=3,
+                ),
+                client,
+                audit_path=Path(directory) / "audit.jsonl",
+            )
+            result = runner.run()
+
+        self.assertEqual(result["outcome"]["backstop_level_cents"], 0)
+        self.assertEqual(result["outcome"]["backstop_fired_count"], 0)
+        self.assertEqual(runner.world.backstop_operating_periods, 3)
 
     def test_external_cost_cap_blocks_before_any_paid_message(self):
         client = FakeClient([], input_tokens=1_000_000)

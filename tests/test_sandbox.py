@@ -705,6 +705,9 @@ def test_hosting_cost_draws_only_on_the_survival_account():
         starting_capital_cents=200,
         opening_keep_cents=100,
         hosting_cost_cents_per_day=80,
+        # The reflex is off here on purpose: this test is about where
+        # collection may draw from, and a rescue would hide the answer.
+        backstop_operating_periods=0,
     )
 
     world.wait({"days": 2})
@@ -739,17 +742,21 @@ def test_an_empty_field_leaves_the_agent_alive_funded_and_blind():
     assert rejection["data"]["account"] == ACCOUNT_FIELD
 
 
-def test_an_empty_keep_stops_thought_while_the_field_is_full():
-    """The stage 4 target in its partitioned form.
+def test_the_reflex_rescues_a_keep_that_hosting_would_have_emptied():
+    """Stage 4 replaces what stage 1 could only pin.
 
-    test_a_zero_balance_agent_cannot_think_at_all pins the single-pot lockout.
-    This is the same wall one account in: model cost is survival, so an agent
-    whose Keep is empty cannot meter another call even holding an untouched
-    Field. Stage 2 gives it a transfer; stage 4 gives it a reflex that does not
-    need one.
+    The partitioned half of the lockout -- an empty Keep beside a funded Field
+    -- is the state the backstop exists to prevent, and it no longer happens.
+    test_a_zero_balance_agent_cannot_think_at_all still stands unchanged: that
+    world declares no split, so it has no Field to be rescued from and no
+    backstop at all.
+
+    Two firings here, and the second is partial. A partial rescue is still a
+    rescue; what follows it is genuine death rather than an accounting
+    artifact.
     """
     tariff = TokenTariff(
-        name="partition-lockout-test",
+        name="backstop-test",
         input_cents_per_million_tokens=200,
         output_cents_per_million_tokens=1_000,
     )
@@ -760,24 +767,167 @@ def test_an_empty_keep_stops_thought_while_the_field_is_full():
         hosting_cost_cents_per_day=80,
         token_tariff=tariff,
     )
+    assert world.observe()["capital"]["backstop_level_cents"] == 80
 
-    world.wait({"days": 2})
-    capital = world.inspect_ledger()["capital"]
-    assert capital["accounts"] == {ACCOUNT_KEEP: 0, ACCOUNT_FIELD: 100}
+    world.wait({"days": 1})
+    assert world.inspect_ledger()["capital"]["accounts"] == {
+        ACCOUNT_KEEP: 80,
+        ACCOUNT_FIELD: 40,
+    }
 
+    world.wait({"days": 1})
+    outcome = world.outcome()
+    # The Field is spent, so the second firing could only move what was left.
+    assert outcome["accounts"] == {ACCOUNT_KEEP: 40, ACCOUNT_FIELD: 0}
+    assert outcome["backstop_fired_count"] == 2
+    assert outcome["backstop_transferred_cents"] == 100
+    assert outcome["insolvent"] is False
+
+    # The point of the rescue: the agent can still think.
     assert world.quote_model_call(
         input_tokens=10_000, max_output_tokens=1_000
-    )["affordable"] is False
+    )["affordable"] is True
+    world.record_model_usage("call-001", input_tokens=10_000, output_tokens=1_000)
 
-    try:
-        world.record_model_usage("call-001", input_tokens=10_000, output_tokens=1_000)
-    except ValueError as error:
-        assert "insufficient synthetic capital" in str(error)
-    else:
-        raise AssertionError(
-            "record_model_usage succeeded with an empty Keep; survival cost is "
-            "no longer charged to the survival account."
-        )
+
+def test_the_backstop_is_not_the_agents_to_call_or_to_switch_off():
+    """It is the one mechanism that moves value without the agent choosing."""
+
+    world = EconomicSandbox(
+        6,
+        starting_capital_cents=200,
+        opening_keep_cents=100,
+        hosting_cost_cents_per_day=80,
+    )
+
+    tools = world.agent_tools()
+    assert "sandbox.backstop" not in tools
+    assert not [name for name in tools if "backstop" in name]
+    # Nothing the agent can reach lowers the level: the floor it does control
+    # sits above the backstop and moving it changes nothing here.
+    world.set_floor({"floor_cents": 0})
+    assert world.observe()["capital"]["backstop_level_cents"] == 80
+
+
+def test_every_firing_is_a_paired_ledger_entry_and_an_audit_line():
+    """Exempt from approval under Cl. 41 is not exempt from recording."""
+
+    world = EconomicSandbox(
+        6,
+        starting_capital_cents=200,
+        opening_keep_cents=100,
+        hosting_cost_cents_per_day=80,
+    )
+    world.wait({"days": 1})
+
+    legs = [
+        entry
+        for entry in world.inspect_ledger()["entries"]
+        if entry["entry_type"] == "backstop_fired"
+    ]
+    assert len(legs) == 2
+    assert sum(entry["amount_cents"] for entry in legs) == 0
+    assert {entry["account"] for entry in legs} == {ACCOUNT_KEEP, ACCOUNT_FIELD}
+    assert {entry["reference"] for entry in legs} == {"backstop-001"}
+
+    recorded = [
+        event
+        for event in world.reveal_world()["journal"]
+        if event["event_type"] == "backstop_fired"
+    ]
+    assert len(recorded) == 1
+    assert recorded[0]["data"]["amount_cents"] == 60
+    assert recorded[0]["data"]["keep_before_cents"] == 20
+    assert recorded[0]["data"]["keep_after_cents"] == 80
+    assert recorded[0]["data"]["backstop_level_cents"] == 80
+
+
+def test_the_reflex_lands_before_a_charge_rather_than_after_a_refusal():
+    """The plan's wording, and it matters: the charge must see the top-up.
+
+    A model call charged against a Keep that would drop below the level fires
+    the backstop first, so the charge proceeds instead of being refused and
+    then rescued too late.
+    """
+    tariff = TokenTariff(
+        name="charge-hook-test",
+        input_cents_per_million_tokens=1_000_000,
+        output_cents_per_million_tokens=1_000_000,
+    )
+    world = EconomicSandbox(
+        6,
+        starting_capital_cents=1_000,
+        opening_keep_cents=100,
+        hosting_cost_cents_per_day=50,
+        token_tariff=tariff,
+    )
+
+    # 60 cents of token cost against a Keep of 100 and a level of 50.
+    world.record_model_usage("call-001", input_tokens=40, output_tokens=20)
+
+    outcome = world.outcome()
+    assert outcome["backstop_fired_count"] == 1
+    assert outcome["accounts"][ACCOUNT_KEEP] == 50
+    assert outcome["model_api_cost_cents"] == 60
+
+
+def test_zero_operating_periods_disables_the_reflex_entirely():
+    world = EconomicSandbox(
+        6,
+        starting_capital_cents=200,
+        opening_keep_cents=100,
+        hosting_cost_cents_per_day=80,
+        backstop_operating_periods=0,
+    )
+
+    assert world.observe()["capital"]["backstop_level_cents"] == 0
+    world.wait({"days": 2})
+    assert world.outcome()["backstop_fired_count"] == 0
+    assert world.outcome()["insolvent"] is True
+
+
+def test_the_level_is_sized_in_operating_periods_and_ignores_arrears():
+    """The one quantity the agent cannot influence stays uninfluenced.
+
+    A level that moved with what the agent already owes would rise exactly
+    when the agent is in trouble.
+    """
+    world = EconomicSandbox(
+        6,
+        starting_capital_cents=1_000,
+        opening_keep_cents=500,
+        hosting_cost_cents_per_day=40,
+        backstop_operating_periods=3,
+    )
+
+    assert world.observe()["capital"]["backstop_level_cents"] == 120
+
+    world.wait({"days": 2})
+    capital = world.observe()["capital"]
+    assert capital["backstop_level_cents"] == 120
+    assert capital["accounts"][ACCOUNT_KEEP] == 420
+    assert world.outcome()["backstop_fired_count"] == 0
+
+
+def test_the_backstop_sizing_is_validated_and_part_of_the_world_commitment():
+    for invalid in (-1,):
+        try:
+            EconomicSandbox(6, opening_keep_cents=100, backstop_operating_periods=invalid)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("a negative sizing was accepted")
+    for invalid in (True, 1.5):
+        try:
+            EconomicSandbox(6, opening_keep_cents=100, backstop_operating_periods=invalid)
+        except TypeError:
+            pass
+        else:
+            raise AssertionError(f"sizing {invalid!r} was accepted")
+
+    one = EconomicSandbox(6, opening_keep_cents=100, backstop_operating_periods=1)
+    two = EconomicSandbox(6, opening_keep_cents=100, backstop_operating_periods=2)
+    assert one.world_commitment != two.world_commitment
 
 
 def test_the_opening_split_is_validated_like_every_other_owner_input():
@@ -832,6 +982,9 @@ def test_insolvency_is_the_keep_at_zero_not_the_whole_balance():
         starting_capital_cents=200,
         opening_keep_cents=100,
         hosting_cost_cents_per_day=80,
+        # Reflex off: this pins what insolvency MEANS, which requires
+        # reaching the state the backstop exists to prevent.
+        backstop_operating_periods=0,
     )
 
     world.wait({"days": 2})
@@ -919,6 +1072,9 @@ def test_a_transfer_can_lift_an_agent_out_of_insolvency():
         starting_capital_cents=200,
         opening_keep_cents=100,
         hosting_cost_cents_per_day=80,
+        # Reflex off: stage 2 is about the agent rescuing itself. Stage 4's
+        # test below is the same rescue made involuntary.
+        backstop_operating_periods=0,
     )
     world.wait({"days": 2})
     assert world.outcome()["insolvent"] is True
@@ -1041,6 +1197,7 @@ def test_recoverability_goes_negative_below_the_floor_and_is_none_at_zero():
         starting_capital_cents=200,
         opening_keep_cents=100,
         hosting_cost_cents_per_day=80,
+        backstop_operating_periods=0,
     )
     world.set_floor({"floor_cents": 100})
 
