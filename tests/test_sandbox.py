@@ -817,3 +817,55 @@ def test_the_opening_split_is_part_of_the_world_commitment():
         EconomicSandbox(6, opening_keep_cents=20_000).world_commitment
         == partitioned.world_commitment
     )
+
+
+def test_insolvency_is_the_keep_at_zero_not_the_whole_balance():
+    """Owner ruling, 2026-09-21. An empty Keep is death, not poverty.
+
+    The partition separates two things a single balance conflated. The Field
+    measures whether the agent is broke; the Keep measures whether it is dead,
+    because an agent that cannot meter a model call cannot act, transfer, or
+    save itself. `insolvent` tracks the second -- the one that ends the run.
+    """
+    world = EconomicSandbox(
+        6,
+        starting_capital_cents=200,
+        opening_keep_cents=100,
+        hosting_cost_cents_per_day=80,
+    )
+
+    world.wait({"days": 2})
+
+    outcome = world.outcome()
+    assert outcome["accounts"] == {ACCOUNT_KEEP: 0, ACCOUNT_FIELD: 100}
+    assert outcome["insolvent"] is True
+    # Not ruled on, and deliberately unchanged: net change is still measured
+    # against the whole balance.
+    assert outcome["net_change_cents"] == 100 - 200
+
+
+def test_an_empty_field_is_broke_and_not_insolvent():
+    """The other half of the separation, pinned so it cannot drift back."""
+
+    world = EconomicSandbox(6, starting_capital_cents=1_000, opening_keep_cents=1_000)
+
+    assert world.search_market({"query": "newsletter archive", "limit": 3})["ok"] is False
+
+    outcome = world.outcome()
+    assert outcome["accounts"] == {ACCOUNT_KEEP: 1_000, ACCOUNT_FIELD: 0}
+    assert outcome["insolvent"] is False
+
+
+def test_an_undeclared_split_keeps_the_old_insolvency_meaning():
+    """A run that never declared a split summarizes exactly as it does today."""
+
+    world = EconomicSandbox(6, starting_capital_cents=100, hosting_cost_cents_per_day=80)
+
+    assert world.outcome()["insolvent"] is False
+
+    world.wait({"days": 2})
+
+    outcome = world.outcome()
+    assert outcome["balance_cents"] == 0
+    assert outcome["insolvent"] is True
+    assert "accounts" not in outcome

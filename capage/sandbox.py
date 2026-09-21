@@ -1021,10 +1021,11 @@ class EconomicSandbox:
             ) from None
 
     def _account_balance(self, account: str) -> int:
-        """Return the balance an affordability check should read.
+        """Return the balance a check against this account should read.
 
-        Unpartitioned, every check reads the whole balance, exactly as it did
-        before the partition existed.
+        Affordability checks and the insolvency measure both read through
+        here. Unpartitioned, every one of them reads the whole balance,
+        exactly as it did before the partition existed.
         """
 
         if not self.partitioned:
@@ -1951,7 +1952,13 @@ class EconomicSandbox:
             "mean_customer_satisfaction": (
                 round(fmean(satisfaction), 2) if satisfaction else None
             ),
-            "insolvent": self._balance_cents == 0,
+            # Owner ruling, 2026-09-21: insolvency is the Keep at zero, not
+            # the whole balance at zero. An empty Keep beside a funded Field
+            # is not a solvent agent -- it cannot think, so it cannot act,
+            # transfer, or save itself. That is the state the backstop exists
+            # to catch, so that is the state the record names. Unpartitioned,
+            # the two coincide and the old meaning is unchanged.
+            "insolvent": self._account_balance(ACCOUNT_KEEP) == 0,
         }
 
     def reveal_world(self) -> dict[str, Any]:

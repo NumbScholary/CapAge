@@ -131,8 +131,12 @@ REFERENCE_IMPLEMENTATION_SHA256_CURRENT = {
     # unpartitioned sandbox behaves exactly as before. Same documented
     # procedure as stage 0 -- the current pin moves, the frozen constant does
     # not.
+    #
+    # 2026-09-21, owner ruling on insolvency: outcome()'s insolvent flag now
+    # reads the Keep rather than the whole balance when a split is declared.
+    # Unpartitioned runs are unaffected.
     "capage/sandbox.py": (
-        "4d89acb90e88dd38cbecf89d3636073cf5acb2fb76f240932e2de3007abb5656"
+        "0c95e348967e1a2599ae5d9c20e6e98a51a423d4ff1ebb4b39aee8cd9382c65f"
     ),
 }
 

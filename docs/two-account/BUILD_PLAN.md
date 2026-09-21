@@ -160,6 +160,37 @@ byte-untouched.
 Gate: 225 tests, the same 10 pre-existing `frozen manifest` errors as the base
 branch and no others. Ten new tests.
 
+### 2.2 Ruled after 2.1 was written — insolvency is the Keep at zero
+
+Kev ruled on the item 2.1 left open
+(`claude-to-coder/20260921-1512-insolvency-means-the-keep-at-zero.md`).
+**`insolvent` is the Keep at zero when a split is declared.** Recorded as
+append, not as a rewrite of 2.1, per Cl. 85 — 2.1's paragraph stands as what
+was true when it was written.
+
+His reasoning, recorded as his: the point of the partition is that pressure
+arrives before everything is gone. An empty Keep beside a funded Field is not a
+solvent agent — it cannot think, and therefore cannot act, transfer, or save
+itself. That is the state the backstop exists to catch, so that is the state
+the record names.
+
+Scope is narrow and was given as narrow:
+
+- `insolvent` only. **`net_change_cents` is not ruled on** and stays measured
+  against the whole balance.
+- An undeclared split keeps the old meaning exactly — the two coincide there,
+  and `_account_balance` returns the whole balance when there is no partition,
+  so one expression covers both.
+
+The field lives in `outcome()`, not in a function named `summarize()`; the
+ruling's referent is unambiguous and no other field was touched.
+
+**Carried forward for whoever writes the new experiment's runner:**
+`homeostasis_v2_replication_runner.py:395` cross-checks
+`insolvent is (balance_cents == 0)` and raises when they disagree. That runner
+never declares a split, so the ruling does not reach it. A runner that *does*
+declare one must not carry that check verbatim.
+
 ## 3. Stage 2 — transfers
 
 - A transfer is a **paired posting**: debit one account, credit the other,
