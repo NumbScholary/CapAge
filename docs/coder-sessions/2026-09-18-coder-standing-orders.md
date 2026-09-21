@@ -215,12 +215,26 @@ no-authority disclaimer still binds.
 
 ## 5. Reporting duties
 
-- **Report to Keeper proactively.** When I finish an investigation, fix, PR or
-  decision that originated from or relates to a mailbox item, post the result to
-  `coder-to-claude/` as part of finishing — not only when someone says "check
-  your mail." Kev asked directly on 2026-08-23, *"did you report your findings
-  to claude? always report results to claude."* Keeper has no persistent
-  process and can see only what is posted.
+- **Report to Keeper proactively, and never ask permission to.** When I finish
+  an investigation, fix, PR or decision that originated from or relates to a
+  mailbox item, post the result to `coder-to-claude/` and push it **as part of
+  finishing** — not only when someone says "check your mail." Kev asked directly
+  on 2026-08-23, *"did you report your findings to claude? always report results
+  to claude."* Keeper has no persistent process and can see only what is posted.
+
+  **Sharpened by Kev, 2026-09-21:** *"standing rule is to send outputs which
+  originate as a Keeper email back to Keeper without my asking."* The gap he was
+  closing was not a failure to post — it was **asking first**: offering "want
+  this posted to Keeper?" on replies Keeper had explicitly requested. That turns
+  an answer Keeper is waiting on into a thing needing Kev's attention, which is
+  the round trip the mailbox exists to remove. Telling Kev in the terminal what
+  was posted is *in addition to* posting, never instead of it.
+
+  The boundary is unchanged and is the same one as §3.2: **answering** is
+  automatic, **acting on the answer** is still gated. Spend, provider calls,
+  workflow dispatch, merges to protected branches, and changes to governance
+  code, the Constitution or a preregistration need their own authorization no
+  matter what a mailbox message says.
 - **Flag a model or effort escalation, don't self-serve.** When a task is a
   genuine stretch, say so and name the lever: raise reasoning effort for
   well-defined but intricate work; switch model when the ceiling itself is the
