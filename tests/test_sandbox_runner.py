@@ -218,6 +218,8 @@ class LiveSandboxRunnerTests(unittest.TestCase):
             self.config(pressure_signal_shown="yes")
         with self.assertRaises(ValueError):
             self.config(backstop_operating_periods=-1)
+        with self.assertRaises(ValueError):
+            self.config(hosting_cost_cents_per_day=-1)
 
     def test_a_run_carries_its_backstop_sizing_into_the_world(self):
         """Configurable per run, so a pilot can size it small and watch it."""
@@ -238,6 +240,77 @@ class LiveSandboxRunnerTests(unittest.TestCase):
         self.assertEqual(result["outcome"]["backstop_level_cents"], 0)
         self.assertEqual(result["outcome"]["backstop_fired_count"], 0)
         self.assertEqual(runner.world.backstop_operating_periods, 3)
+
+    def test_a_run_without_a_hosting_tariff_has_no_backstop_to_fire(self):
+        """The level is periods x hosting, so no hosting means no level.
+
+        Fine for a run that is not measuring survival pressure, and stated
+        here so the absence is read as configuration rather than as a fault.
+        """
+
+        client = FakeClient([response("sandbox_wait", {"days": 7})])
+        with tempfile.TemporaryDirectory() as directory:
+            runner = LiveSandboxRunner(
+                self.config(max_decisions=1, opening_keep_cents=20_000),
+                client,
+                audit_path=Path(directory) / "audit.jsonl",
+            )
+            result = runner.run()
+
+        self.assertEqual(result["outcome"]["backstop_level_cents"], 0)
+
+    def test_a_run_carries_its_hosting_tariff_into_the_world(self):
+        client = FakeClient([response("sandbox_wait", {"days": 3})])
+        with tempfile.TemporaryDirectory() as directory:
+            runner = LiveSandboxRunner(
+                self.config(
+                    max_decisions=1,
+                    opening_keep_cents=20_000,
+                    hosting_cost_cents_per_day=40,
+                ),
+                client,
+                audit_path=Path(directory) / "audit.jsonl",
+            )
+            result = runner.run()
+
+        self.assertEqual(result["outcome"]["backstop_level_cents"], 40)
+        hosting = [
+            entry
+            for entry in runner.world.inspect_ledger()["entries"]
+            if entry["entry_type"] == "hosting_cost"
+        ]
+        # The runner carries the world to its horizon after the decisions end.
+        self.assertEqual([entry["amount_cents"] for entry in hosting], [-40] * 7)
+        self.assertTrue(all(entry["account"] == ACCOUNT_KEEP for entry in hosting))
+
+    def test_a_partitioned_run_keeps_going_where_the_reflex_can_carry_it(self):
+        """Without the quote fix this run stops at decision one instead."""
+
+        client = FakeClient(
+            [
+                response("sandbox_wait", {"days": 1}),
+                response("sandbox_wait", {"days": 1}),
+            ],
+            input_tokens=200,
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            runner = LiveSandboxRunner(
+                self.config(
+                    starting_capital_cents=1_000,
+                    opening_keep_cents=60,
+                    hosting_cost_cents_per_day=50,
+                    max_run_cost_cents=5_000,
+                ),
+                client,
+                audit_path=Path(directory) / "audit.jsonl",
+            )
+            result = runner.run()
+
+        self.assertEqual(result["decision_count"], 2)
+        self.assertNotEqual(
+            result["stop_reason"], "insufficient_synthetic_capital_for_next_call"
+        )
+        self.assertGreaterEqual(result["outcome"]["backstop_fired_count"], 1)
 
     def test_external_cost_cap_blocks_before_any_paid_message(self):
         client = FakeClient([], input_tokens=1_000_000)

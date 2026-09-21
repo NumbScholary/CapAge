@@ -1394,3 +1394,77 @@ def test_which_arm_a_cell_is_in_is_part_of_the_world_commitment():
         EconomicSandbox(6, pressure_signal_shown=False).world_commitment
         == EconomicSandbox(6).world_commitment
     )
+
+
+def test_a_call_the_reflex_would_cover_is_quoted_as_affordable():
+    """The other side of the gate that made the backstop fire from collection.
+
+    The runner breaks its loop on an unaffordable quote BEFORE any charge, so
+    a quote blind to the reflex would end a run the reflex was about to
+    rescue -- and it would do so more often at low tariffs, where the level is
+    low, which is exactly the axis the experiment turns on. That would
+    truncate runs and undercount the primary outcome along the treatment.
+    """
+    tariff = TokenTariff(
+        name="quote-gate-test",
+        input_cents_per_million_tokens=1_000_000,
+        output_cents_per_million_tokens=1_000_000,
+    )
+    world = EconomicSandbox(
+        6,
+        starting_capital_cents=1_000,
+        opening_keep_cents=100,
+        hosting_cost_cents_per_day=100,
+        token_tariff=tariff,
+    )
+
+    # 150 cents of token cost against a Keep of 100 and a level of 100.
+    quote = world.quote_model_call(input_tokens=100, max_output_tokens=50)
+    assert quote["worst_case_incremental_cost_cents"] == 150
+    assert quote["backstop_would_transfer_cents"] == 150
+    assert quote["affordable"] is True
+
+    world.record_model_usage("call-001", input_tokens=100, output_tokens=50)
+    outcome = world.outcome()
+    assert outcome["backstop_fired_count"] == 1
+    assert outcome["accounts"] == {ACCOUNT_KEEP: 100, ACCOUNT_FIELD: 750}
+
+
+def test_a_quote_beyond_what_the_field_can_cover_is_still_unaffordable():
+    """The reflex raises the ceiling by what the Field holds, and no further."""
+
+    tariff = TokenTariff(
+        name="quote-gate-limit-test",
+        input_cents_per_million_tokens=1_000_000,
+        output_cents_per_million_tokens=1_000_000,
+    )
+    world = EconomicSandbox(
+        6,
+        starting_capital_cents=200,
+        opening_keep_cents=100,
+        hosting_cost_cents_per_day=100,
+        token_tariff=tariff,
+    )
+
+    quote = world.quote_model_call(input_tokens=400, max_output_tokens=0)
+    assert quote["worst_case_incremental_cost_cents"] == 400
+    assert quote["backstop_would_transfer_cents"] == 100
+    assert quote["affordable"] is False
+
+
+def test_an_unpartitioned_quote_is_unchanged_by_the_reflex():
+    tariff = TokenTariff(
+        name="quote-unpartitioned-test",
+        input_cents_per_million_tokens=1_000_000,
+        output_cents_per_million_tokens=1_000_000,
+    )
+    world = EconomicSandbox(
+        6,
+        starting_capital_cents=200,
+        hosting_cost_cents_per_day=100,
+        token_tariff=tariff,
+    )
+
+    quote = world.quote_model_call(input_tokens=300, max_output_tokens=0)
+    assert quote["backstop_would_transfer_cents"] == 0
+    assert quote["affordable"] is False

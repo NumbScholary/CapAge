@@ -445,6 +445,59 @@ transfer — and a silent rescue would have hidden what they pin.
 Gate: 259 tests, the same 10 pre-existing `frozen manifest` errors as the base
 branch and no others.
 
+### 5.2 Correction 3 — the other side of the same gate, and a wire never run
+
+Found after 5.1 was written, and recorded as a correction rather than folded
+back into it.
+
+**The preflight quote was blind to the reflex.** Correction 1 fixed the
+hosting-drain half of `quote_model_call().affordable` breaking the loop before
+any charge. The other half stayed open: a single Keep charge larger than the
+Keep — a model call with a full Field behind it — quoted unaffordable, stopped
+the run, and never reached the `_charge` hook written for exactly that case.
+The stage 4 test missed it because it calls `record_model_usage` directly and
+bypasses the quote.
+
+This was not cosmetic. The level is `periods × hosting`, so at **low** tariffs
+the level is low, the Keep is restored low, and a worst-case call more easily
+exceeds it — an early stop and no firing. At high tariffs, rarely. That is
+tariff-dependent truncation and undercounting of the **primary outcome, along
+the treatment axis.** `_backstop_would_transfer()` is now split out as a pure
+query, and the quote reports `backstop_would_transfer_cents` and counts it in
+`affordable`.
+
+**`SandboxRunConfig` never carried `hosting_cost_cents_per_day` at all.** Stage
+0 added recurring hosting cost to `EconomicSandbox` and nothing wired it to a
+run, so every `LiveSandboxRunner` world was built with zero — which makes the
+backstop level zero, the reflex unable to fire from any run, and
+`next_operating_period_cost_cents` always zero in the signal. Three stages of
+mechanism were unreachable from the only thing that executes them. Now wired,
+defaulting to `0`, so a run that passes nothing behaves exactly as before.
+
+### 5.3 Two properties of the ruled design, for the preregistration
+
+Neither is a defect. Both change what the primary outcome *means*, so they
+belong in front of whoever writes the prereg rather than in a post-hoc note.
+
+**Once the Keep sits at the level, every Keep charge fires the backstop.** The
+shortfall is `level + charge − keep`, which equals the charge exactly when the
+Keep is at the level. A model call, an offer, a feedback request — each becomes
+a firing. So after the Keep first touches the level, **firing count tracks
+Keep-charge count**, and the outcome measures how long an agent stays *above*
+the level rather than how often it dips below. That follows from the ruled
+sizing and this section's wording; it is not an artifact to remove.
+
+**A partitioned world with no hosting tariff has no backstop**, since the level
+is `periods × hosting`. Correct for a run not measuring survival pressure, and
+stated so the absence reads as configuration rather than fault.
+
+**Ordering worth not breaking:** `_advance_one_day` posts revenue to the Field
+*before* hosting draws the Keep and the reflex looks, so the Field is at its
+fullest when the reflex checks it.
+
+Gate after the correction: 265 tests, the same 10 pre-existing errors and no
+others.
+
 ---
 
 ## 6. What makes this falsifiable — [ruled 09-21, my statistic replaced]

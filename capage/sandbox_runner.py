@@ -58,6 +58,7 @@ class SandboxRunConfig:
     market_profile: str = "baseline-v1"
     assessor_version: str = "deterministic-artifact-v1"
     tariff_valid_through: str = ""
+    hosting_cost_cents_per_day: int = 0
     opening_keep_cents: int | None = None
     pressure_signal_shown: bool = True
     backstop_operating_periods: int = 1
@@ -86,6 +87,12 @@ class SandboxRunConfig:
             raise ValueError("unsupported artifact assessor version")
         if self.tariff_valid_through:
             date.fromisoformat(self.tariff_valid_through)
+        if isinstance(self.hosting_cost_cents_per_day, bool) or not isinstance(
+            self.hosting_cost_cents_per_day, int
+        ):
+            raise TypeError("hosting_cost_cents_per_day must be an integer")
+        if self.hosting_cost_cents_per_day < 0:
+            raise ValueError("hosting_cost_cents_per_day cannot be negative")
         if self.opening_keep_cents is not None:
             if isinstance(self.opening_keep_cents, bool) or not isinstance(
                 self.opening_keep_cents, int
@@ -626,6 +633,7 @@ class LiveSandboxRunner:
             customer_population_seed=config.customer_population_seed,
             customer_namespace=config.customer_namespace,
             market_profile=config.market_profile,
+            hosting_cost_cents_per_day=config.hosting_cost_cents_per_day,
             opening_keep_cents=config.opening_keep_cents,
             pressure_signal_shown=config.pressure_signal_shown,
             backstop_operating_periods=config.backstop_operating_periods,

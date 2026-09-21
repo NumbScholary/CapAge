@@ -152,11 +152,17 @@ REFERENCE_IMPLEMENTATION_SHA256_CURRENT = {
     # _charge and from hosting collection, sized in operating periods with a
     # default of one, and never reachable by the agent.
     # capage/sandbox_runner.py carries the sizing through SandboxRunConfig.
+    #
+    # 2026-09-21, stage 4 follow-up: quote_model_call() now counts what the
+    # reflex would move, and SandboxRunConfig finally carries
+    # hosting_cost_cents_per_day, which stage 0 added to EconomicSandbox but
+    # never wired to a run. Runs that pass neither are byte-identical in
+    # behaviour to before.
     "capage/sandbox.py": (
-        "66ad6ccbd151715cc6cbf35bf1df53336b2437bb10bf521cadc6122c9d840a09"
+        "3b374f030b7253071b03a159bdbb708686e22ccfd8b72f701edcfd7ac7a3d305"
     ),
     "capage/sandbox_runner.py": (
-        "9fbdf8c510f1cc62ac0701d1976029e1362e8c20a213ac7326ad63bc01ba4e5d"
+        "e8b31ee2025980bbdc125548dc97ad6cb286ab07d76fc9e53c65345302788121"
     ),
 }
 

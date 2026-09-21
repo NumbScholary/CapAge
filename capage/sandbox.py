@@ -1085,6 +1085,27 @@ class EconomicSandbox:
 
         return self.backstop_operating_periods * self._hosting_cost_cents_per_day
 
+    def _backstop_would_transfer(self, pending_charge_cents: int = 0) -> int:
+        """How much the reflex would move right now. Moves nothing itself.
+
+        Split out from the firing so an affordability check can ask the
+        question without answering it. quote_model_call() has to: the runner
+        breaks its loop on an unaffordable quote BEFORE any charge, so a quote
+        blind to the reflex would stop a run the reflex was about to rescue.
+        """
+
+        if not self.partitioned:
+            return 0
+        level = self._backstop_level_cents()
+        if level <= 0:
+            return 0
+        shortfall = (
+            level + pending_charge_cents - self._account_balances[ACCOUNT_KEEP]
+        )
+        if shortfall <= 0:
+            return 0
+        return max(0, min(shortfall, self._account_balances[ACCOUNT_FIELD]))
+
     def _maybe_fire_backstop(self, pending_charge_cents: int = 0) -> None:
         """Top the Keep back up to the backstop level, involuntarily.
 
@@ -1104,18 +1125,12 @@ class EconomicSandbox:
         ledger entry and an audit line.
         """
 
-        if not self.partitioned:
-            return
-        level = self._backstop_level_cents()
-        if level <= 0:
-            return
-        keep = self._account_balances[ACCOUNT_KEEP]
-        shortfall = level + pending_charge_cents - keep
-        if shortfall <= 0:
-            return
-        amount = min(shortfall, self._account_balances[ACCOUNT_FIELD])
+        amount = self._backstop_would_transfer(pending_charge_cents)
         if amount <= 0:
             return
+        level = self._backstop_level_cents()
+        keep = self._account_balances[ACCOUNT_KEEP]
+        shortfall = level + pending_charge_cents - keep
 
         self._backstop_fired_count += 1
         reference = f"backstop-{self._backstop_fired_count:03d}"
@@ -2191,13 +2206,20 @@ class EconomicSandbox:
             0,
             projected_billed_cents - self._billed_model_cost_cents,
         )
+        # The quote has to count the reflex. The runner breaks its loop on an
+        # unaffordable quote before any charge happens, so a quote that
+        # ignored the backstop would end runs the backstop was about to save
+        # -- and it would do so more often at low tariffs, where the level is
+        # low, which is precisely the axis the experiment turns on.
+        keep = self._account_balance(self._account_for("model_api_cost"))
+        would_transfer = self._backstop_would_transfer(incremental_cents)
         return {
             "tariff": asdict(tariff),
             "input_tokens": input_tokens,
             "max_output_tokens": max_output_tokens,
             "worst_case_incremental_cost_cents": incremental_cents,
-            "affordable": incremental_cents
-            <= self._account_balance(self._account_for("model_api_cost")),
+            "backstop_would_transfer_cents": would_transfer,
+            "affordable": incremental_cents <= keep + would_transfer,
         }
 
     def record_model_usage(
