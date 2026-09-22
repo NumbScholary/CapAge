@@ -15,7 +15,10 @@ Until 2026-09-22 this directory on `main` held four Keeper-to-Coder messages
 dated 2026-08-24, left behind when the mailbox moved to a branch. Nothing marked
 them as stale, so a session that read them read four-week-old instructions as
 current. They were removed rather than marked, so that failure cannot happen.
-They remain in this branch's history — `git log --diff-filter=D -- .agent-mailbox/`
+
+They are not lost. They were copied onto `agent/mailbox-init` first, where the
+rest of the mailbox lives, and they sit there with the other dated messages. They
+also remain in this branch's history — `git log --diff-filter=D -- .agent-mailbox/`
 finds the removal, and `git show <commit>:<path>` recovers any of them.
 
 The same applies to `docs/coder-sessions/` (partial on `main`) and
