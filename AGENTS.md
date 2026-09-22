@@ -120,10 +120,11 @@ Stop if any command tries to use a live credential or provider.
 ## Agent mailbox
 
 **The live mailbox and session records are on branch `agent/mailbox-init`, not on
-`main`.** `main` carries a frozen snapshot of `.agent-mailbox/` that ends
-2026-08-24, holds only part of `docs/coder-sessions/`, and carries no
-`docs/keeper-sessions/` at all. A session that reads those paths on `main` will
-read stale state without anything indicating it is stale. Fetch the branch first:
+`main`.** `main` carries no messages in `.agent-mailbox/`, holds only part of
+`docs/coder-sessions/`, and carries no `docs/keeper-sessions/` at all. A session
+that reads those paths on `main` reads incomplete state, and before 2026-09-22 it
+read four-week-old mail with nothing indicating it was stale. Fetch the branch
+first:
 
 ```
 git fetch origin agent/mailbox-init
