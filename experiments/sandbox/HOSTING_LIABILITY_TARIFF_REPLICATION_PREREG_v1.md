@@ -215,3 +215,25 @@ Constitution)
 6. A new, explicit, byte-exact owner authorization phrase at launch time,
    per standing CapAge protocol -- nothing above, including this
    approval, authorizes spending on its own.
+
+## Correction -- 2026-09-22
+
+This preregistration is stopped, closed and unrun, by Overseer ruling
+2026-09-21. No cells were run under it.
+
+Two defects are recorded rather than repaired:
+
+- The wording proposed for the agent-facing V0 condition -- that the hosting
+  tariff was "available on request via `inspect_ledger`" -- is false on the
+  harness that would have executed it, and never shipped. The agent's return
+  from that tool is the capital summary it already has, plus a count of
+  entries; no amounts, memos or entry types reach the prompt. Verified by
+  measurement 2026-09-18: a call returning 31 ledger entries reduced the next
+  decision's input tokens by 66.
+- Section 4 refers to "the primary hypothesis". No hypothesis is stated
+  anywhere in this document; the definite article has no referent.
+
+Nothing above is deleted or rewritten. Section 10's no-replay provision is
+moot. Both defects are left as written.
+
+Drafted by Keeper under Overseer ruling; placed 2026-09-22.
