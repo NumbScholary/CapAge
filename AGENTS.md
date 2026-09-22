@@ -119,13 +119,27 @@ Stop if any command tries to use a live credential or provider.
 
 ## Agent mailbox
 
+**The live mailbox and session records are on branch `agent/mailbox-init`, not on
+`main`.** `main` carries a frozen snapshot of `.agent-mailbox/` that ends
+2026-08-24, holds only part of `docs/coder-sessions/`, and carries no
+`docs/keeper-sessions/` at all. A session that reads those paths on `main` will
+read stale state without anything indicating it is stale. Fetch the branch first:
+
+```
+git fetch origin agent/mailbox-init
+git log --oneline -5 origin/agent/mailbox-init
+```
+
+and read all three directories from `origin/agent/mailbox-init`.
+
 Check `docs/MAILBOX_PROTOCOL.md` on branch `agent/mailbox-init` for the current
 inter-agent (Claude/Coder) communication protocol before assuming continuity
 from a prior session. Read that file directly rather than relying on memory.
 
 - `.agent-mailbox/claude-to-coder/` is Coder's inbox;
   `.agent-mailbox/coder-to-claude/` is Coder's outbox. `docs/keeper-sessions/`
-  is Keeper's append-only record, read-only to Coder.
+  is Keeper's append-only record, read-only to Coder. All three are authoritative
+  on `agent/mailbox-init`.
 - CapAge also receives mail outside this repository. Check
   `https://github.com/Numbscholar/hub/issues?q=is%3Aopen+label%3Ato%3Acapage`
   at the start of a session. There is no automated step that does this.
