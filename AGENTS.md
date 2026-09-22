@@ -119,19 +119,21 @@ Stop if any command tries to use a live credential or provider.
 
 ## Agent mailbox
 
-**The live mailbox and session records are on branch `agent/mailbox-init`, not on
-`main`.** `main` carries no messages in `.agent-mailbox/`, holds only part of
-`docs/coder-sessions/`, and carries no `docs/keeper-sessions/` at all. A session
-that reads those paths on `main` reads incomplete state, and before 2026-09-22 it
-read four-week-old mail with nothing indicating it was stale. Fetch the branch
-first:
+**The live mailbox, the session directories, the dated handoff ledgers and the
+mailbox protocol are on branch `agent/mailbox-init`, not on `main`.** Owner
+ruling, 2026-09-22: `main` **points at** that branch rather than mirroring it.
+`main` carries the code; the working record lives on the branch, and any copy of
+it on `main` is a snapshot that can lag and must not be read as current. Today
+`main` holds no messages in `.agent-mailbox/`, no `docs/keeper-sessions/`, and no
+`docs/CLAUDE_CODE_HANDOFF_*.md`. Fetch the branch first:
 
 ```
 git fetch origin agent/mailbox-init
 git log --oneline -5 origin/agent/mailbox-init
 ```
 
-and read all three directories from `origin/agent/mailbox-init`.
+and read the mailbox, both session directories and the newest handoff ledger
+from `origin/agent/mailbox-init`.
 
 Check `docs/MAILBOX_PROTOCOL.md` on branch `agent/mailbox-init` for the current
 inter-agent (Claude/Coder) communication protocol before assuming continuity

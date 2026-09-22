@@ -21,5 +21,7 @@ rest of the mailbox lives, and they sit there with the other dated messages. The
 also remain in this branch's history — `git log --diff-filter=D -- .agent-mailbox/`
 finds the removal, and `git show <commit>:<path>` recovers any of them.
 
-The same applies to `docs/coder-sessions/` (partial on `main`) and
-`docs/keeper-sessions/` (absent from `main`). See AGENTS.md, "Agent mailbox".
+The same applies to `docs/coder-sessions/`, `docs/keeper-sessions/` and the
+dated handoff ledgers: by owner ruling of 2026-09-22 `main` points at the branch
+rather than mirroring it, so any copy here is a snapshot that can lag. See
+AGENTS.md, "Agent mailbox".
